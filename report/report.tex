@@ -1,0 +1,80 @@
+\documentclass[a4paper, 11pt]{report}
+
+\usepackage{geometry}
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{hyperref}
+
+\geometry{margin=2cm}
+
+\usepackage{fancyhdr}
+\usepackage{fancyvrb} 
+\usepackage{graphicx}
+\usepackage{float}
+%\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{pdfpages}
+
+\usepackage{array}
+
+\pagestyle{fancy}
+\rhead{Title}
+\renewcommand{\footrulewidth}{0.5pt}
+
+
+\begin{document}
+
+\begin{titlepage}
+  \begin{center}
+    \textsc{\huge Rapport}\\[3cm]
+	\textsc{\Huge Projet Système Embarqué}\\[3cm]
+    \includegraphics[width=8cm]{logo-IPB.jpg}\\[3cm]
+	\begin{tabular*}{\textwidth}{@{} m{12cm} l}
+		\large{Auteurs :} & \large{Encadrants :} \\[0.5cm]
+	    \textsc{\Large David Bitonneau} & \textsc{\Large Aymeric Vincent} \\
+	    \textsc{\Large Ludovic Hofer}   & \textsc{\Large Grégoire Passault} \\ 
+        \textsc{\Large Fabien Depraetre} & \\
+    \end{tabular*}
+	\\[2cm]
+    \textsc{\Large \today}\\
+
+\end{center}
+
+\end{titlepage}
+
+\clearpage
+\tableofcontents
+\clearpage
+
+\chapter{Introduction}
+
+\chapter{Description du protocole}
+
+\chapter{Conception et choix}
+
+\section{Arduino}
+
+\section{RaspberryPi}
+
+\subsection{Choix de l'OS}
+
+\section{Convention d'écriture}
+
+\chapter{Implémentation}
+
+\section{Driver}
+
+Le driver est écrit en C.
+
+\section{Firmware}
+
+Le firmware est écrit en C.
+
+\chapter{Tests et benchmarks}
+
+\chapter{Conclusion}
+
+\end{document}
