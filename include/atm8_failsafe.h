@@ -1,0 +1,3 @@
+#ifndef ATM8_FAILSAFE_H
+#define ATM8_FAILSAFE_H
+#endif//ATM8_FAILSAFE_H
