@@ -44,7 +44,10 @@
 struct atm8_connection{
   int fd_in;
   int fd_out;
-  //TODO memorize current states and last known values, maybe with a timestamp
+  atm8_mask unknown_pins;// Pins which are not up to date
+  atm8_val_list2 current_states;
+  atm8_val_list16 last_values;
+  // maybe add time stamp instead of unknown pins
 };
 
 /**
@@ -140,21 +143,25 @@ atm8_set_state_mask( struct atm8_connection * connection,
  * Get the state of the specified pin
  * \param connection The connection concerned
  * \param pin_no @see atm8_pins.h
+ * \param state State of the pin will be set here
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
 atm8_get_state( struct atm8_connection * connection,
-                int pin_no );
+                int pin_no,
+                int8_t * state );
 
 /**
  * Get the states of all the pins used in the given mask
  * \param connection The connection concerned
  * \param mask The pins used @see atm8_mask.h
+ * \param states The values of the states will be placed here
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
 atm8_get_state_mask( struct atm8_connection * connection,
-                     struct atm8_mask * mask );
+                     struct atm8_mask * mask,
+                     struct atm8_val_list2 * states);
 
 /**
  * Read the value of the pin in it's current state, value will be placed in
@@ -220,9 +227,9 @@ atm8_analogic_read( struct atm8_connection * connection,
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_analogic_pwm8( struct atm8_connection * connection,
-                    int pin_no,
-                    int16_t * value );
+atm8_pwm8_read( struct atm8_connection * connection,
+                int pin_no,
+                int16_t * value );
 
 /**
  * Read a pwm16 value on a pin, setting it's state to digital before if
@@ -233,9 +240,9 @@ atm8_analogic_pwm8( struct atm8_connection * connection,
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_analogic_pwm16( struct atm8_connection * connection,
-                     int pin_no,
-                     int16_t * value );
+atm8_pwm16_read( struct atm8_connection * connection,
+                 int pin_no,
+                 int16_t * value );
 
 /**
  * Write a digital value to a pin, setting it to this state before if needed
@@ -303,31 +310,28 @@ atm8_write_value_mask( struct atm8_connection * connection,
 /**
  * Launch a monitoring read on the atm8, concerning the specified pin, the
  * atm8 will then send the values at a given frequency.
+ * Rhis feature is not currently supported by the driver
  * \param connection The connection concerned
- * \param state The state of the pin in which you will read
  * \param pin_no The number of the pin to use @see atm8_pins.h
  * \param frequency The update frequency, in Hertz
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
 atm8_monitor_read( struct atm8_connection * connection,
-                   int8_t state,
                    int8_t pin_no,
                    int8_t frequency);
 
-
-//TODO finish
-
 /**
- * Launch a monitoring read on the atm8, concerning several pins. All pins
+ * Launch a monitoring read on the atm8, concerning several pins.
+ * This feature is not currently supported by the driver.
  * \param connection The connection concerned
- * \param pin_no The number of the pin to use @see atm8_pins.h
+ * \param mask The mask of the pins to be monitored
  * \param frequency The update frequency, in Hertz
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
 atm8_monitor_read_mask( struct atm8_connection * connection,
-                        int8_t pin_no,
+                        struct atm8_mask * mask,
                         int8_t frequency);
 
 
