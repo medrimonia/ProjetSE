@@ -2,51 +2,22 @@
  * This header has the purpose of offering an API allowing the user to
  * communicate with an ATMega 8 using our protocol.
  */
-#ifndef ATM8_DRIVER_H
-#define ATM8_DRIVER_H
+#ifndef DRIVER_H
+#define DRIVER_H
 
-#include "atm8_failsafe.h"
-
-
-/* Analog pins */
-#define ATM8_A0   0
-#define ATM8_A1   1
-#define ATM8_A2   2
-#define ATM8_A3   3
-#define ATM8_A4   4
-#define ATM8_A5   5
-#define ATM8_A6   6
-#define ATM8_A7   7
-/* Digital pins */
-#define ATM8_D0   8
-#define ATM8_D1   9
-#define ATM8_D2  10
-#define ATM8_D3  11
-#define ATM8_D4  12
-#define ATM8_D5  13
-#define ATM8_D6  14
-#define ATM8_D7  15
-#define ATM8_D8  16
-#define ATM8_D9  17
-#define ATM8_D10 18
-#define ATM8_D11 19
-#define ATM8_D12 20
-#define ATM8_D13 21
-
-#define ATM8_SYNC  0
-#define ATM8_ASYNC 1
+#include "failsafe.h"
 
 /**
  * An atm8 connection is a pair of file descriptor, one is used to send
  * informations to the other side and the other is used to receive
  * informations
  */
-struct atm8_connection{
+struct connection{
   int fd_in;
   int fd_out;
-  atm8_mask unknown_pins;// Pins which are not up to date
-  atm8_val_list2 current_states;
-  atm8_val_list16 last_values;
+  mask unknown_pins;// Pins which are not up to date
+  val_list2 current_states;
+  val_list16 last_values;
   // maybe add time stamp instead of unknown pins
 };
 
@@ -63,24 +34,24 @@ struct atm8_connection{
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_init_connection( char * path,
+init_connection( char * path,
                       int mode,
-                      struct atm8_failsafe *  failsafe_state,
-                      struct atm8_connection * connection );
+                      struct failsafe *  failsafe_state,
+                      struct connection * connection );
 
 /**
  * All the connection allocated resources are freed and connection is closed
  * \param connection The connection to close
  */
 void
-atm8_close_connection( struct atm8_connection * connection );
+close_connection( struct connection * connection );
 
 /**
  * Send a reset signal to the atm8, after it, the connection is reinitialized
  * \param connection The connection to reset
  */
 void
-atm8_reset( struct atm8_connection * connection );
+reset( struct connection * connection );
 
 /**
  * Set the failsafe state of the atm8 connected by the specified connection
@@ -89,8 +60,8 @@ atm8_reset( struct atm8_connection * connection );
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_set_failsafe( struct atm8_connection * connection,
-                   struct atm8_failsafe * failsafe_state);
+set_failsafe( struct connection * connection,
+                   struct failsafe * failsafe_state);
 
 /**
  * Change the mode of the connection to the specified mode
@@ -99,7 +70,7 @@ atm8_set_failsafe( struct atm8_connection * connection,
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_set_mode( struct atm8_connection * connection,
+set_mode( struct connection * connection,
                int mode );
 
 /**
@@ -108,36 +79,36 @@ atm8_set_mode( struct atm8_connection * connection,
  * into fail state.
  * \param connection The connection concerned
  * \param frequency 0 -> disable the frequency
- *                  1-7 -> set frequency to 2^n 
+ *                  1-7 -> set frequency to 2^n
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_set_heartbeat( struct atm8_connection * connection,
+set_heartbeat( struct connection * connection,
                     char frequency );
 
 /**
  * Set the state of the given pin
  * \param connection The connection concerned
  * \param pin_no @see atm8_pins.h
- * \param state @see atm8_states.h
+ * \param state @see states.h
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_set_state( struct atm8_connection * connection,
+set_state( struct connection * connection,
                 int pin_no,
                 char state );
 
 /**
  * Set several state in one packet
  * \param connection The connection concerned
- * \param mask The mask of the values used @see atm8_mask.h
- * \param states The values to use @see atm8_val_list2
+ * \param mask The mask of the values used @see mask.h
+ * \param states The values to use @see val_list2
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_set_state_mask( struct atm8_connection * connection,
-                     struct atm8_mask * mask,
-                     struct atm8_val_list2 states );
+set_state_mask( struct connection * connection,
+                     struct mask * mask,
+                     struct val_list2 states );
 
 /**
  * Get the state of the specified pin
@@ -147,21 +118,21 @@ atm8_set_state_mask( struct atm8_connection * connection,
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_get_state( struct atm8_connection * connection,
+get_state( struct connection * connection,
                 int pin_no,
                 int8_t * state );
 
 /**
  * Get the states of all the pins used in the given mask
  * \param connection The connection concerned
- * \param mask The pins used @see atm8_mask.h
+ * \param mask The pins used @see mask.h
  * \param states The values of the states will be placed here
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_get_state_mask( struct atm8_connection * connection,
-                     struct atm8_mask * mask,
-                     struct atm8_val_list2 * states);
+get_state_mask( struct connection * connection,
+                     struct mask * mask,
+                     struct val_list2 * states);
 
 /**
  * Read the value of the pin in it's current state, value will be placed in
@@ -172,7 +143,7 @@ atm8_get_state_mask( struct atm8_connection * connection,
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_read_value( struct atm8_connection * connection,
+read_value( struct connection * connection,
                  int pin_no,
                  int * value);
 
@@ -180,17 +151,17 @@ atm8_read_value( struct atm8_connection * connection,
  * Read a digital value on a pin, setting it's state to digital before if
  * needed
  * \param connection The connection concerned
- * \param mask The mask of the pins to read @see atm8_mask
+ * \param mask The mask of the pins to read @see mask
  * \param states The mask of the states in which the values have to be read
- *               @see atm8_val_list2
- * \param values The values will be stored in this list @see atm8_val_list16
+ *               @see val_list2
+ * \param values The values will be stored in this list @see val_list16
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_read_value_mask( struct atm8_connection * connection,
-                      struct atm8_mask * mask,
-                      struct atm8_val_list2 * states,
-                      struct atm8_val_list16 * values );
+read_value_mask( struct connection * connection,
+                      struct mask * mask,
+                      struct val_list2 * states,
+                      struct val_list16 * values );
 
 /**
  * Read a digital value on a pin, setting it's state to digital before if
@@ -201,7 +172,7 @@ atm8_read_value_mask( struct atm8_connection * connection,
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_digital_read( struct atm8_connection * connection,
+digital_read( struct connection * connection,
                    int pin_no,
                    bool * value );
 
@@ -214,7 +185,7 @@ atm8_digital_read( struct atm8_connection * connection,
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_analogic_read( struct atm8_connection * connection,
+analogic_read( struct connection * connection,
                     int pin_no,
                     int16_t * value );
 
@@ -227,7 +198,7 @@ atm8_analogic_read( struct atm8_connection * connection,
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_pwm8_read( struct atm8_connection * connection,
+pwm8_read( struct connection * connection,
                 int pin_no,
                 int16_t * value );
 
@@ -240,7 +211,7 @@ atm8_pwm8_read( struct atm8_connection * connection,
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_pwm16_read( struct atm8_connection * connection,
+pwm16_read( struct connection * connection,
                  int pin_no,
                  int16_t * value );
 
@@ -252,7 +223,7 @@ atm8_pwm16_read( struct atm8_connection * connection,
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_digital_write( struct atm8_connection * connection,
+digital_write( struct connection * connection,
                     int pin_no,
                     bool value );
 
@@ -264,7 +235,7 @@ atm8_digital_write( struct atm8_connection * connection,
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_analogic_write( struct atm8_connection * connection,
+analogic_write( struct connection * connection,
                      int pin_no,
                      bool value );
 
@@ -276,7 +247,7 @@ atm8_analogic_write( struct atm8_connection * connection,
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_pwm8_write( struct atm8_connection * connection,
+pwm8_write( struct connection * connection,
                  int pin_no,
                  bool value );
 
@@ -288,24 +259,24 @@ atm8_pwm8_write( struct atm8_connection * connection,
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_pwm16_write( struct atm8_connection * connection,
+pwm16_write( struct connection * connection,
                   int pin_no,
                   bool value );
 
 /**
  * Write a mask of values, setting pins types before if needed.
  * \param connection The connection concerned
- * \param mask The mask of the pins used @see atm8_mask
+ * \param mask The mask of the pins used @see mask
  * \param states The mask of the states in which the values have to be written
- *               @see atm8_val_list2
- * \param values The values to write on pins @see atm8_val_list16
+ *               @see val_list2
+ * \param values The values to write on pins @see val_list16
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_write_value_mask( struct atm8_connection * connection,
-                       struct atm8_mask * mask,
-                       struct atm8_val_list2 * states,
-                       struct atm8_val_list16 * values );
+write_value_mask( struct connection * connection,
+                       struct mask * mask,
+                       struct val_list2 * states,
+                       struct val_list16 * values );
 
 /**
  * Launch a monitoring read on the atm8, concerning the specified pin, the
@@ -317,7 +288,7 @@ atm8_write_value_mask( struct atm8_connection * connection,
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_monitor_read( struct atm8_connection * connection,
+monitor_read( struct connection * connection,
                    int8_t pin_no,
                    int8_t frequency);
 
@@ -330,10 +301,10 @@ atm8_monitor_read( struct atm8_connection * connection,
  * \return 0 if everything worked well, an error number in case of an error
  */
 int
-atm8_monitor_read_mask( struct atm8_connection * connection,
-                        struct atm8_mask * mask,
+monitor_read_mask( struct connection * connection,
+                        struct mask * mask,
                         int8_t frequency);
 
 
 
-#endif//ATM8_DRIVER_H
+#endif//DRIVER_H

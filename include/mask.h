@@ -1,24 +1,24 @@
-#ifndef ATM8_MASK_H
-#define ATM8_MASK_H
+#ifndef MASK_H
+#define MASK_H
 
 #include <stdbool.h>
 
 #include "atm8_pins.h"
 
-#define ATM8_MASK_PIN_ON  true
-#define ATM8_MASK_PIN_OFF false
+#define MASK_PIN_ON  true
+#define MASK_PIN_OFF false
 
-typedef bool[ATM8_NB_PINS]     atm8_mask;
+typedef bool[NB_PINS]     mask;
 
 /**
  * Return the number of pins used in a mask
  * \param m The mask to analyze
  */
 int
-nb_pins_used(atm8_mask m);
+nb_pins_used(mask m);
 
 int
-next_pin_used(atm8_mask m, int start);
+next_pin_used(mask m, int start);
 
 /**
  * Write the content of a mask in a buffer
@@ -28,7 +28,7 @@ next_pin_used(atm8_mask m, int start);
  * \return The number of chars written
  */
 int
-write_mask(char * buffer, atm8_mask m);
+write_mask(char * buffer, mask m);
 
 /**
  * Read a mask from a buffer, ceil(NB_PINS /8) chars will be read.
@@ -37,6 +37,6 @@ write_mask(char * buffer, atm8_mask m);
  * \return the numbers of chars read
  */
 int
-read_mask(char * buffer, atm8_mask m);
+read_mask(char * buffer, mask m);
 
-#endif//ATM8_MASK_H
+#endif//MASK_H
