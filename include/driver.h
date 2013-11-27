@@ -33,25 +33,22 @@ struct connection{
  * \param connection Thi
  * \return 0 if everything worked well, an error number in case of an error
  */
-int
-init_connection( char * path,
-                      int mode,
-                      struct failsafe *  failsafe_state,
-                      struct connection * connection );
+int init_connection( char * path,
+                     int mode,
+                     struct failsafe *  failsafe_state,
+                     struct connection * connection );
 
 /**
  * All the connection allocated resources are freed and connection is closed
  * \param connection The connection to close
  */
-void
-close_connection( struct connection * connection );
+void close_connection( struct connection * connection );
 
 /**
  * Send a reset signal to the atm8, after it, the connection is reinitialized
  * \param connection The connection to reset
  */
-void
-reset( struct connection * connection );
+void reset( struct connection * connection );
 
 /**
  * Set the failsafe state of the atm8 connected by the specified connection
@@ -59,9 +56,8 @@ reset( struct connection * connection );
  * \param failsafe_state The state that will be taken when connection fails
  * \return 0 if everything worked well, an error number in case of an error
  */
-int
-set_failsafe( struct connection * connection,
-                   struct failsafe * failsafe_state);
+int set_failsafe( struct connection * connection,
+                  struct failsafe * failsafe_state);
 
 /**
  * Change the mode of the connection to the specified mode
@@ -69,9 +65,7 @@ set_failsafe( struct connection * connection,
  * \param mode The mode to be taken
  * \return 0 if everything worked well, an error number in case of an error
  */
-int
-set_mode( struct connection * connection,
-               int mode );
+int set_mode( struct connection * connection, int mode );
 
 /**
  * Set the heartbeat to be used for the connection, informing the atm8 and
@@ -82,9 +76,7 @@ set_mode( struct connection * connection,
  *                  1-7 -> set frequency to 2^n
  * \return 0 if everything worked well, an error number in case of an error
  */
-int
-set_heartbeat( struct connection * connection,
-                    char frequency );
+int set_heartbeat( struct connection * connection, char frequency );
 
 /**
  * Set the state of the given pin
@@ -93,10 +85,7 @@ set_heartbeat( struct connection * connection,
  * \param state @see states.h
  * \return 0 if everything worked well, an error number in case of an error
  */
-int
-set_state( struct connection * connection,
-                int pin_no,
-                char state );
+int set_state( struct connection * connection, int pin_no, char state );
 
 /**
  * Set several state in one packet
@@ -117,10 +106,7 @@ set_state_mask( struct connection * connection,
  * \param state State of the pin will be set here
  * \return 0 if everything worked well, an error number in case of an error
  */
-int
-get_state( struct connection * connection,
-                int pin_no,
-                int8_t * state );
+int get_state( struct connection * connection, int pin_no, int8_t * state );
 
 /**
  * Get the states of all the pins used in the given mask
@@ -129,10 +115,9 @@ get_state( struct connection * connection,
  * \param states The values of the states will be placed here
  * \return 0 if everything worked well, an error number in case of an error
  */
-int
-get_state_mask( struct connection * connection,
-                     struct mask * mask,
-                     struct val_list2 * states);
+int get_state_mask( struct connection * connection,
+                    struct mask * mask,
+                    struct val_list2 * states);
 
 /**
  * Read the value of the pin in it's current state, value will be placed in
@@ -142,10 +127,7 @@ get_state_mask( struct connection * connection,
  * \param value The value of the pin will be stored in it.
  * \return 0 if everything worked well, an error number in case of an error
  */
-int
-read_value( struct connection * connection,
-                 int pin_no,
-                 int * value);
+int read_value( struct connection * connection, int pin_no, int * value);
 
 /**
  * Read a digital value on a pin, setting it's state to digital before if
@@ -157,11 +139,10 @@ read_value( struct connection * connection,
  * \param values The values will be stored in this list @see val_list16
  * \return 0 if everything worked well, an error number in case of an error
  */
-int
-read_value_mask( struct connection * connection,
-                      struct mask * mask,
-                      struct val_list2 * states,
-                      struct val_list16 * values );
+int read_value_mask( struct connection * connection,
+                     struct mask * mask,
+                     struct val_list2 * states,
+                     struct val_list16 * values );
 
 /**
  * Read a digital value on a pin, setting it's state to digital before if
@@ -171,10 +152,7 @@ read_value_mask( struct connection * connection,
  * \param value The value of the pin will be stored in it.
  * \return 0 if everything worked well, an error number in case of an error
  */
-int
-digital_read( struct connection * connection,
-                   int pin_no,
-                   bool * value );
+int digital_read( struct connection * connection, int pin_no, bool * value );
 
 /**
  * Read an analogic value on a pin, setting it's state to digital before if
@@ -184,10 +162,8 @@ digital_read( struct connection * connection,
  * \param value The value of the pin will be stored in it.
  * \return 0 if everything worked well, an error number in case of an error
  */
-int
-analogic_read( struct connection * connection,
-                    int pin_no,
-                    int16_t * value );
+int analogic_read( struct connection * connection,
+                   int pin_no, int16_t * value );
 
 /**
  * Read a pwm8 value on a pin, setting it's state to digital before if
@@ -197,10 +173,7 @@ analogic_read( struct connection * connection,
  * \param value The value of the pin will be stored in it.
  * \return 0 if everything worked well, an error number in case of an error
  */
-int
-pwm8_read( struct connection * connection,
-                int pin_no,
-                int16_t * value );
+int pwm8_read( struct connection * connection, int pin_no, int16_t * value );
 
 /**
  * Read a pwm16 value on a pin, setting it's state to digital before if
@@ -210,10 +183,7 @@ pwm8_read( struct connection * connection,
  * \param value The value of the pin will be stored in it.
  * \return 0 if everything worked well, an error number in case of an error
  */
-int
-pwm16_read( struct connection * connection,
-                 int pin_no,
-                 int16_t * value );
+int pwm16_read( struct connection * connection, int pin_no, int16_t * value );
 
 /**
  * Write a digital value to a pin, setting it to this state before if needed
@@ -222,10 +192,7 @@ pwm16_read( struct connection * connection,
  * \param value The value to write
  * \return 0 if everything worked well, an error number in case of an error
  */
-int
-digital_write( struct connection * connection,
-                    int pin_no,
-                    bool value );
+int digital_write( struct connection * connection, int pin_no, bool value );
 
 /**
  * Write an analogic value to a pin, setting it to this state before if needed
@@ -234,10 +201,7 @@ digital_write( struct connection * connection,
  * \param value The value to write
  * \return 0 if everything worked well, an error number in case of an error
  */
-int
-analogic_write( struct connection * connection,
-                     int pin_no,
-                     bool value );
+int analogic_write( struct connection * connection, int pin_no, bool value );
 
 /**
  * Write a pwm8 value to a pin, setting it to this state before if needed
@@ -246,10 +210,7 @@ analogic_write( struct connection * connection,
  * \param value The value to write
  * \return 0 if everything worked well, an error number in case of an error
  */
-int
-pwm8_write( struct connection * connection,
-                 int pin_no,
-                 bool value );
+int pwm8_write( struct connection * connection, int pin_no, bool value );
 
 /**
  * Write a pwm16 value to a pin, setting it to this state before if needed
@@ -258,10 +219,7 @@ pwm8_write( struct connection * connection,
  * \param value The value to write
  * \return 0 if everything worked well, an error number in case of an error
  */
-int
-pwm16_write( struct connection * connection,
-                  int pin_no,
-                  bool value );
+int pwm16_write( struct connection * connection, int pin_no, bool value );
 
 /**
  * Write a mask of values, setting pins types before if needed.
@@ -272,11 +230,10 @@ pwm16_write( struct connection * connection,
  * \param values The values to write on pins @see val_list16
  * \return 0 if everything worked well, an error number in case of an error
  */
-int
-write_value_mask( struct connection * connection,
-                       struct mask * mask,
-                       struct val_list2 * states,
-                       struct val_list16 * values );
+int write_value_mask( struct connection * connection,
+                      struct mask * mask,
+                      struct val_list2 * states,
+                      struct val_list16 * values );
 
 /**
  * Launch a monitoring read on the atm8, concerning the specified pin, the
@@ -287,10 +244,8 @@ write_value_mask( struct connection * connection,
  * \param frequency The update frequency, in Hertz
  * \return 0 if everything worked well, an error number in case of an error
  */
-int
-monitor_read( struct connection * connection,
-                   int8_t pin_no,
-                   int8_t frequency);
+int monitor_read( struct connection * connection,
+                  int8_t pin_no, int8_t frequency);
 
 /**
  * Launch a monitoring read on the atm8, concerning several pins.
@@ -300,11 +255,7 @@ monitor_read( struct connection * connection,
  * \param frequency The update frequency, in Hertz
  * \return 0 if everything worked well, an error number in case of an error
  */
-int
-monitor_read_mask( struct connection * connection,
-                        struct mask * mask,
-                        int8_t frequency);
-
-
+int monitor_read_mask( struct connection * connection,
+                       struct mask * mask, int8_t frequency);
 
 #endif//DRIVER_H

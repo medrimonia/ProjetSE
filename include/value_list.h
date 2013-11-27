@@ -16,8 +16,7 @@ typedef char[NB_PINS * 2] val_list16;
  * \param m The mask indicating which values should be written to the buffer
  * \return The number of chars written
  */
-int
-write_val_list2(char * buffer, val_list2 l, mask m);
+int write_val_list2( char * buffer, val_list2 l, mask m );
 
 /**
  * Write the content of a value list to a buffer
@@ -28,8 +27,7 @@ write_val_list2(char * buffer, val_list2 l, mask m);
  * \param m The mask indicating which values should be written to the buffer
  * \return The number of chars written
  */
-int
-write_val_list8(char * buffer, val_list8 l, mask m);
+int write_val_list8( char * buffer, val_list8 l, mask m );
 
 /**
  * Write the content of a value list to a buffer
@@ -40,8 +38,7 @@ write_val_list8(char * buffer, val_list8 l, mask m);
  * \param m The mask indicating which values should be written to the buffer
  * \return The number of chars written
  */
-int
-write_val_list16(char * buffer, val_list16 l, mask m);
+int write_val_list16( char * buffer, val_list16 l, mask m );
 
 /**
  * Read the content of a value list from a buffer, according to a mask, and
@@ -53,7 +50,7 @@ write_val_list16(char * buffer, val_list16 l, mask m);
  * \return the number of chars read.
  */
 int
-read_val_list2(char * buffer, val_list2 l, mask m);
+read_val_list2( char * buffer, val_list2 l, mask m );
 
 /**
  * Read the content of a value list from a buffer, according to a mask, and
@@ -64,8 +61,7 @@ read_val_list2(char * buffer, val_list2 l, mask m);
  * \param m The mask indicating which values are used in the buffer
  * \return the number of chars read.
  */
-int
-read_val_list8(char * buffer, val_list8 l, mask m);
+int read_val_list8( char * buffer, val_list8 l, mask m );
 
 /**
  * Read the content of a value list from a buffer, according to a mask, and
@@ -76,7 +72,6 @@ read_val_list8(char * buffer, val_list8 l, mask m);
  * \param m The mask indicating which values are used in the buffer
  * \return the number of chars read.
  */
-int
-read_val_list16(char * buffer, val_list16 l, mask m);
+int read_val_list16( char * buffer, val_list16 l, mask m );
 
 #endif//VALUE_LIST_H

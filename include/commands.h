@@ -1,7 +1,7 @@
 #ifndef COMMANDS_H
 #define COMMANDS_H
 
-typedef int8_t command_no
+typedef int8_t command_id
 
 #define CMD_GET_CAPS       0
 #define CMD_RESET          1
@@ -14,6 +14,6 @@ typedef int8_t command_no
 #define CMD_SET_FAILSAFE   8
 // This command number is reserved for the specific purpose of spontaneous
 // messages from the device in a future version
-#define CMD_RESERVED     15
+#define CMD_RESERVED      15
 
 #endif//COMMANDS_H
