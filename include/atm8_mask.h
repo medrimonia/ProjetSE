@@ -17,6 +17,9 @@ typedef bool[ATM8_NB_PINS]     atm8_mask;
 int
 nb_pins_used(atm8_mask m);
 
+int
+next_pin_used(atm8_mask m, int start);
+
 /**
  * Write the content of a mask in a buffer
  * \param m The mask from which the content is read
