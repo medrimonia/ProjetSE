@@ -3,12 +3,10 @@
 
 #include <stdbool.h>
 
-#include "atm8_pins.h"
-
 #define MASK_PIN_ON  true
 #define MASK_PIN_OFF false
 
-typedef bool[NB_PINS]     mask;
+typedef bool * mask;
 
 /**
  * Return the number of pins used in a mask

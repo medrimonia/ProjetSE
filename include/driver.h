@@ -1,6 +1,9 @@
 /**
  * This header has the purpose of offering an API allowing the user to
- * communicate with an ATMega 8 using our protocol.
+ * communicate with any device with at most 256 pins using our protocol.
+ *
+ * The return value of each function is used to for error handling purpose.
+ * 0 means no error, an error number is given otherwise.
  */
 #ifndef DRIVER_H
 #define DRIVER_H
@@ -8,7 +11,7 @@
 #include "failsafe.h"
 
 /**
- * An atm8 connection is a pair of file descriptor, one is used to send
+ * A connection is a pair of file descriptor, one is used to send
  * informations to the other side and the other is used to receive
  * informations
  */
@@ -22,16 +25,15 @@ struct connection{
 };
 
 /**
- * Initialize a connection to an ATM8 board
+ * Initialize a connection to a device
  *
  * \param path The path to the io file which will be used to talk to the
- *             ATM8 (dev/...)
+ *             device (dev/...)
  * \param mode Specify if the mode to use should be synchronous or
  *             asynchronous
  * \param failsafe_state the state to take when connection fails, if null
  *                       is used, failsafe won't be used
  * \param connection Thi
- * \return 0 if everything worked well, an error number in case of an error
  */
 int init_connection( char * path,
                      int mode,
@@ -40,222 +42,145 @@ int init_connection( char * path,
 
 /**
  * All the connection allocated resources are freed and connection is closed
- * \param connection The connection to close
  */
 void close_connection( struct connection * connection );
 
 /**
- * Send a reset signal to the atm8, after it, the connection is reinitialized
- * \param connection The connection to reset
+ * Send a reset signal to the device, after it, the connection is reinitialized
  */
 void reset( struct connection * connection );
 
 /**
- * Set the failsafe state of the atm8 connected by the specified connection
- * \param connection The connection concerned
+ * Set the failsafe state of the device connected by the specified connection
  * \param failsafe_state The state that will be taken when connection fails
- * \return 0 if everything worked well, an error number in case of an error
  */
 int set_failsafe( struct connection * connection,
                   struct failsafe * failsafe_state);
 
 /**
  * Change the mode of the connection to the specified mode
- * \param connection  The connection concerned
- * \param mode The mode to be taken
- * \return 0 if everything worked well, an error number in case of an error
  */
 int set_mode( struct connection * connection, int mode );
 
 /**
- * Set the heartbeat to be used for the connection, informing the atm8 and
+ * Set the heartbeat to be used for the connection, informing the device and
  * ensuring that the value will be sent frequently enough to avoid falling
  * into fail state.
- * \param connection The connection concerned
  * \param frequency 0 -> disable the frequency
  *                  1-7 -> set frequency to 2^n
- * \return 0 if everything worked well, an error number in case of an error
  */
 int set_heartbeat( struct connection * connection, char frequency );
 
 /**
- * Set the state of the given pin
- * \param connection The connection concerned
- * \param pin_no @see atm8_pins.h
- * \param state @see states.h
- * \return 0 if everything worked well, an error number in case of an error
+ * Set the type of the given pin
+ * \param type @see protocol.h
  */
-int set_state( struct connection * connection, int pin_no, char state );
+int set_type( struct connection * connection, int pin_id, char type );
 
 /**
- * Set several state in one packet
- * \param connection The connection concerned
+ * Set several type in one packet
  * \param mask The mask of the values used @see mask.h
- * \param states The values to use @see val_list2
- * \return 0 if everything worked well, an error number in case of an error
+ * \param types The values to use @see val_list2
  */
 int
-set_state_mask( struct connection * connection,
+set_type_mask( struct connection * connection,
                      struct mask * mask,
-                     struct val_list2 states );
+                     struct val_list2 types );
 
 /**
- * Get the state of the specified pin
- * \param connection The connection concerned
- * \param pin_no @see atm8_pins.h
- * \param state State of the pin will be set here
- * \return 0 if everything worked well, an error number in case of an error
+ * Get the type of the specified pin
+ * \param type Type of the pin will be set here
  */
-int get_state( struct connection * connection, int pin_no, int8_t * state );
+int get_type( struct connection * connection, int pin_id, int8_t * type );
 
 /**
- * Get the states of all the pins used in the given mask
- * \param connection The connection concerned
+ * Get the types of all the pins used in the given mask
  * \param mask The pins used @see mask.h
- * \param states The values of the states will be placed here
- * \return 0 if everything worked well, an error number in case of an error
+ * \param types The values of the types will be placed here
  */
-int get_state_mask( struct connection * connection,
-                    struct mask * mask,
-                    struct val_list2 * states);
+int get_type_mask( struct connection * connection,
+                   struct mask * mask,
+                   struct val_list2 * types);
 
 /**
  * Read the value of the pin in it's current state, value will be placed in
  * an int in order to be able to stock any type of value.
- * \param connection The connection concerned
- * \param pin_no The number of the pin where you have to read
  * \param value The value of the pin will be stored in it.
- * \return 0 if everything worked well, an error number in case of an error
  */
-int read_value( struct connection * connection, int pin_no, int * value);
+int read_value( struct connection * connection, int pin_id, int * value);
 
 /**
- * Read a digital value on a pin, setting it's state to digital before if
+ * Read a digital value on a pin, setting it's type to digital before if
  * needed
- * \param connection The connection concerned
  * \param mask The mask of the pins to read @see mask
- * \param states The mask of the states in which the values have to be read
+ * \param types The mask of the types in which the values have to be read
  *               @see val_list2
  * \param values The values will be stored in this list @see val_list16
- * \return 0 if everything worked well, an error number in case of an error
  */
 int read_value_mask( struct connection * connection,
                      struct mask * mask,
-                     struct val_list2 * states,
+                     struct val_list2 * types,
                      struct val_list16 * values );
 
 /**
- * Read a digital value on a pin, setting it's state to digital before if
+ * Read a digital value on a pin, setting it's type to digital before if
  * needed
- * \param connection The connection concerned
- * \param pin_no The number of the pin to use @see atm8_pins.h
  * \param value The value of the pin will be stored in it.
- * \return 0 if everything worked well, an error number in case of an error
  */
-int digital_read( struct connection * connection, int pin_no, bool * value );
+int digital_read( struct connection * connection, int pin_id, bool * value );
 
 /**
- * Read an analogic value on a pin, setting it's state to digital before if
+ * Read an analogic value on a pin, setting it's type to digital before if
  * needed
- * \param connection The connection concerned
- * \param pin_no The number of the pin to use @see atm8_pins.h
  * \param value The value of the pin will be stored in it.
- * \return 0 if everything worked well, an error number in case of an error
  */
 int analogic_read( struct connection * connection,
-                   int pin_no, int16_t * value );
+                   int pin_id, int16_t * value );
 
 /**
- * Read a pwm8 value on a pin, setting it's state to digital before if
+ * Read a pwm8 value on a pin, setting it's type to digital before if
  * needed
- * \param connection The connection concerned
- * \param pin_no The number of the pin to use @see atm8_pins.h
  * \param value The value of the pin will be stored in it.
- * \return 0 if everything worked well, an error number in case of an error
  */
-int pwm8_read( struct connection * connection, int pin_no, int16_t * value );
+int pwm8_read( struct connection * connection, int pin_id, int16_t * value );
 
 /**
- * Read a pwm16 value on a pin, setting it's state to digital before if
+ * Read a pwm16 value on a pin, setting it's type to digital before if
  * needed
- * \param connection The connection concerned
- * \param pin_no The number of the pin to use @see atm8_pins.h
  * \param value The value of the pin will be stored in it.
- * \return 0 if everything worked well, an error number in case of an error
  */
-int pwm16_read( struct connection * connection, int pin_no, int16_t * value );
+int pwm16_read( struct connection * connection, int pin_id, int16_t * value );
 
 /**
- * Write a digital value to a pin, setting it to this state before if needed
- * \param connection The connection concerned
- * \param pin_no The number of the pin to use @see atm8_pins.h
- * \param value The value to write
- * \return 0 if everything worked well, an error number in case of an error
+ * Write a digital value to a pin, setting it to this type before if needed
  */
-int digital_write( struct connection * connection, int pin_no, bool value );
+int digital_write( struct connection * connection, int pin_id, bool value );
 
 /**
- * Write an analogic value to a pin, setting it to this state before if needed
- * \param connection The connection concerned
- * \param pin_no The number of the pin to use @see atm8_pins.h
- * \param value The value to write
- * \return 0 if everything worked well, an error number in case of an error
+ * Write an analogic value to a pin, setting it to this type before if needed
  */
-int analogic_write( struct connection * connection, int pin_no, bool value );
+int analogic_write( struct connection * connection, int pin_id, bool value );
 
 /**
- * Write a pwm8 value to a pin, setting it to this state before if needed
- * \param connection The connection concerned
- * \param pin_no The number of the pin to use @see atm8_pins.h
- * \param value The value to write
- * \return 0 if everything worked well, an error number in case of an error
+ * Write a pwm8 value to a pin, setting it to this type before if needed
  */
-int pwm8_write( struct connection * connection, int pin_no, bool value );
+int pwm8_write( struct connection * connection, int pin_id, bool value );
 
 /**
- * Write a pwm16 value to a pin, setting it to this state before if needed
- * \param connection The connection concerned
- * \param pin_no The number of the pin to use @see atm8_pins.h
- * \param value The value to write
- * \return 0 if everything worked well, an error number in case of an error
+ * Write a pwm16 value to a pin, setting it to this type before if needed
  */
-int pwm16_write( struct connection * connection, int pin_no, bool value );
+int pwm16_write( struct connection * connection, int pin_id, bool value );
 
 /**
  * Write a mask of values, setting pins types before if needed.
- * \param connection The connection concerned
  * \param mask The mask of the pins used @see mask
- * \param states The mask of the states in which the values have to be written
+ * \param types The mask of the types in which the values have to be written
  *               @see val_list2
  * \param values The values to write on pins @see val_list16
- * \return 0 if everything worked well, an error number in case of an error
  */
 int write_value_mask( struct connection * connection,
                       struct mask * mask,
-                      struct val_list2 * states,
+                      struct val_list2 * types,
                       struct val_list16 * values );
-
-/**
- * Launch a monitoring read on the atm8, concerning the specified pin, the
- * atm8 will then send the values at a given frequency.
- * Rhis feature is not currently supported by the driver
- * \param connection The connection concerned
- * \param pin_no The number of the pin to use @see atm8_pins.h
- * \param frequency The update frequency, in Hertz
- * \return 0 if everything worked well, an error number in case of an error
- */
-int monitor_read( struct connection * connection,
-                  int8_t pin_no, int8_t frequency);
-
-/**
- * Launch a monitoring read on the atm8, concerning several pins.
- * This feature is not currently supported by the driver.
- * \param connection The connection concerned
- * \param mask The mask of the pins to be monitored
- * \param frequency The update frequency, in Hertz
- * \return 0 if everything worked well, an error number in case of an error
- */
-int monitor_read_mask( struct connection * connection,
-                       struct mask * mask, int8_t frequency);
 
 #endif//DRIVER_H
