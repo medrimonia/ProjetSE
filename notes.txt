@@ -1,0 +1,8 @@
+Fonctionalités nécessaires :
+============================
+
+Construire un message :
+-----------------------
+writeHeader(dst, cmd, flags)
+writeTypes(dst, int type, int offset, toto)
+
