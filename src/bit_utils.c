@@ -6,7 +6,10 @@
 
 //dst bits must be 0 where they will be written
 //TODO improve
-void write_bit_value( unsigned char * dst, int offset, int16_t val, int val_size ){
+void write_bit_value( unsigned char * dst,
+                      int offset,
+                      int16_t val,
+                      int val_size ){
   int bit_no = offset / 8;
   offset = offset % 8;
   int bits_remaining = val_size;
@@ -26,7 +29,29 @@ void write_bit_value( unsigned char * dst, int offset, int16_t val, int val_size
   dst[bit_no] |= (unsigned char)to_write;
 }
 
-//void read_bit_value( unsigned char * src, int offset
+int16_t read_bit_value( unsigned char * src,
+                        int offset,
+                        int val_size){
+  int16_t val = 0;
+  int bit_no = offset / 8;
+  offset = offset % 8;
+  int bits_remaining = val_size;
+  int available_bits = 8 - offset;
+  while (bits_remaining > available_bits){
+    int16_t read_value = (unsigned char)(src[bit_no] << offset) >> offset;
+    val += read_value;
+    bits_remaining -= available_bits;
+    available_bits = 8;
+    offset = 0;
+    bit_no++;
+    val = val << bits_remaining;
+  }
+  int shift = 8 - bits_remaining - offset;
+  unsigned char read_value  = src[bit_no] >> shift;
+  // Removing the unwanted left part
+  val += (unsigned char)(read_value << (8 - bits_remaining)) >> (8 - bits_remaining);
+  return val;
+}
 
 void display_binary(unsigned char v){
   int i;
@@ -60,4 +85,16 @@ void write_param(unsigned char * p, int param_no){
 
 void write_data_size(unsigned char * p, int16_t data_size){
   write_bit_value(p + 1, 0, data_size, DATA_SIZE_BITS_NB);
+}
+
+int16_t read_cmd(unsigned char * p){
+  return read_bit_value(p, 0, CMD_BITS_NB);
+}
+
+int16_t read_param(unsigned char * p){
+  return read_bit_value(p, 4, PARAM_BITS_NB);
+}
+
+int16_t read_data_size(unsigned char * p){
+  return read_bit_value(p, 8, DATA_SIZE_BITS_NB);
 }
