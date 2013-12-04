@@ -1,59 +1,71 @@
 #include "uart.h"
 
+
 fifo fifo_receiver;
 fifo fifo_transmitter;
 
+unsigned char test= 'o';
+
+
 /* Receiver */
-ISR(UART_RXC_vect_num)
+ISR(USART_RXC_vect)
 {
-  char sREG;
 
-  sREG = SREG;
+  test = UDR;
 
-  _CLI();
-    fifo_receiver.tableau[fifo_receiver.indice_ecriture] = UDR;
-    fifo_receiver.indice_ecriture = (fifo_receiver.indice_ecriture +1)%TAILLE_FIFO;
+  if( test == 'A')
+    PORTB |= 0xFF;
+  else if ( test== 'E')
+    PORTB &= 0x00;
 
-  _SEI();
+  UDR = test;
+
 }
 
-/* Transmitter */
-ISR(UART_TXC_vect_num)
+void delay(int32_t wait)
 {
-  char sREG;
-
-  sREG = SREG;
-
-  _CLI();
-
-    UDR =  fifo_transmitter.tableau[fifo_transmitter.indice_lecture];
-    fifo_transmitter.indice_lecture = (fifo_transmitter.indice_lecture + 1)%TAILLE_FIFO;
-  _SEI(sREG);
+  while(wait--);
 }
+
 void
-uart_init(unsigned int baudrate)
+uart_init(uint32_t baudrate)
 {
+  uint16_t ubbr = (F_CPU/(16 * baudrate) ) -1;
 
-  unsigned int ubbr = (F_CPU/(16 * baudrate) ) -1;
-
-  UBRRH = (unsigned char)(ubbr >>8);
-  UBRRL = (unsigned char)(ubbr);
+  UBRRH = (ubbr >>8);
+  UBRRL = ubbr & 0xff;
 
   /* Enable Receiver and Transmitter */
-  UCSRB = (1<<RXEN)|(1<<TXEN) | (1<<RXCIE) | (1 << TXCIE);
+  UCSRB = (1<<RXEN)|(1<<TXEN) | (1<<RXCIE);
 
   /* Set frame format : 8data , 1 stop bit, no parity, Asynchronous */
-  UCSRC = (1 << URSEL) | (3 <<UCSZ0);
+//  UCSRC = (1 << URSEL);
+//  UCSRC |= (1 <<UCSZ0) |(1 << UCSZ1);
 
 }
-
-
 void
-uart_write(char c)
-{
-  while(!(UCSRA | (1<< UDRE)));
-
+uart_write(unsigned char c)
+{ 
   UDR = c;
+  while(!(UCSRA & (1<< UDRE)));
+
 }
 
 
+int main()
+{
+  DDRB = 0x20;
+  uart_init(19200);
+  sei();
+
+  while(1)
+  {
+    PORTB |= 0xFF;
+    _delay_ms(400);
+    PORTB &= 0x00;
+    _delay_ms(400);
+
+  }
+
+  return -1;
+}
