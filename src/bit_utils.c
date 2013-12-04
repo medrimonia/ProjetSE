@@ -29,9 +29,7 @@ void write_bit_value( unsigned char * dst,
   dst[bit_no] |= (unsigned char)to_write;
 }
 
-int16_t read_bit_value( unsigned char * src,
-                        int offset,
-                        int val_size){
+int16_t read_bit_value( unsigned char * src, int offset, int val_size ){
   int16_t val = 0;
   int bit_no = offset / 8;
   offset = offset % 8;
@@ -53,12 +51,12 @@ int16_t read_bit_value( unsigned char * src,
   return val;
 }
 
-void display_binary(unsigned char v){
+void display_binary( unsigned char v ){
   int i;
   for(i = 7; i >= 0; i--) putchar('0' + ((v >> i) & 1));
 }
 
-void display_packet(unsigned char * p, int packet_size){
+void display_packet( unsigned char * p, int packet_size ){
   printf("|");
   int i;
   for (i = 0; i < packet_size; i++){
@@ -67,7 +65,7 @@ void display_packet(unsigned char * p, int packet_size){
   }
 }
 
-void display_packet_hexa(unsigned char * p, int packet_size){
+void display_packet_hexa( unsigned char * p, int packet_size ){
   printf("|");
   int i;
   for (i = 0; i < packet_size; i++){
@@ -75,26 +73,26 @@ void display_packet_hexa(unsigned char * p, int packet_size){
   }
 }
 
-void write_cmd(unsigned char * p, int cmd_no){
+void write_cmd( unsigned char * p, int cmd_no ){
   write_bit_value(p, 0, cmd_no, CMD_BITS_NB);
 }
 
-void write_param(unsigned char * p, int param_no){
+void write_param( unsigned char * p, int param_no ){
   write_bit_value(p, 4, param_no, PARAM_BITS_NB);
 }
 
-void write_data_size(unsigned char * p, int16_t data_size){
+void write_data_size( unsigned char * p, int16_t data_size ){
   write_bit_value(p + 1, 0, data_size, DATA_SIZE_BITS_NB);
 }
 
-int16_t read_cmd(unsigned char * p){
+int16_t read_cmd( const unsigned char * p ){
   return read_bit_value(p, 0, CMD_BITS_NB);
 }
 
-int16_t read_param(unsigned char * p){
+int16_t read_param( const unsigned char * p ){
   return read_bit_value(p, 4, PARAM_BITS_NB);
 }
 
-int16_t read_data_size(unsigned char * p){
+int16_t read_data_size( const unsigned char * p ){
   return read_bit_value(p, 8, DATA_SIZE_BITS_NB);
 }

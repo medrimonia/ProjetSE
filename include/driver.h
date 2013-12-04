@@ -36,83 +36,85 @@ struct connection{
  * \param failsafe_state the state to take when connection fails, if null
  *                       is used, failsafe won't be used
  */
-int init_connection( char              * path,
-                     struct failsafe   * failsafe_state,
-                     struct connection * connection );
+int init_connection( const char            * path,
+                     const struct failsafe * failsafe_state,
+                     struct connection     * connection );
 
 /** All the connection allocated resources are freed and connection is closed */
-void close_connection( struct connection * connection );
+void close_connection( struct connection * c );
 
 /** Ask the device the capacities of all its pins (number of pins, pins type) */
 // TODO define a caps struct to store the return value
-void get_caps( struct connection * connection );
+void get_caps( struct connection * c );
 
 /** Send a reset signal to the device, after it, the connection is reinitialized */
-void reset( struct connection * connection );
+void reset( struct connection * c );
 
 /** Send a ping request to check if the board is alive */
-void ping( struct connection * connection, char protocol_version );
+void ping( const struct connection * c, char protocol_version );
 
 /** Get the device-stored type of one pin */
-int get_type( struct connection * connection, int pin_id, int8_t * type );
+int get_type( const struct connection * c, uint8_t pin_id, int8_t * type );
 
 /** Get the device-stored type of a set of pins */
-int get_type_mask( struct connection * connection,
-                   struct mask       * mask,
-                   struct val_list2  * types );
+int get_type_mask( const struct connection * c,
+                   const struct mask       * mask,
+                   struct val_list2        * types );
 
 /** Set and store the type of one pin on the device. */
-int set_type( struct connection * connection, int pin_id, char type );
+int set_type( const struct connection * c, uint8_t pin_id, char type );
 
 /** Set and store the type of a set of pins on the device. */
-int set_type_mask( struct connection * connection,
-                   struct mask       * mask,
-                   struct val_list2    types );
+int set_type_mask( const struct connection * c,
+                   const struct mask       * mask,
+                   struct val_list2          types );
+
+/** Get the failsafe state of the device connected by the specified connection */
+int get_failsafe( const struct connection * c,
+                  uint8_t                   pin_id,
+                  struct pin_failsafe     * failsafe );
+
+int get_failsafe_mask( const struct connection * c,
+                       const mask              * mask,
+                       struct failsafe         * failsafe );
 
 /** Set the failsafe state of the device connected by the specified connection */
-int get_failsafe( struct connection   * connection,
-                  int                   pin_id,
-                  struct pin_failsafe * failsafe );
-
-int get_failsafe_mask( struct connection * connection, mask * mask );
-
-/** Set the failsafe state of the device connected by the specified connection */
-int set_failsafe( struct connection * connection,
-                  struct failsafe   * failsafe_state,
-                  uint16_t            timeout );
+int set_failsafe( const struct connection * c,
+                  const struct failsafe   * failsafe_state,
+                  uint16_t                  timeout );
 
 /** Read the value of the pin in it's current state, value will be placed in
  * an int in order to be able to stock any type of value. */
-int read_value( struct connection * connection, int pin_id, int * value );
+int read_value( const struct connection * c, uint8_t pin_id, const int * val );
 
 /** The following read function set the pin to the right type before if needed.
  *  Pins values are return through the value parameter */
-int digital_read ( struct connection * connection, int pin_id, bool    * value );
-int analogic_read( struct connection * connection, int pin_id, int16_t * value );
-int pwm8_read    ( struct connection * connection, int pin_id, int16_t * value );
-int pwm16_read   ( struct connection * connection, int pin_id, int16_t * value );
+int digital_read ( const struct connection * c, uint8_t pin_id, bool    * val );
+int analogic_read( const struct connection * c, uint8_t pin_id, int16_t * val );
+int pwm8_read    ( const struct connection * c, uint8_t pin_id, int16_t * val );
+int pwm16_read   ( const struct connection * c, uint8_t pin_id, int16_t * val );
 
 /** Read several pins values using a mask.
  * \param types  The mask of the types in which the values have to be read
  *               (@see val_list2) */
-int read_value_mask( struct connection * connection,
-                     struct mask       * mask,
-                     struct val_list2  * types,
-                     struct val_list16 * values );
+int read_value_mask( const struct connection * c,
+                     const struct mask       * mask,
+                     struct val_list2        * types,
+                     struct val_list16       * vals );
 
 /** The following write function set the pin to the right type before if needed */
-int digital_write ( struct connection * connection, int pin_id, bool    value );
-int analogic_write( struct connection * connection, int pin_id, int16_t value );
-int pwm8_write    ( struct connection * connection, int pin_id, int16_t value );
-int pwm16_write   ( struct connection * connection, int pin_id, int16_t value );
+int digital_write ( const struct connection * c, uint8_t pin_id, bool    val );
+int analogic_write( const struct connection * c, uint8_t pin_id, int16_t val );
+int pwm8_write    ( const struct connection * c, uint8_t pin_id, int16_t val );
+int pwm16_write   ( const struct connection * c, uint8_t pin_id, int16_t val );
 
 /**
  * Write several pins values using a mask.
  * \param types  The mask of the types in which the values have to be written
  *               (@see val_list2) */
-int write_value_mask( struct connection * connection,
-                      struct mask       * mask,
-                      struct val_list2  * types,
-                      struct val_list16 * values );
+int write_value_mask( const struct connection * c,
+                      const struct mask       * mask,
+                      struct val_list2        * types,
+                      struct val_list16       * vals );
 
 #endif//DRIVER_H
