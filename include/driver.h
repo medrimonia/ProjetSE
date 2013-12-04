@@ -14,6 +14,7 @@
 #define DRIVER_H
 
 #include "failsafe.h"
+#include "value_list.h"
 
 /**
  * A connection is a pair of file descriptor, one is used to send
@@ -24,8 +25,7 @@ struct connection{
   int fd_in;
   int fd_out;
   mask unknown_pins;// Pins which are not up to date
-  val_list2 current_states;
-  val_list16 last_values;
+  //TODO adding things !!! (nb pins, pins states)
   // maybe add time stamp instead of unknown pins
 };
 
@@ -58,16 +58,16 @@ int get_type( struct connection * connection, int pin_id, int8_t * type );
 
 /** Get the device-stored type of a set of pins */
 int get_type_mask( struct connection * connection,
-                   struct mask       * mask,
-                   struct val_list2  * types );
+                   mask       * mask,
+                   val_list2  * types );
 
 /** Set and store the type of one pin on the device. */
 int set_type( struct connection * connection, int pin_id, char type );
 
 /** Set and store the type of a set of pins on the device. */
 int set_type_mask( struct connection * connection,
-                   struct mask       * mask,
-                   struct val_list2    types );
+                   mask       * mask,
+                   val_list2    types );
 
 /** Set the failsafe state of the device connected by the specified connection */
 int get_failsafe( struct connection   * connection,
@@ -96,9 +96,9 @@ int pwm16_read   ( struct connection * connection, int pin_id, int16_t * value )
  * \param types  The mask of the types in which the values have to be read
  *               (@see val_list2) */
 int read_value_mask( struct connection * connection,
-                     struct mask       * mask,
-                     struct val_list2  * types,
-                     struct val_list16 * values );
+                     mask       * mask,
+                     val_list2  * types,
+                     val_list16 * values );
 
 /** The following write function set the pin to the right type before if needed */
 int digital_write ( struct connection * connection, int pin_id, bool    value );
@@ -111,8 +111,13 @@ int pwm16_write   ( struct connection * connection, int pin_id, int16_t value );
  * \param types  The mask of the types in which the values have to be written
  *               (@see val_list2) */
 int write_value_mask( struct connection * connection,
-                      struct mask       * mask,
-                      struct val_list2  * types,
-                      struct val_list16 * values );
+                      mask       * mask,
+                      val_list2  * types,
+                      val_list16 * values );
+
+// Handle the checksum calculation
+int send_packet( struct connection * connection,
+                 const unsigned char * p,
+                 int packet_size);
 
 #endif//DRIVER_H

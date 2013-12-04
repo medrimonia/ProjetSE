@@ -4,6 +4,11 @@
 
 #include "protocol.h"
 
+void init_packet(unsigned char * p, int packet_size){
+  int i;
+  for (i = 0; i < packet_size; i++) p[i] = 0;
+}
+
 //dst bits must be 0 where they will be written
 //TODO improve
 void write_bit_value( unsigned char * dst,

@@ -1,6 +1,8 @@
 #ifndef FAILSAFE_H
 #define FAILSAFE_H
 
+#include <stdint.h>
+
 #include "mask.h"
 
 struct pin_failsafe {
