@@ -17,3 +17,4 @@
 *.out
 *.app
 test_bit_utils
+test_driver

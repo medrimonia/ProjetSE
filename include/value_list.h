@@ -3,9 +3,9 @@
 
 #include "mask.h"
 
-typedef char[NB_PINS]     val_list2;
-typedef char[NB_PINS]     val_list8;
-typedef char[NB_PINS * 2] val_list16;
+typedef unsigned char * val_list2;
+typedef unsigned char * val_list8;
+typedef unsigned char * val_list16;
 
 /**
  * Write the content of a value list to a buffer
