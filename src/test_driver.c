@@ -27,5 +27,6 @@ int main(void){
   m[5] = true;
   m[8] = true;
   get_type_mask(NULL, &m, NULL);
+  free(m);
   exit(EXIT_SUCCESS);
 }

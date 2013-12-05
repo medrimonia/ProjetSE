@@ -9,6 +9,14 @@
 //TODO cmd_size should depend on connection
 #define CMD_SIZE 10
 
+struct connection * new_connection(){
+  struct connection * c = malloc(sizeof(struct connection));
+  c->fd_in = -1;
+  c->fd_out = -1;
+  c->nb_pins = 0;
+  return c;
+}
+
 void get_caps( struct connection * connection){
   unsigned char p[CMD_SIZE];
   init_packet(p, CMD_SIZE);

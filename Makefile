@@ -26,6 +26,8 @@ ${SRC_FOLDER}/bit_utils.o: ${HEADER_FOLDER}/bit_utils.h \
 ${SRC_FOLDER}/test_bit_utils.o: ${HEADER_FOLDER}/bit_utils.h \
                                 ${HEADER_FOLDER}/protocol.h
 
+${SRC_FOLDER}/test_driver.o: ${HEADER_FOLDER}/driver.h
+
 ${SRC_FOLDER}/driver.o: ${HEADER_FOLDER}/driver.h    \
                         ${HEADER_FOLDER}/bit_utils.h \
                         ${HEADER_FOLDER}/protocol.h

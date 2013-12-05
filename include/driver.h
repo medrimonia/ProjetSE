@@ -24,12 +24,13 @@
 struct connection{
   int fd_in;
   int fd_out;
-  mask unknown_pins;// Pins which are not up to date
+  int nb_pins;
   //TODO adding things !!! (nb pins, pins states)
-  // maybe add time stamp instead of unknown pins
+  // maybe adding time stamps or unknown pins
 };
 
-//TODO init the capacity at 0 ?
+struct connection * new_connection();
+
 /** Initialize a connection to a device
  *
  * \param path The path to the io file which will be used to talk to the
