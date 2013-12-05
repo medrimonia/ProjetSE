@@ -125,14 +125,19 @@ int write_value_mask( const struct connection * c,
   return EXIT_FAILURE;
 }
 
-int set_type( const struct connection * c, uint8_t pin_id, char type ){
-  //TODO
-  return EXIT_FAILURE;
+int set_type( struct connection * c, uint8_t pin_id, char type ){
+  unsigned char p[CMD_SIZE];
+  init_packet(p, CMD_SIZE);
+  write_header(p, CMD_SET_TYPE, 0, 2);
+  write_bit_value(p + 3, 0, pin_id, 8);
+  write_bit_value(p + 4, 5, type, 3);
+  send_packet(c, p, 5);
+  return EXIT_FAILURE;//TODO wait and parse answer
 }
 
-int set_type_mask( const struct connection * c,
-                   const mask              * mask,
-                   val_list2                 types ){
+int set_type_mask( struct connection * c,
+                   const mask        * mask,
+                   val_list2           types ){
   //TODO
   return EXIT_FAILURE;
 }

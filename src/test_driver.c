@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "driver.h"
+#include "protocol.h"
 
 #define NB_PINS 12
 
@@ -39,6 +40,8 @@ int main(void){
   pwm8_write    (c, 3,   24);
   printf("PWM16   write of '515' on pin 9 : ");
   pwm16_write   (c, 9,  515);
+  printf("Set type of pin 8 to digital    : ");
+  set_type(c, 8,  PIN_TYPE_DIGITAL);
   destroy_connection(c);
   exit(EXIT_SUCCESS);
 }

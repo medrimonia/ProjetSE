@@ -66,12 +66,12 @@ int get_type_mask( struct connection * c,
                    val_list2               * types );
 
 /** Set and store the type of one pin on the device. */
-int set_type( const struct connection * c, uint8_t pin_id, char type );
+int set_type( struct connection * c, uint8_t pin_id, char type );
 
 /** Set and store the type of a set of pins on the device. */
-int set_type_mask( const struct connection * c,
-                   const mask              * mask,
-                   val_list2                 types );
+int set_type_mask( struct connection * c,
+                   const mask        * mask,
+                   val_list2           types );
 
 /** Get the failsafe state of the device connected by the specified connection */
 int get_failsafe( const struct connection * c,
@@ -120,6 +120,7 @@ int write_value_mask( const struct connection * c,
                       const mask              * mask,
                       val_list2               * types,
                       val_list16              * vals );
+//TODO it seems that write_value_mask should write for only one type
 
 // Handle the checksum calculation
 int send_packet( struct connection * connection,
