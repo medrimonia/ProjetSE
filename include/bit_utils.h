@@ -31,6 +31,12 @@ void write_data_size( unsigned char * p, int16_t data_size );
 void write_header   ( unsigned char * p,
                       int cmd_no, int param, int16_t data_size );
 
+void write_value_list ( unsigned char * p,
+                        unsigned int offset,
+                        const uint16_t * values,
+                        unsigned int nb_values,
+                        unsigned int value_size);
+
 int16_t read_cmd      ( const unsigned char * p );
 int16_t read_param    ( const unsigned char * p );
 int16_t read_data_size( const unsigned char * p );

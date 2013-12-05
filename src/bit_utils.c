@@ -97,6 +97,18 @@ void write_header( unsigned char * p,
   write_data_size(p, data_size);
 }
 
+void write_value_list ( unsigned char * p,
+                        unsigned int offset,
+                        const uint16_t * values,
+                        unsigned int nb_values,
+                        unsigned int value_size){
+  int i;
+  for (i = 0; i < nb_values; i++){
+    write_bit_value(p, offset, values[i], value_size);
+    offset += value_size;
+  }
+}
+
 int16_t read_cmd( const unsigned char * p ){
   return read_bit_value(p, 0, CMD_BITS_NB);
 }

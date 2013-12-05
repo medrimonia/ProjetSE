@@ -137,7 +137,16 @@ int set_type( struct connection * c, uint8_t pin_id, char type ){
 
 int set_type_mask( struct connection * c,
                    const mask        * mask,
-                   val_list2           types ){
+                   const uint16_t    * values,
+                   unsigned int        nb_values){
+  unsigned char p[CMD_SIZE];
+  init_packet(p, CMD_SIZE);
+  int data_bits_nb = c->nb_pins + PIN_TYPE_BITS_NB * nb_values;
+  int packet_size = 3 + (data_bits_nb - 1) / 8 + 1;
+  write_header(p, CMD_SET_TYPE, 1, packet_size - 3);
+  write_mask(p + 3, *mask, c->nb_pins);
+  write_value_list(p + 3, c->nb_pins, values, nb_values, PIN_TYPE_BITS_NB);
+  send_packet(c, p, packet_size);
   //TODO
   return EXIT_FAILURE;
 }

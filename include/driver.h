@@ -71,7 +71,8 @@ int set_type( struct connection * c, uint8_t pin_id, char type );
 /** Set and store the type of a set of pins on the device. */
 int set_type_mask( struct connection * c,
                    const mask        * mask,
-                   val_list2           types );
+                   const uint16_t    * values,
+                   unsigned int nb_values );
 
 /** Get the failsafe state of the device connected by the specified connection */
 int get_failsafe( const struct connection * c,
