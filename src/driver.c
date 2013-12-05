@@ -17,6 +17,10 @@ struct connection * new_connection(){
   return c;
 }
 
+void destroy_connection(struct connection * c){
+  free(c);
+}
+
 void get_caps( struct connection * connection){
   unsigned char p[CMD_SIZE];
   init_packet(p, CMD_SIZE);
@@ -51,12 +55,12 @@ int get_type( struct connection * c, uint8_t pin_id, int8_t * type){
 }
 
 int get_type_mask( struct connection * c,
-                   const mask              * mask,
-                   val_list2               * types ){
+                   const mask        * mask,
+                   val_list2         * types ){
   unsigned char p[CMD_SIZE];
   init_packet(p, CMD_SIZE);
-  write_header(p, CMD_GET_TYPE, 1, 2);//TODO c->nb_pins / 8
-  write_mask(p + 3, *mask, 10);//TODO c->nb_pins
+  write_header(p, CMD_GET_TYPE, 1, (c->nb_pins-1) / 8 + 1);
+  write_mask(p + 3, *mask, c->nb_pins);
   send_packet(c, p, 5);
   return EXIT_FAILURE;//TODO wait and parse answer  
 }

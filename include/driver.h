@@ -31,6 +31,8 @@ struct connection{
 
 struct connection * new_connection();
 
+void destroy_connection(struct connection * c);
+
 /** Initialize a connection to a device
  *
  * \param path The path to the io file which will be used to talk to the
@@ -43,7 +45,7 @@ int init_connection( const char            * path,
                      struct connection     * connection );
 
 /** All the connection allocated resources are freed and connection is closed */
-void close_connection( struct connection * c );
+void destroy_connection( struct connection * c );
 
 /** Ask the device the capacities of all its pins (number of pins, pins type) */
 // TODO define a caps struct to store the return value
