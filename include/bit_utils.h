@@ -26,6 +26,8 @@ void display_packet_hexa( const unsigned char * p, int packet_size );
 void write_cmd      ( unsigned char * p, int     cmd_no    );
 void write_param    ( unsigned char * p, int     param     );
 void write_data_size( unsigned char * p, int16_t data_size );
+void write_header   ( unsigned char * p,
+                      int cmd_no, int param, int16_t data_size );
 
 int16_t read_cmd      ( const unsigned char * p );
 int16_t read_param    ( const unsigned char * p );

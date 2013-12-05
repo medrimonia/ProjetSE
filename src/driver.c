@@ -9,15 +9,57 @@
 //TODO cmd_size should depend on connection
 #define CMD_SIZE 10
 
+void get_caps( struct connection * connection){
+  unsigned char p[CMD_SIZE];
+  init_packet(p, CMD_SIZE);
+  write_header(p, CMD_GET_CAPS, 0, 0);
+  send_packet(connection, p, 3);
+}
+
+void reset( struct connection * connection ){
+  unsigned char p[CMD_SIZE];
+  init_packet(p, CMD_SIZE);
+  write_header(p, CMD_RESET, 0, 0);
+  send_packet(connection, p, 3);
+}
+
+uint16_t generic_read( struct connection * c,
+                       uint8_t pin_id, uint8_t pin_mode){
+  unsigned char p[CMD_SIZE];
+  init_packet(p, CMD_SIZE);
+  write_header(p, CMD_READ, pin_mode << 1, 1);
+  write_bit_value(p + 3, 0, pin_id, 8);
+  send_packet(c, p, 4);
+  return EXIT_FAILURE;//TODO wait and parse answer
+}
+
+int digital_read( struct connection * c, uint8_t pin_id, bool * val){
+  generic_read( c, pin_id, PIN_TYPE_DIGITAL);
+  return EXIT_FAILURE;//TODO wait and parse answer
+}
+
+int analogic_read( struct connection * c, uint8_t pin_id, int16_t * val){
+  generic_read( c, pin_id, PIN_TYPE_ANALOG16);
+  return EXIT_FAILURE;//TODO wait and parse answer
+}
+
+int pwm8_read( struct connection * c, uint8_t pin_id, int8_t * val){
+  generic_read( c, pin_id, PIN_TYPE_PWM8);
+  return EXIT_FAILURE;//TODO wait and parse answer
+}
+
+int pwm16_read( struct connection * c, uint8_t pin_id, int16_t * val){
+  generic_read( c, pin_id, PIN_TYPE_PWM16);
+  return EXIT_FAILURE;//TODO wait and parse answer
+}
+
 void ping( struct connection * connection,
            char protocol_version ){
   unsigned char p[CMD_SIZE];
   init_packet(p, CMD_SIZE);
-  write_cmd(p, CMD_PING);
-  write_param(p, 0);
-  write_data_size(p,1);
+  write_header(p, CMD_PING, 0, 1);
   write_bit_value(p + 3, 0, protocol_version, 8);
-  send_packet(NULL, p, 4);
+  send_packet(connection, p, 4);
 }
 
 int send_packet ( struct connection * connection,
@@ -29,4 +71,5 @@ int send_packet ( struct connection * connection,
   //ignoring connection, just dumping for now
   //TODO calculate checksum
   //TODO send to connection
+  return EXIT_FAILURE;
 }

@@ -34,7 +34,7 @@ void write_bit_value( unsigned char * dst,
   dst[bit_no] |= (unsigned char)to_write;
 }
 
-int16_t read_bit_value( unsigned char * src, int offset, int val_size ){
+int16_t read_bit_value( const unsigned char * src, int offset, int val_size ){
   int16_t val = 0;
   int bit_no = offset / 8;
   offset = offset % 8;
@@ -88,6 +88,13 @@ void write_param( unsigned char * p, int param_no ){
 
 void write_data_size( unsigned char * p, int16_t data_size ){
   write_bit_value(p + 1, 0, data_size, DATA_SIZE_BITS_NB);
+}
+
+void write_header( unsigned char * p,
+                   int cmd_no, int param, int16_t data_size ){
+  write_cmd(p, cmd_no);
+  write_param(p, param);
+  write_data_size(p, data_size);
 }
 
 int16_t read_cmd( const unsigned char * p ){
