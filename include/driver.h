@@ -95,7 +95,7 @@ int read_value( const struct connection * c, uint8_t pin_id, const int * val );
  *  Pins values are return through the value parameter */
 int digital_read ( struct connection * c, uint8_t pin_id, bool    * val );
 int analogic_read( struct connection * c, uint8_t pin_id, int16_t * val );
-int pwm8_read    ( struct connection * c, uint8_t pin_id, int8_t * val );
+int pwm8_read    ( struct connection * c, uint8_t pin_id, int8_t  * val );
 int pwm16_read   ( struct connection * c, uint8_t pin_id, int16_t * val );
 
 /** Read several pins values using a mask.
@@ -107,10 +107,10 @@ int read_value_mask( const struct connection * c,
                      val_list16              * vals );
 
 /** The following write function set the pin to the right type before if needed */
-int digital_write ( const struct connection * c, uint8_t pin_id, bool    val );
-int analogic_write( const struct connection * c, uint8_t pin_id, int16_t val );
-int pwm8_write    ( const struct connection * c, uint8_t pin_id, int16_t val );
-int pwm16_write   ( const struct connection * c, uint8_t pin_id, int16_t val );
+int digital_write ( struct connection * c, uint8_t pin_id, bool    val );
+int analogic_write( struct connection * c, uint8_t pin_id, int16_t val );
+int pwm8_write    ( struct connection * c, uint8_t pin_id, int16_t val );
+int pwm16_write   ( struct connection * c, uint8_t pin_id, int16_t val );
 
 /**
  * Write several pins values using a mask.

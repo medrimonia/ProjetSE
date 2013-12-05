@@ -85,6 +85,67 @@ int pwm16_read( struct connection * c, uint8_t pin_id, int16_t * val){
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
+int digital_write ( struct connection * c, uint8_t pin_id, bool    val ){
+  //TODO
+  return EXIT_FAILURE;
+}
+
+int analogic_write( struct connection * c, uint8_t pin_id, int16_t val ){
+  //TODO
+  return EXIT_FAILURE;
+}
+
+int pwm8_write    ( struct connection * c, uint8_t pin_id, int16_t val ){
+  //TODO
+  return EXIT_FAILURE;
+}
+
+int pwm16_write   ( struct connection * c, uint8_t pin_id, int16_t val ){
+  //TODO
+  return EXIT_FAILURE;
+}
+
+int write_value_mask( const struct connection * c,
+                      const mask              * mask,
+                      val_list2               * types,
+                      val_list16              * vals ){
+  //TODO
+  return EXIT_FAILURE;
+}
+
+int set_type( const struct connection * c, uint8_t pin_id, char type ){
+  //TODO
+  return EXIT_FAILURE;
+}
+
+int set_type_mask( const struct connection * c,
+                   const mask              * mask,
+                   val_list2                 types ){
+  //TODO
+  return EXIT_FAILURE;
+}
+
+int get_failsafe( const struct connection * c,
+                  uint8_t                   pin_id,
+                  struct pin_failsafe     * failsafe ){
+  //TODO
+  return EXIT_FAILURE;
+}
+
+int get_failsafe_mask( const struct connection * c,
+                       const mask              * mask,
+                       struct failsafe         * failsafe ){
+  //TODO
+  return EXIT_FAILURE;
+}
+
+int set_failsafe( const struct connection * c,
+                  const struct failsafe   * failsafe_state,
+                  uint16_t                  timeout ){
+  //TODO
+  return EXIT_FAILURE;
+}
+
 void ping( struct connection * connection,
            char protocol_version ){
   unsigned char p[CMD_SIZE];
