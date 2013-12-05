@@ -33,6 +33,26 @@ uint16_t generic_read( struct connection * c,
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
+int get_type( struct connection * c, uint8_t pin_id, int8_t * type){
+  unsigned char p[CMD_SIZE];
+  init_packet(p, CMD_SIZE);
+  write_header(p, CMD_GET_TYPE, 0, 1);
+  write_bit_value(p + 3, 0, pin_id, 8);
+  send_packet(c, p, 4);
+  return EXIT_FAILURE;//TODO wait and parse answer
+}
+
+int get_type_mask( struct connection * c,
+                   const mask              * mask,
+                   val_list2               * types ){
+  unsigned char p[CMD_SIZE];
+  init_packet(p, CMD_SIZE);
+  write_header(p, CMD_GET_TYPE, 1, 2);//TODO c->nb_pins / 8
+  write_mask(p + 3, *mask, 10);//TODO c->nb_pins
+  send_packet(c, p, 5);
+  return EXIT_FAILURE;//TODO wait and parse answer  
+}
+
 int digital_read( struct connection * c, uint8_t pin_id, bool * val){
   generic_read( c, pin_id, PIN_TYPE_DIGITAL);
   return EXIT_FAILURE;//TODO wait and parse answer

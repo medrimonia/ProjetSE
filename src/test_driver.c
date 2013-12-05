@@ -3,6 +3,8 @@
 
 #include "driver.h"
 
+#define NB_PINS 12
+
 int main(void){
   printf("Get caps : ");
   get_caps(NULL);
@@ -18,5 +20,12 @@ int main(void){
   pwm8_read(NULL, 7, NULL);
   printf("PWM16 read on pin 13   : ");
   pwm16_read(NULL, 13, NULL);
+  printf("Get type on pin 6      : ");
+  get_type(NULL, 6, NULL);
+  mask m = new_mask(NB_PINS);
+  m[0] = true;
+  m[5] = true;
+  m[8] = true;
+  get_type_mask(NULL, &m, NULL);
   exit(EXIT_SUCCESS);
 }

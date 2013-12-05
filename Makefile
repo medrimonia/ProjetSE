@@ -16,7 +16,8 @@ test_bit_utils: ${SRC_FOLDER}/test_bit_utils.o \
 
 test_driver: ${SRC_FOLDER}/bit_utils.o   \
              ${SRC_FOLDER}/driver.o      \
-             ${SRC_FOLDER}/test_driver.o
+             ${SRC_FOLDER}/test_driver.o \
+             ${SRC_FOLDER}/mask.o
 	${CC} -o $@  $^ ${LDFLAGS}
 
 ${SRC_FOLDER}/bit_utils.o: ${HEADER_FOLDER}/bit_utils.h \
@@ -28,6 +29,9 @@ ${SRC_FOLDER}/test_bit_utils.o: ${HEADER_FOLDER}/bit_utils.h \
 ${SRC_FOLDER}/driver.o: ${HEADER_FOLDER}/driver.h    \
                         ${HEADER_FOLDER}/bit_utils.h \
                         ${HEADER_FOLDER}/protocol.h
+
+${SRC_FOLDER}/mask.o: ${HEADER_FOLDER}/mask.h      \
+                      ${HEADER_FOLDER}/bit_utils.h
 
 .PHONY: clean mrproper
 

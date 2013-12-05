@@ -29,6 +29,7 @@ struct connection{
   // maybe add time stamp instead of unknown pins
 };
 
+//TODO init the capacity at 0 ?
 /** Initialize a connection to a device
  *
  * \param path The path to the io file which will be used to talk to the
@@ -54,10 +55,10 @@ void reset( struct connection * c );
 void ping( struct connection * c, char protocol_version );
 
 /** Get the device-stored type of one pin */
-int get_type( const struct connection * c, uint8_t pin_id, int8_t * type );
+int get_type( struct connection * c, uint8_t pin_id, int8_t * type );
 
 /** Get the device-stored type of a set of pins */
-int get_type_mask( const struct connection * c,
+int get_type_mask( struct connection * c,
                    const mask              * mask,
                    val_list2               * types );
 

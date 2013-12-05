@@ -8,13 +8,15 @@
 
 typedef bool * mask;
 
+mask new_mask( unsigned int nb_pins );
+
 /**
  * Return the number of pins used in a mask
  * \param m The mask to analyze
  */
-int nb_pins_used( mask m );
+int nb_pins_used( mask m , int mask_length);
 
-int next_pin_used( mask m, int start );
+int next_pin_used( mask m, int start, int mask_length );
 
 /**
  * Write the content of a mask in a buffer
@@ -23,7 +25,7 @@ int next_pin_used( mask m, int start );
  *               ceil( NB_PINS / 8 ) free chars available
  * \return The number of chars written
  */
-int write_mask( char * buffer, mask m );
+int write_mask( unsigned char * buffer, const mask m, int mask_length );
 
 /**
  * Read a mask from a buffer, ceil( NB_PINS /8 ) chars will be read.
@@ -31,6 +33,6 @@ int write_mask( char * buffer, mask m );
  * \param m The mask in which data will be placed.
  * \return the numbers of chars read
  */
-int read_mask( char * buffer, mask m );
+int read_mask( const unsigned char * buffer, mask m, int mask_length );
 
 #endif//MASK_H

@@ -1,6 +1,8 @@
 #ifndef BIT_UTILS_H
 #define BIT_UTILS_H
 
+#include <stdint.h>
+
 // Fill the given packet with 0
 void init_packet(unsigned char * p, int packet_size);
 
