@@ -85,24 +85,36 @@ int pwm16_read( struct connection * c, uint8_t pin_id, int16_t * val){
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
-int digital_write ( struct connection * c, uint8_t pin_id, bool    val ){
-  //TODO
+int generic_write( struct connection * c,
+                   uint8_t pin_id, int pin_mode, int16_t val, int val_size){
+  unsigned char p[CMD_SIZE];
+  init_packet(p, CMD_SIZE);
+  int packet_size = 1 + 2 + 1 + (val_size - 1) / 8 + 1;
+  write_header(p, CMD_WRITE, pin_mode << 1, packet_size - 3);
+  write_bit_value(p + 3, 0, pin_id, 8);
+  write_bit_value(p + 4, 0, val, val_size);
+  send_packet(c, p, packet_size);
   return EXIT_FAILURE;
+}
+
+int digital_write ( struct connection * c, uint8_t pin_id, bool    val ){
+  generic_write(c, pin_id, PIN_TYPE_DIGITAL, val, 1);
+  return EXIT_FAILURE;//TODO wait and parse answer
 }
 
 int analogic_write( struct connection * c, uint8_t pin_id, int16_t val ){
-  //TODO
-  return EXIT_FAILURE;
+  generic_write(c, pin_id, PIN_TYPE_ANALOG16, val, 16);
+  return EXIT_FAILURE;//TODO wait and parse answer
 }
 
 int pwm8_write    ( struct connection * c, uint8_t pin_id, int16_t val ){
-  //TODO
-  return EXIT_FAILURE;
+  generic_write(c, pin_id, PIN_TYPE_PWM8, val, 8);
+  return EXIT_FAILURE;//TODO wait and parse answer
 }
 
 int pwm16_write   ( struct connection * c, uint8_t pin_id, int16_t val ){
-  //TODO
-  return EXIT_FAILURE;
+  generic_write(c, pin_id, PIN_TYPE_PWM16, val, 16);
+  return EXIT_FAILURE;//TODO wait and parse answer
 }
 
 int write_value_mask( const struct connection * c,

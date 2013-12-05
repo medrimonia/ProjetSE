@@ -26,11 +26,13 @@ int main(void){
   get_type(c, 6, NULL);
   printf("Get type mask (1,5,8)  : ");
   mask m = new_mask(NB_PINS);
-  m[0] = true;
-  m[5] = true;
-  m[8] = true;
+  m[0] = MASK_PIN_ON;
+  m[5] = MASK_PIN_ON;
+  m[8] = MASK_PIN_ON;
   get_type_mask(c, &m, NULL);
   free(m);
+  printf("Digital write of 'on' on pin 1 : ");
+  digital_write(c, 1 , true);
   destroy_connection(c);
   exit(EXIT_SUCCESS);
 }
