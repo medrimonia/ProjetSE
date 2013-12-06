@@ -51,6 +51,7 @@ int get_type( struct connection * c, uint8_t pin_id, int8_t * type){
   write_header(p, CMD_GET_TYPE, 0, 1);
   write_bit_value(p + 3, 0, pin_id, 8);
   send_packet(c, p, 4);
+  *type = 0;//TODO set value at end
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
@@ -62,26 +63,31 @@ int get_type_mask( struct connection * c,
   write_header(p, CMD_GET_TYPE, 1, (c->nb_pins-1) / 8 + 1);
   write_mask(p + 3, *mask, c->nb_pins);
   send_packet(c, p, 5);
+  types[0] = 0;//TODO read values
   return EXIT_FAILURE;//TODO wait and parse answer  
 }
 
 int digital_read( struct connection * c, uint8_t pin_id, bool * val){
   generic_read( c, pin_id, PIN_TYPE_DIGITAL);
+  *val = false;//TODO read value
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
 int analogic_read( struct connection * c, uint8_t pin_id, int16_t * val){
   generic_read( c, pin_id, PIN_TYPE_ANALOG16);
+  *val = 0;//TODO read value
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
 int pwm8_read( struct connection * c, uint8_t pin_id, int8_t * val){
   generic_read( c, pin_id, PIN_TYPE_PWM8);
+  *val = 0;//TODO read value
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
 int pwm16_read( struct connection * c, uint8_t pin_id, int16_t * val){
   generic_read( c, pin_id, PIN_TYPE_PWM16);
+  *val = 0;//TODO read value
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
