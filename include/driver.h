@@ -31,7 +31,7 @@ struct connection{
 
 struct connection * new_connection();
 
-void destroy_connection(struct connection * c);
+void destroy_connection( struct connection * c );
 
 /** Initialize a connection to a device
  *
