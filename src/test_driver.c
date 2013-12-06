@@ -27,6 +27,7 @@ void get_type_test(struct connection * c){
   printf("Get type of pin 8 : ");
   get_type(c, 8, NULL);
 }
+
 void get_type_mask_test(struct connection * c){
   printf("Get type mask of pin 3,6,10:\n\t");
   mask m = new_mask(NB_PINS);
@@ -36,6 +37,28 @@ void get_type_mask_test(struct connection * c){
   get_type_mask(c, &m, NULL);
   printf("\tExpected    : |51|00|02|12|20|\n");
   free(m);
+}
+
+void set_failsafe_test(struct connection * c){
+  printf("Set failsafe : {1:DIGITAL:OFF, 3:PWM8:25, 9:ANALOG16:522} timeout 514\n\t");
+  struct failsafe * f = new_failsafe(c->nb_pins);
+  f->pins_used[1] = MASK_PIN_ON;
+  f->pins_failsafe[1].pin_state = PIN_TYPE_DIGITAL;
+  f->pins_failsafe[1].pin_value = false;
+  f->pins_used[3] = MASK_PIN_ON;
+  f->pins_failsafe[3].pin_state = PIN_TYPE_PWM8;
+  f->pins_failsafe[3].pin_value = 25;
+  f->pins_used[9] = MASK_PIN_ON;
+  f->pins_failsafe[9].pin_state = PIN_TYPE_ANALOG16;
+  f->pins_failsafe[9].pin_value = 522;
+  f->timeout = 514;
+  set_failsafe(c, f);
+  // Expected Data :
+  //      mask    |  1  |      3      |          9            |
+  //  1 3      9  | D | | P8|   25    |A16|       522         |
+  // 01010000|0100-010-0|011-00011|001-001-00|000010-00|001010-00|
+  //    50   |    44    |   63    |    24    |    08   |   28    |
+  printf("\tExpected    : |81|00|08|02|02|50|44|63|24|08|28|\n");
 }
 
 int main(void){
@@ -77,6 +100,7 @@ int main(void){
   set_type_mask_test(c);
   get_type_test(c);
   get_type_mask_test(c);
+  set_failsafe_test(c);
   destroy_connection(c);
   exit(EXIT_SUCCESS);
 }

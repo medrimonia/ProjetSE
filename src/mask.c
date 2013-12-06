@@ -20,3 +20,7 @@ int write_mask( unsigned char * buffer, const mask m, unsigned int mask_length){
   }
   return i;
 }
+
+void destroy_mask(mask m){
+  free(m);
+}

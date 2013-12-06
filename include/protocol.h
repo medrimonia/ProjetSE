@@ -1,6 +1,11 @@
 #ifndef PROTOCOLES_H
 #define PROTOCOLES_H
 
+#include <stdint.h>
+
+// Return the size of values of the specified type in bits
+uint8_t get_type_bits_nb(uint8_t pin_type);
+
 /* TYPE (3 bits) */
 #define PIN_TYPE_BITS_NB   3
 #define PIN_TYPE_ANALOG8   0

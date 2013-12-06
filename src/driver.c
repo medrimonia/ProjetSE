@@ -5,9 +5,10 @@
 
 #include "bit_utils.h"
 #include "protocol.h"
+#include "failsafe.h"
 
 //TODO cmd_size should depend on connection
-#define CMD_SIZE 10
+#define CMD_SIZE 15
 
 struct connection * new_connection(){
   struct connection * c = malloc(sizeof(struct connection));
@@ -169,7 +170,7 @@ int get_failsafe( struct connection * c,
   return EXIT_FAILURE;
 }
 
-int get_failsafe_mask( struct connection * c,
+int get_failsafe_mask( struct connection       * c,
                        const mask              * mask,
                        struct failsafe         * failsafe ){
   unsigned char p[CMD_SIZE];
@@ -181,9 +182,15 @@ int get_failsafe_mask( struct connection * c,
   return EXIT_FAILURE;
 }
 
-int set_failsafe( struct connection * c,
-                  const struct failsafe   * failsafe_state,
-                  uint16_t                  timeout ){
+int set_failsafe( struct connection       * c,
+                  const struct failsafe   * failsafe_state){
+  unsigned char p[CMD_SIZE];
+  init_packet(p, CMD_SIZE);
+  unsigned int data_bits_nb = failsafe_nb_bits(failsafe_state, c->nb_pins);
+  unsigned int data_bytes_nb = (data_bits_nb - 1) / 8 + 1;
+  write_header(p, CMD_SET_FAILSAFE, 1, data_bytes_nb);
+  write_failsafe(p + 3, failsafe_state, c->nb_pins);
+  send_packet(c, p, 3 + data_bytes_nb);
   //TODO
   return EXIT_FAILURE;
 }

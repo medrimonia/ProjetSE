@@ -35,4 +35,6 @@ int write_mask( unsigned char * buffer, const mask m, unsigned int mask_length )
  */
 int read_mask( const unsigned char * buffer, mask m, int mask_length );
 
+void destroy_mask(mask m);
+
 #endif//MASK_H
