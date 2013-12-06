@@ -42,7 +42,7 @@ typedef struct{
  *  Initialisation of the UART Communication with a baudrate equal to "baudrate"
  *  RX and TX interupt are enabled
  *  Frame Format is 8bit data, 1 Stop bit, no parity , asynchronous
- *  
+ *
  * */
 
 void uart_init(uint32_t);

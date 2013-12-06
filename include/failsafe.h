@@ -15,9 +15,9 @@ struct pin_failsafe {
 
 struct failsafe{
   /** Failsafe can set only some pins when connection fails.  */
-  mask     pins_used;
-  uint16_t timeout;
-  struct   pin_failsafe * pins_failsafe;
+  mask                   pins_used;
+  uint16_t               timeout;
+  struct  pin_failsafe * pins_failsafe;
 };
 
 struct failsafe * new_failsafe( unsigned int nb_pins );

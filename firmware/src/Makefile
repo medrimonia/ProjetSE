@@ -11,7 +11,7 @@ FCPU         = 16000000
 TARGET       = main
 
 OPTIMISATION = s
-CFLAGS       = -W -Wall -std=c99 
+CFLAGS       = -W -Wall -std=c99
 
 PROGRAMMER   = arduino
 PORT         = /dev/ttyUSB0
@@ -57,7 +57,7 @@ compiler_files/%.s : %.c compiler_files
 disasm: compiler_files/$(TARGET).elf
 	avr-objdump -h -S $< > compiler_files/${TARGET}.lss
 
-asm: $(ASSEMBLE) 
+asm: $(ASSEMBLE)
 
 compiler_files/$(TARGET).hex : compiler_files/$(TARGET).elf
 	avr-objcopy -S -j .text -j .data -O ihex $< $@ -g
@@ -69,11 +69,11 @@ bin: compiler_files/$(TARGET).elf
 compiler_files/$(TARGET).elf : $(OBJECTS)
 	$(COMPILE) -o $@ $^
 
-clean: 
+clean:
 	rm -r compiler_files/
 
 tarball: backup_dir
-	tar -czvf backup_dir/backup.tgz Makefile $(SRC) $(ASSM) 
+	tar -czvf backup_dir/backup.tgz Makefile $(SRC) $(ASSM)
 
 compiler_files:
 	@mkdir -p compiler_files

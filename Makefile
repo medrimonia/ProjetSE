@@ -51,4 +51,4 @@ clean:
 	rm -rf ${SRC_FOLDER}/*.o
 
 mrproper: clean
-	rm -rf test_bit_utils
+	rm -rf ${BINS}

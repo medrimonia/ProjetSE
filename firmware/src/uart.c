@@ -1,16 +1,13 @@
 #include "uart.h"
 
-
 fifo fifo_receiver;
 fifo fifo_transmitter;
 
 unsigned char test= 'o';
 
-
 /* Receiver */
-ISR(USART_RXC_vect)
+ISR( USART_RXC_vect )
 {
-
   test = UDR;
 
   if( test == 'A')
@@ -19,16 +16,14 @@ ISR(USART_RXC_vect)
     PORTB &= 0x00;
 
   UDR = test;
-
 }
 
-void delay(int32_t wait)
+void delay( int32_t wait )
 {
   while(wait--);
 }
 
-void
-uart_init(uint32_t baudrate)
+void uart_init( uint32_t baudrate )
 {
   uint16_t ubbr = (F_CPU/(16 * baudrate) ) -1;
 
@@ -41,16 +36,13 @@ uart_init(uint32_t baudrate)
   /* Set frame format : 8data , 1 stop bit, no parity, Asynchronous */
 //  UCSRC = (1 << URSEL);
 //  UCSRC |= (1 <<UCSZ0) |(1 << UCSZ1);
-
 }
-void
-uart_write(unsigned char c)
-{ 
+
+void uart_write( unsigned char c )
+{
   UDR = c;
   while(!(UCSRA & (1<< UDRE)));
-
 }
-
 
 int main()
 {

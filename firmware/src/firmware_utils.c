@@ -8,42 +8,46 @@
 struct connection * connection_open( const char * in_filename,
                                      const char * out_filename )
 {
-    struct connection * c = malloc( sizeof *c );
+  struct connection * c = malloc( sizeof *c );
 
-    c->fd_in  = open( "driver_to_device", O_WRONLY );
+  c->fd_in = open( "driver_to_device", O_WRONLY );
 
-    if ( c->fd_in == -1 ) {
-        perror( "open" );
-        free( c );
-        return NULL;
-    }
+  if ( c->fd_in == -1 ) {
+    perror( "open" );
+    free( c );
+    return NULL;
+  }
 
-    c->fd_out = open( "device_to_driver", O_RDONLY );
+  c->fd_out = open( "device_to_driver", O_RDONLY );
 
-    if ( c->fd_out == -1 ) {
-        perror( "open" );
-        close( c->fd_in );
-        free( c );
-        return NULL;
-    }
+  if ( c->fd_out == -1 ) {
+    perror( "open" );
+    close( c->fd_in );
+    free( c );
+    return NULL;
+  }
 
-    return c;
+  return c;
 }
 
 void connection_close( struct connection * c )
 {
-    close( c->fd_in  );
-    close( c->fd_out );
+  close( c->fd_in  );
+  close( c->fd_out );
 
-    free( c );
+  free( c );
 }
 
-void connection_write( struct connection * c, const unsigned char * packet, int   size )
+void connection_write( struct connection   * c,
+                       const unsigned char * packet,
+                       int                   size )
 {
-    //TODO
+  //TODO
 }
 
-void connection_read(  struct connection * c,       unsigned char * packet, int * size )
+void connection_read( struct connection * c,
+                      unsigned char     * packet,
+                      int               * size )
 {
-    //TODO
+  //TODO
 }

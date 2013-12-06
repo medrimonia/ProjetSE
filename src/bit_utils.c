@@ -4,7 +4,8 @@
 
 #include "protocol.h"
 
-void init_packet(unsigned char * p, int packet_size){
+void init_packet( unsigned char * p, int packet_size )
+{
   int i;
   for (i = 0; i < packet_size; i++) p[i] = 0;
 }
@@ -14,12 +15,13 @@ void init_packet(unsigned char * p, int packet_size){
 void write_bit_value( unsigned char * dst,
                       int offset,
                       int16_t val,
-                      int val_size ){
+                      int val_size )
+{
   int bit_no = offset / 8;
   offset = offset % 8;
   int bits_remaining = val_size;
   int available_bits = 8 - offset;
-  while (bits_remaining > available_bits){
+  while (bits_remaining > available_bits) {
     int shift = bits_remaining - available_bits;
     int16_t to_write = val >> shift;
     val -= (to_write << shift);
@@ -34,13 +36,14 @@ void write_bit_value( unsigned char * dst,
   dst[bit_no] |= (unsigned char)to_write;
 }
 
-int16_t read_bit_value( const unsigned char * src, int offset, int val_size ){
+int16_t read_bit_value( const unsigned char * src, int offset, int val_size )
+{
   int16_t val = 0;
   int bit_no = offset / 8;
   offset = offset % 8;
   int bits_remaining = val_size;
   int available_bits = 8 - offset;
-  while (bits_remaining > available_bits){
+  while (bits_remaining > available_bits) {
     int16_t read_value = (unsigned char)(src[bit_no] << offset) >> offset;
     val += read_value;
     bits_remaining -= available_bits;
@@ -56,42 +59,49 @@ int16_t read_bit_value( const unsigned char * src, int offset, int val_size ){
   return val;
 }
 
-void display_binary( unsigned char v ){
+void display_binary( unsigned char v )
+{
   int i;
   for(i = 7; i >= 0; i--) putchar('0' + ((v >> i) & 1));
 }
 
-void display_packet( unsigned char * p, int packet_size ){
+void display_packet( unsigned char * p, int packet_size )
+{
   printf("|");
   int i;
-  for (i = 0; i < packet_size; i++){
+  for (i = 0; i < packet_size; i++) {
     display_binary(p[i]);
     printf("|");
   }
 }
 
-void display_packet_hexa( unsigned char * p, int packet_size ){
+void display_packet_hexa( unsigned char * p, int packet_size )
+{
   printf("|");
   int i;
-  for (i = 0; i < packet_size; i++){
+  for (i = 0; i < packet_size; i++) {
     printf("%02x|", p[i]);
   }
 }
 
-void write_cmd( unsigned char * p, int cmd_no ){
+void write_cmd( unsigned char * p, int cmd_no )
+{
   write_bit_value(p, 0, cmd_no, CMD_BITS_NB);
 }
 
-void write_param( unsigned char * p, int param_no ){
+void write_param( unsigned char * p, int param_no )
+{
   write_bit_value(p, 4, param_no, PARAM_BITS_NB);
 }
 
-void write_data_size( unsigned char * p, int16_t data_size ){
+void write_data_size( unsigned char * p, int16_t data_size )
+{
   write_bit_value(p + 1, 0, data_size, DATA_SIZE_BITS_NB);
 }
 
 void write_header( unsigned char * p,
-                   int cmd_no, int param, int16_t data_size ){
+                   int cmd_no, int param, int16_t data_size )
+{
   write_cmd(p, cmd_no);
   write_param(p, param);
   write_data_size(p, data_size);
@@ -101,23 +111,27 @@ void write_value_list ( unsigned char * p,
                         unsigned int offset,
                         const uint16_t * values,
                         unsigned int nb_values,
-                        unsigned int value_size){
+                        unsigned int value_size )
+{
   unsigned int i;
-  for (i = 0; i < nb_values; i++){
+  for (i = 0; i < nb_values; i++) {
     write_bit_value(p, offset, values[i], value_size);
     offset += value_size;
   }
 }
 
-int16_t read_cmd( const unsigned char * p ){
+int16_t read_cmd( const unsigned char * p )
+{
   return read_bit_value(p, 0, CMD_BITS_NB);
 }
 
-int16_t read_param( const unsigned char * p ){
+int16_t read_param( const unsigned char * p )
+{
   return read_bit_value(p, 4, PARAM_BITS_NB);
 }
 
-int16_t read_data_size( const unsigned char * p ){
+int16_t read_data_size( const unsigned char * p )
+{
   return read_bit_value(p, 8, DATA_SIZE_BITS_NB);
 }
 
@@ -125,9 +139,10 @@ void read_value_list( const unsigned char * p,
                       unsigned int          offset,
                       uint16_t *            values,
                       unsigned int          nb_values,
-                      unsigned int          value_size){
+                      unsigned int          value_size )
+{
   unsigned int i;
-  for (i = 0; i < nb_values; i++){
+  for (i = 0; i < nb_values; i++) {
     values[i] = read_bit_value(p, offset, value_size);
     offset += value_size;
   }

@@ -21,7 +21,7 @@
  * informations to the other side and the other is used to receive
  * informations
  */
-struct connection{
+struct connection {
   int fd_in;
   int fd_out;
   int nb_pins;
@@ -30,8 +30,6 @@ struct connection{
 };
 
 struct connection * new_connection();
-
-void destroy_connection( struct connection * c );
 
 /** Initialize a connection to a device
  *
@@ -62,8 +60,8 @@ int get_type( struct connection * c, uint8_t pin_id, int8_t * type );
 
 /** Get the device-stored type of a set of pins */
 int get_type_mask( struct connection * c,
-                   const mask              * mask,
-                   val_list2               * types );
+                   const mask        * mask,
+                   val_list2         * types );
 
 /** Set and store the type of one pin on the device. */
 int set_type( struct connection * c, uint8_t pin_id, char type );
@@ -72,20 +70,20 @@ int set_type( struct connection * c, uint8_t pin_id, char type );
 int set_type_mask( struct connection * c,
                    const mask        * mask,
                    const uint16_t    * values,
-                   unsigned int nb_values );
+                   unsigned int        nb_values );
 
 /** Get the failsafe state of the device connected by the specified connection */
-int get_failsafe( struct connection * c,
-                  uint8_t                   pin_id,
-                  struct pin_failsafe     * failsafe );
+int get_failsafe( struct connection   * c,
+                  uint8_t               pin_id,
+                  struct pin_failsafe * failsafe );
 
 int get_failsafe_mask( struct connection * c,
-                       const mask              * mask,
-                       struct failsafe         * failsafe );
+                       const mask        * mask,
+                       struct failsafe   * failsafe );
 
 /** Set the failsafe state of the device connected by the specified connection */
-int set_failsafe( struct connection * c,
-                  const struct failsafe   * failsafe_state );
+int set_failsafe( struct connection     * c,
+                  const struct failsafe * failsafe_state );
 
 /** Read the value of the pin in it's current state, value will be placed in
  * an int in order to be able to stock any type of value. */
@@ -123,8 +121,8 @@ int write_value_mask( const struct connection * c,
 //TODO it seems that write_value_mask should write for only one type
 
 // Handle the checksum calculation
-int send_packet( struct connection * connection,
+int send_packet( struct connection   * connection,
                  const unsigned char * p,
-                 int packet_size);
+                 int                   packet_size);
 
 #endif//DRIVER_H

@@ -4,16 +4,16 @@
 #include <stdint.h>
 
 // Fill the given packet with 0
-void init_packet(unsigned char * p, int packet_size);
+void init_packet( unsigned char * p, int packet_size );
 
 /**
  * param offset In bits
  * param val_size In bits
  */
 void write_bit_value( unsigned char * dst,
-                      int offset,
-                      int16_t val,
-                      int val_size );
+                      int             offset,
+                      int16_t         val,
+                      int             val_size );
 
 int16_t read_bit_value( const unsigned char * dst, int offset, int val_size );
 

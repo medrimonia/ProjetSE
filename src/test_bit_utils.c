@@ -6,15 +6,17 @@
 
 #define CMD_SIZE 5
 
-void print_separator(){
+void print_separator()
+{
   int i;
-  for (i = 0; i < 80; i++){
+  for (i = 0; i < 80; i++) {
     printf("-");
   }
   printf("\n");
 }
 
-void test1(){
+void test1()
+{
   unsigned char p[CMD_SIZE];
   int i;
   for (i = 0; i < CMD_SIZE; i++) p[i] = 0;
@@ -46,7 +48,8 @@ void test1(){
   printf("read v2 : %d\n",v2);
 }
 
-void test2(){
+void test2()
+{
   printf("Test 2\n");
   unsigned char p[CMD_SIZE];
   int i;
@@ -74,7 +77,8 @@ void test2(){
   printf("data_size : %d\n", data_size);
 }
 
-int main(void){
+int main( void )
+{
   print_separator();
   test1();
   print_separator();

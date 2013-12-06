@@ -1,7 +1,8 @@
 #include "protocol.h"
 
-uint8_t get_type_bits_nb(uint8_t pin_type){
-  switch(pin_type){
+uint8_t get_type_bits_nb( uint8_t pin_type )
+{
+  switch(pin_type) {
   case PIN_TYPE_DIGITAL:
     return 1;
   case PIN_TYPE_ANALOG8:
