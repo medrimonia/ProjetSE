@@ -13,13 +13,28 @@ void set_type_mask_test(struct connection * c){
   m[7] = MASK_PIN_ON;
   m[9] = MASK_PIN_ON;
   uint16_t values[3] = { PIN_TYPE_DIGITAL, PIN_TYPE_ANALOG8, PIN_TYPE_PWM16};
-  set_type_mask(c, &m,  values, 3);
+  set_type_mask(c, &m,  values, 3);//TODO length is not needed (read in mask)
   // Expected Data :
   //      mask    |   values   |
   //     4  7  9  | 4 |  7 | 9 |
   // 00001001|0100-010-0|00-100-000|
   //    09   |    44    |   20
   printf("\tExpected    : |61|00|03|09|44|20|\n");
+  free(m);
+}
+
+void get_type_test(struct connection * c){
+  printf("Get type of pin 8 : ");
+  get_type(c, 8, NULL);
+}
+void get_type_mask_test(struct connection * c){
+  printf("Get type mask of pin 3,6,10:\n\t");
+  mask m = new_mask(NB_PINS);
+  m[3] = MASK_PIN_ON;
+  m[6] = MASK_PIN_ON;
+  m[10] = MASK_PIN_ON;
+  get_type_mask(c, &m, NULL);
+  printf("\tExpected    : |51|00|02|12|20|\n");
   free(m);
 }
 
@@ -60,6 +75,8 @@ int main(void){
   printf("Set type of pin 8 to digital    : ");
   set_type(c, 8,  PIN_TYPE_DIGITAL);
   set_type_mask_test(c);
+  get_type_test(c);
+  get_type_mask_test(c);
   destroy_connection(c);
   exit(EXIT_SUCCESS);
 }

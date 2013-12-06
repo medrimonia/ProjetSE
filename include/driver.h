@@ -75,16 +75,16 @@ int set_type_mask( struct connection * c,
                    unsigned int nb_values );
 
 /** Get the failsafe state of the device connected by the specified connection */
-int get_failsafe( const struct connection * c,
+int get_failsafe( struct connection * c,
                   uint8_t                   pin_id,
                   struct pin_failsafe     * failsafe );
 
-int get_failsafe_mask( const struct connection * c,
+int get_failsafe_mask( struct connection * c,
                        const mask              * mask,
                        struct failsafe         * failsafe );
 
 /** Set the failsafe state of the device connected by the specified connection */
-int set_failsafe( const struct connection * c,
+int set_failsafe( struct connection * c,
                   const struct failsafe   * failsafe_state,
                   uint16_t                  timeout );
 

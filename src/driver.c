@@ -51,7 +51,7 @@ int get_type( struct connection * c, uint8_t pin_id, int8_t * type){
   write_header(p, CMD_GET_TYPE, 0, 1);
   write_bit_value(p + 3, 0, pin_id, 8);
   send_packet(c, p, 4);
-  *type = 0;//TODO set value at end
+  //TODO set value at end
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
@@ -63,31 +63,31 @@ int get_type_mask( struct connection * c,
   write_header(p, CMD_GET_TYPE, 1, (c->nb_pins-1) / 8 + 1);
   write_mask(p + 3, *mask, c->nb_pins);
   send_packet(c, p, 5);
-  types[0] = 0;//TODO read values
+  //TODO read values
   return EXIT_FAILURE;//TODO wait and parse answer  
 }
 
 int digital_read( struct connection * c, uint8_t pin_id, bool * val){
   generic_read( c, pin_id, PIN_TYPE_DIGITAL);
-  *val = false;//TODO read value
+  //TODO read value
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
 int analogic_read( struct connection * c, uint8_t pin_id, int16_t * val){
   generic_read( c, pin_id, PIN_TYPE_ANALOG16);
-  *val = 0;//TODO read value
+  //TODO read value
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
 int pwm8_read( struct connection * c, uint8_t pin_id, int8_t * val){
   generic_read( c, pin_id, PIN_TYPE_PWM8);
-  *val = 0;//TODO read value
+  //TODO read value
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
 int pwm16_read( struct connection * c, uint8_t pin_id, int16_t * val){
   generic_read( c, pin_id, PIN_TYPE_PWM16);
-  *val = 0;//TODO read value
+  //TODO read value
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
@@ -153,27 +153,35 @@ int set_type_mask( struct connection * c,
   write_mask(p + 3, *mask, c->nb_pins);
   write_value_list(p + 3, c->nb_pins, values, nb_values, PIN_TYPE_BITS_NB);
   send_packet(c, p, packet_size);
-  //TODO
+  //TODO read reply
   return EXIT_FAILURE;
 }
 
-int get_failsafe( const struct connection * c,
+int get_failsafe( struct connection * c,
                   uint8_t                   pin_id,
                   struct pin_failsafe     * failsafe ){
-  //TODO
+  unsigned char p[CMD_SIZE];
+  init_packet(p, CMD_SIZE);
+  write_header(p, CMD_GET_FAILSAFE, 0, 1);
+  write_bit_value(p + 3, 0, pin_id, 8);
+  send_packet(c, p, 4);
+  //TODO read reply and parse it
   return EXIT_FAILURE;
 }
 
-int get_failsafe_mask( const struct connection * c,
+int get_failsafe_mask( struct connection * c,
                        const mask              * mask,
                        struct failsafe         * failsafe ){
-  //TODO
-
-
+  unsigned char p[CMD_SIZE];
+  init_packet(p, CMD_SIZE);
+  write_header(p, CMD_GET_FAILSAFE, 0, (c->nb_pins - 1) / 8 + 1);
+  write_mask(p + 3, *mask, c->nb_pins);
+  send_packet(c, p, 4);
+  //TODO read and use values
   return EXIT_FAILURE;
 }
 
-int set_failsafe( const struct connection * c,
+int set_failsafe( struct connection * c,
                   const struct failsafe   * failsafe_state,
                   uint16_t                  timeout ){
   //TODO
