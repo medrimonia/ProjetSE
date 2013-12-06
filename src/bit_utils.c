@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "protocol.h"
+#include "bit_utils.h"
 
 void init_packet( unsigned char * p, int packet_size )
 {
@@ -65,7 +66,7 @@ void display_binary( unsigned char v )
   for(i = 7; i >= 0; i--) putchar('0' + ((v >> i) & 1));
 }
 
-void display_packet( unsigned char * p, int packet_size )
+void display_packet( const unsigned char * p, int packet_size )
 {
   printf("|");
   int i;
@@ -75,7 +76,7 @@ void display_packet( unsigned char * p, int packet_size )
   }
 }
 
-void display_packet_hexa( unsigned char * p, int packet_size )
+void display_packet_hexa( const unsigned char * p, int packet_size )
 {
   printf("|");
   int i;
@@ -89,9 +90,19 @@ void write_cmd( unsigned char * p, int cmd_no )
   write_bit_value(p, 0, cmd_no, CMD_BITS_NB);
 }
 
+void write_pin_type( unsigned char * p, uint8_t pin_type )
+{
+  write_bit_value(p, CMD_BITS_NB, pin_type, PIN_TYPE_BITS_NB);
+}
+
+void write_mask_p( unsigned char * p, uint8_t mask_p )
+{
+  write_bit_value(p, CMD_BITS_NB+PIN_TYPE_BITS_NB, mask_p, 1);
+}
+
 void write_param( unsigned char * p, int param_no )
 {
-  write_bit_value(p, 4, param_no, PARAM_BITS_NB);
+  write_bit_value(p, CMD_BITS_NB, param_no, PARAM_BITS_NB);
 }
 
 void write_data_size( unsigned char * p, int16_t data_size )
@@ -99,11 +110,12 @@ void write_data_size( unsigned char * p, int16_t data_size )
   write_bit_value(p + 1, 0, data_size, DATA_SIZE_BITS_NB);
 }
 
-void write_header( unsigned char * p,
-                   int cmd_no, int param, int16_t data_size )
+void write_header( unsigned char * p, int cmd_no,
+                   uint8_t pin_type, uint8_t mask_p, int16_t data_size )
 {
   write_cmd(p, cmd_no);
-  write_param(p, param);
+  write_pin_type(p, pin_type);
+  write_mask_p(p, mask_p);
   write_data_size(p, data_size);
 }
 

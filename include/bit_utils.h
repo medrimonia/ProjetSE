@@ -26,10 +26,12 @@ void display_packet     ( const unsigned char * p, int packet_size );
 void display_packet_hexa( const unsigned char * p, int packet_size );
 
 void write_cmd      ( unsigned char * p, int     cmd_no    );
+void write_pin_type ( unsigned char * p, uint8_t pin_type  );
+void write_mask_p   ( unsigned char * p, uint8_t mask_p    );
 void write_param    ( unsigned char * p, int     param     );
 void write_data_size( unsigned char * p, int16_t data_size );
-void write_header   ( unsigned char * p,
-                      int cmd_no, int param, int16_t data_size );
+void write_header   ( unsigned char * p, int cmd_no,
+                      uint8_t pin_type, uint8_t mask_p, int16_t data_size );
 
 void write_value_list ( unsigned char  * p,
                         unsigned int     offset,

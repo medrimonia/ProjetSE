@@ -34,4 +34,8 @@ uint8_t get_type_bits_nb( uint8_t pin_type );
 #define PARAM_BITS_NB      4
 #define DATA_SIZE_BITS_NB 16
 
+// Possible values for the mask_p bit
+#define USE_PIN_ID         0
+#define USE_MASK           1
+
 #endif//PROTOCOLES_H
