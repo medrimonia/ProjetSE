@@ -1,6 +1,6 @@
 SRC_FOLDER=src
 HEADER_FOLDER=include
-CFLAGS=-Wall -I${HEADER_FOLDER} -g
+CFLAGS=-Wextra -Wall -I${HEADER_FOLDER} -g
 
 BINS=test_bit_utils \
      test_driver
@@ -38,7 +38,7 @@ ${SRC_FOLDER}/mask.o: ${HEADER_FOLDER}/mask.h      \
 .PHONY: clean mrproper
 
 clean:
-	rm -rf ${SRC_FOLDER}/*.c
+	rm -rf ${SRC_FOLDER}/*.o
 
 mrproper: clean
 	rm -rf test_bit_utils

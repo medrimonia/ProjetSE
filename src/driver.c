@@ -35,7 +35,7 @@ void reset( struct connection * connection ){
   send_packet(connection, p, 3);
 }
 
-uint16_t generic_read( struct connection * c,
+int16_t generic_read( struct connection * c,
                        uint8_t pin_id, uint8_t pin_mode){
   unsigned char p[CMD_SIZE];
   init_packet(p, CMD_SIZE);
@@ -162,6 +162,8 @@ int get_failsafe_mask( const struct connection * c,
                        const mask              * mask,
                        struct failsafe         * failsafe ){
   //TODO
+
+
   return EXIT_FAILURE;
 }
 
@@ -180,6 +182,7 @@ void ping( struct connection * connection,
   write_bit_value(p + 3, 0, protocol_version, 8);
   send_packet(connection, p, 4);
 }
+
 
 int send_packet ( struct connection * connection,
                   const unsigned char * p,

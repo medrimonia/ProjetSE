@@ -102,7 +102,7 @@ void write_value_list ( unsigned char * p,
                         const uint16_t * values,
                         unsigned int nb_values,
                         unsigned int value_size){
-  int i;
+  unsigned int i;
   for (i = 0; i < nb_values; i++){
     write_bit_value(p, offset, values[i], value_size);
     offset += value_size;
@@ -119,4 +119,16 @@ int16_t read_param( const unsigned char * p ){
 
 int16_t read_data_size( const unsigned char * p ){
   return read_bit_value(p, 8, DATA_SIZE_BITS_NB);
+}
+
+void read_value_list( const unsigned char * p,
+                      unsigned int          offset,
+                      uint16_t *            values,
+                      unsigned int          nb_values,
+                      unsigned int          value_size){
+  unsigned int i;
+  for (i = 0; i < nb_values; i++){
+    values[i] = read_bit_value(p, offset, value_size);
+    offset += value_size;
+  }
 }
