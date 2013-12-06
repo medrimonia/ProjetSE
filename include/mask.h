@@ -25,7 +25,7 @@ int next_pin_used( mask m, int start, int mask_length );
  *               ceil( NB_PINS / 8 ) free chars available
  * \return The number of chars written
  */
-int write_mask( unsigned char * buffer, const mask m, int mask_length );
+int write_mask( unsigned char * buffer, const mask m, unsigned int mask_length );
 
 /**
  * Read a mask from a buffer, ceil( NB_PINS /8 ) chars will be read.

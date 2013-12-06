@@ -74,7 +74,7 @@ void test2(){
   printf("data_size : %d\n", data_size);
 }
 
-int main(int argc, char ** argv){
+int main(void){
   print_separator();
   test1();
   print_separator();
