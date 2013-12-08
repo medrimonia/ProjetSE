@@ -2,7 +2,7 @@
 #include "protocol.h"
 #include "bit_utils.h"
 
-static uint8_t compute_checksum( struct packet * p )
+uint8_t compute_checksum( struct packet * p )
 {
   uint8_t sum = p->header;
   sum += (uint8_t)(p->size % (1<<8)); // First  byte of p->size
@@ -14,6 +14,11 @@ static uint8_t compute_checksum( struct packet * p )
   sum = ~sum;
 
   return sum;
+}
+
+bool packet_valid( struct packet * p )
+{
+  return compute_checksum( p ) == p->checksum;
 }
 
 void packet_write( unsigned char * buffer, const struct packet * p )
@@ -40,11 +45,6 @@ void packet_read( const unsigned char * buffer, struct packet * p )
 void packet_free( struct packet * p )
 {
   free( p->data );
-}
-
-bool packet_valid( struct packet * p )
-{
-  return compute_checksum( p ) == p->checksum;
 }
 
 uint8_t get_type_bits_nb( uint8_t pin_type )

@@ -44,7 +44,9 @@ struct packet {
   uint8_t         checksum; // (   1 byte )
 };
 
+uint8_t compute_checksum( struct packet * p );
 /** Computes the checksum and compare it with the one received */
+
 bool packet_valid( struct packet * p );
 
 void packet_write( unsigned char * buffer, const struct packet * p );
