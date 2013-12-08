@@ -1,16 +1,24 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include "firmware_utils.h"
 
-// Returns NULL if connection could not be opened
+/** BUFF_SIZE should be high enough to read up to 256 pin status (3 bits)
+ * and value (up to 16 bits)
+ * Thus it should be greater than 1+2+256*19/8+1 = 612 */
+#define BUFF_SIZE 612
+
+/** Returns NULL if connection could not be opened */
 struct connection * connection_open( const char * in_filename,
                                      const char * out_filename )
 {
   struct connection * c = malloc( sizeof *c );
 
-  c->fd_in = open( "driver_to_device", O_WRONLY );
+  c->fd_in = open( in_filename, O_WRONLY );
 
   if ( c->fd_in == -1 ) {
     perror( "open" );
@@ -18,7 +26,7 @@ struct connection * connection_open( const char * in_filename,
     return NULL;
   }
 
-  c->fd_out = open( "device_to_driver", O_RDONLY );
+  c->fd_out = open( out_filename, O_RDONLY );
 
   if ( c->fd_out == -1 ) {
     perror( "open" );
@@ -38,14 +46,36 @@ void connection_close( struct connection * c )
   free( c );
 }
 
-void connection_write( struct connection   * c,
-                       const struct packet * p )
+/** Returns -1 if there was an error writing.
+ *  Otherwise the number of bytes written is returned */
+ssize_t connection_write( struct connection   * c,
+                          const struct packet * p )
 {
-  //TODO
+  int buff_size = p->size + 4;
+  unsigned char * buffer = malloc( buff_size );
+  packet_write( buffer, p );
+  ssize_t nb_bytes = write( c->fd_out, buffer, buff_size );
+  if ( nb_bytes == -1 ) {
+    perror("write");
+    return -1;
+  }
+
+  return nb_bytes;
 }
 
-void connection_read( struct connection * c,
+/** Returns -1 if there was an error reading.
+ *  Otherwise the number of bytes read is returned */
+ssize_t connection_read( struct connection * c,
                       struct packet     * p )
 {
-  //TODO
+  unsigned char buffer[BUFF_SIZE] = {0};
+  ssize_t nb_bytes = read( c->fd_in, buffer, BUFF_SIZE );
+  if ( nb_bytes == -1 ) {
+    perror("read");
+    return -1;
+  }
+
+  packet_read( buffer, p );
+
+  return nb_bytes;
 }
