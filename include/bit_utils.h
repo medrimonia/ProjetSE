@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 // Fill the given packet with 0
-void init_packet( unsigned char * p, int packet_size );
+void init_packet( unsigned char * p, uint16_t packet_size );
 
 /**
  * param offset In bits
@@ -23,8 +23,8 @@ void display_binary( unsigned char v );
 /**
  * param packet_size In bytes
  */
-void display_packet     ( const unsigned char * p, int packet_size );
-void display_packet_hexa( const unsigned char * p, int packet_size );
+void display_packet     ( const unsigned char * p, uint16_t packet_size );
+void display_packet_hexa( const unsigned char * p, uint16_t packet_size );
 
 void write_cmd      ( unsigned char * p, uint8_t cmd_no     );
 void write_pin_type ( unsigned char * p, uint8_t pin_type   );

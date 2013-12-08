@@ -5,9 +5,9 @@
 #include "protocol.h"
 #include "bit_utils.h"
 
-void init_packet( unsigned char * p, int packet_size )
+void init_packet( unsigned char * p, uint16_t packet_size )
 {
-  int i;
+  uint16_t i;
   for (i = 0; i < packet_size; i++) p[i] = 0;
 }
 
@@ -66,20 +66,20 @@ void display_binary( unsigned char v )
   for(i = 7; i >= 0; i--) putchar('0' + ((v >> i) & 1));
 }
 
-void display_packet( const unsigned char * p, int packet_size )
+void display_packet( const unsigned char * p, uint16_t packet_size )
 {
   printf("|");
-  int i;
+  uint16_t i;
   for (i = 0; i < packet_size; i++) {
     display_binary(p[i]);
     printf("|");
   }
 }
 
-void display_packet_hexa( const unsigned char * p, int packet_size )
+void display_packet_hexa( const unsigned char * p, uint16_t packet_size )
 {
   printf("|");
-  int i;
+  uint16_t i;
   for (i = 0; i < packet_size; i++) {
     printf("%02x|", p[i]);
   }

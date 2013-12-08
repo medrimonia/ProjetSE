@@ -20,7 +20,7 @@ void test1()
   unsigned char p[CMD_SIZE];
   int i;
   for (i = 0; i < CMD_SIZE; i++) p[i] = 0;
-  int16_t v1, v2;
+  uint16_t v1, v2;
   int offset1, offset2, val_size1, val_size2;
   v1 = 2;
   v2 = 5;
@@ -54,7 +54,7 @@ void test2()
   unsigned char p[CMD_SIZE];
   int i;
   for (i = 0; i < CMD_SIZE; i++) p[i] = 0;
-  int16_t cmd, param, data_size;
+  uint16_t cmd, param, data_size;
   cmd = 10;
   param = 3;
   data_size = 257;
