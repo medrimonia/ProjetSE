@@ -32,14 +32,12 @@ void packet_write( unsigned char * buffer, const struct packet * p )
 
 void packet_read( const unsigned char * buffer, struct packet * p )
 {
-  uint16_t size = read_data_size(buffer);
+  uint16_t size = read_data_size( buffer );
   p->size = size;
-  p->data = malloc(size);
-  //p->checksum = read_checksum(buffer);
-
-  write_cmd  ( &p->header, read_cmd  (buffer)          );
-  write_param( &p->header, read_param(buffer)          );
-  read_data  ( buffer    , p->data           , p->size );
+  p->data = malloc( size );
+  read_header( buffer, &p->header          );
+  read_data  ( buffer,  p->data  , p->size );
+  p->checksum = read_checksum( buffer, p->size );
 }
 
 void packet_free( struct packet * p )

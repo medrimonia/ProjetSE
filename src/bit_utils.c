@@ -121,7 +121,7 @@ void write_data( unsigned char * p, unsigned char * data, uint16_t data_size )
 
 void write_checksum( unsigned char * p, uint8_t checksum, uint16_t data_size )
 {
-    write_bit_value(p+3+data_size, 0, checksum, CHECKSUM_BITS_NB);
+  write_bit_value(p+3+data_size, 0, checksum, CHECKSUM_BITS_NB);
 }
 
 void write_header( unsigned char * p, uint8_t cmd_no,
@@ -161,9 +161,19 @@ uint16_t read_data_size( const unsigned char * p )
   return read_bit_value(p, 8, DATA_SIZE_BITS_NB);
 }
 
+void read_header( const unsigned char * p, unsigned char * dst )
+{
+  memcpy( dst, p, 1 );
+}
+
 void read_data( const unsigned char * p, unsigned char * dst, uint16_t size )
 {
   memcpy( dst, p + 3, size );
+}
+
+uint8_t read_checksum( const unsigned char * p, uint16_t data_size )
+{
+  return read_bit_value(p+3+data_size, 0, CHECKSUM_BITS_NB);
 }
 
 void read_value_list( const unsigned char * p,
