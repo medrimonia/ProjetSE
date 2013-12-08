@@ -2,6 +2,7 @@
 #define BIT_UTILS_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 // Fill the given packet with 0
 void init_packet( unsigned char * p, int packet_size );
@@ -49,5 +50,7 @@ void read_value_list ( const unsigned char  * p,
                        unsigned int           nb_values,
                        unsigned int           value_size );
 
+uint8_t compute_checksum( const unsigned char * p, int packet_size );
+bool    packet_valid    ( const unsigned char * p, int packet_size );
 
 #endif//BIT_UTILS_H

@@ -159,3 +159,20 @@ void read_value_list( const unsigned char * p,
     offset += value_size;
   }
 }
+
+uint8_t compute_checksum( const unsigned char * p, int packet_size )
+{
+  uint8_t sum = 0;
+  int i = 0;
+  for (; i < packet_size; i++ ) {
+    sum += p[i];
+  }
+  sum = ~sum;
+
+  return sum;
+}
+
+bool packet_valid ( const unsigned char * p, int packet_size )
+{
+  return false;
+}
