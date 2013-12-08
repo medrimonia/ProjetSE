@@ -2,9 +2,7 @@
 #define PROTOCOLES_H
 
 #include <stdint.h>
-
-// Return the size of values of the specified type in bits
-uint8_t get_type_bits_nb( uint8_t pin_type );
+#include <stdbool.h>
 
 /* TYPE (3 bits) */
 #define PIN_TYPE_BITS_NB   3
@@ -33,9 +31,29 @@ uint8_t get_type_bits_nb( uint8_t pin_type );
 
 #define PARAM_BITS_NB      4
 #define DATA_SIZE_BITS_NB 16
+#define CHECKSUM_BITS_NB   8
 
 // Possible values for the mask_p bit
 #define USE_PIN_ID         0
 #define USE_MASK           1
+
+struct packet {
+  unsigned char   header;   // (   1 byte )
+  uint16_t        size;     // (   2 bytes)
+  unsigned char * data;     // (size bytes)
+  uint8_t         checksum; // (   1 byte )
+};
+
+/** Computes the checksum and compare it with the one received */
+bool packet_valid( struct packet * p );
+
+void packet_write( unsigned char * buffer, const struct packet * p );
+/** Memory for data is allocated here to match data size */
+void packet_read ( const unsigned char * buffer, struct packet * p );
+/** This function must be called after read_packet to free data memory */
+void packet_free ( struct packet * p );
+
+// Return the size of values of the specified type in bits
+uint8_t get_type_bits_nb( uint8_t pin_type );
 
 #endif//PROTOCOLES_H
