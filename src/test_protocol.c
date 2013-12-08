@@ -15,6 +15,7 @@ void print_separator()
 void print_packet( struct packet * p )
 {
   unsigned char * buffer = malloc( p->size + 4 );
+  init_packet( buffer, p->size + 4 );
 
   printf("Packet: ");
   packet_write( buffer, p );
@@ -22,6 +23,14 @@ void print_packet( struct packet * p )
   printf("\n");
 
   free( buffer );
+}
+
+void compute_and_cmp_checksum( struct packet * p, uint8_t expected_checksum )
+{
+  p->checksum = compute_checksum( p );
+  print_packet( p );
+  printf("Computed checksum: 0x%02X\n", p->checksum);
+  printf("Expected checksum: 0x%02X\n", expected_checksum);
 }
 
 void test_checksum(void)
@@ -32,18 +41,14 @@ void test_checksum(void)
 
   p.header = 0x2;
   p.size   = 0x0;
-  print_packet( &p );
-  printf("Computed checksum: 0x%02X\n", compute_checksum( &p ));
-  printf("Expected checksum: 0xFD\n");
+  compute_and_cmp_checksum( &p, 0xFD );
   printf("\n");
 
   p.header  = 0xFF;
   p.size    = 0x01;
   p.data    = malloc( p.size );
   p.data[0] = 0xFE;
-  print_packet( &p );
-  printf("Computed checksum: 0x%02X\n", compute_checksum( &p ));
-  printf("Expected checksum: 0x01\n");
+  compute_and_cmp_checksum( &p, 0x01 );
   free(p.data);
   printf("\n");
 
@@ -51,9 +56,7 @@ void test_checksum(void)
   p.size    = 0x03;
   p.data    = malloc( p.size );
   p.data[0] = 0x02; p.data[1] = 0x81; p.data[2] = 0x6E;
-  print_packet( &p );
-  printf("Computed checksum: 0x%02X\n", compute_checksum( &p ));
-  printf("Expected checksum: 0x68\n");
+  compute_and_cmp_checksum( &p, 0x68 );
   free(p.data);
   printf("\n");
 
@@ -71,8 +74,10 @@ void test_packet_conversion(void)
   src.size    = 0x04;
   src.data    = malloc( src.size );
   src.data[0] = 0xDE; src.data[1] = 0xAD; src.data[2] = 0xBE; src.data[3] = 0xEF;
+  src.checksum = compute_checksum( &src );
 
   unsigned char * buffer = malloc( src.size + 4 );
+  init_packet(  buffer, src.size + 4 );
   packet_write( buffer, &src );
   packet_read(  buffer, &dst );
 
@@ -82,6 +87,7 @@ void test_packet_conversion(void)
   print_packet( &dst );
   printf("\n");
 
+  free( buffer );
   packet_free( &src );
   packet_free( &dst );
 }
