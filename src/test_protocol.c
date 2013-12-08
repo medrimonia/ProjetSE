@@ -45,6 +45,7 @@ void test_checksum(void)
   printf("Computed checksum: 0x%02X\n", compute_checksum( &p ));
   printf("Expected checksum: 0x01\n");
   free(p.data);
+  printf("\n");
 
   p.header  = 0xA3;
   p.size    = 0x03;
@@ -54,8 +55,8 @@ void test_checksum(void)
   printf("Computed checksum: 0x%02X\n", compute_checksum( &p ));
   printf("Expected checksum: 0x68\n");
   free(p.data);
-
   printf("\n");
+
   //printf("Packet validation\n");
 
 }

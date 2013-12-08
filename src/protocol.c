@@ -26,8 +26,8 @@ void packet_write( unsigned char * buffer, const struct packet * p )
   write_cmd      ( buffer, read_cmd  (&(p->header)) );
   write_param    ( buffer, read_param(&(p->header)) );
   write_data_size( buffer, p->size                  );
-  //write_data     ( buffer, p->data,    p->size      );
-  //write_checksum ( buffer, p->checksum              );
+  write_data     ( buffer, p->data,     p->size     );
+  write_checksum ( buffer, p->checksum, p->size     );
 }
 
 void packet_read( const unsigned char * buffer, struct packet * p )

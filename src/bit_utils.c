@@ -110,6 +110,19 @@ void write_data_size( unsigned char * p, uint16_t data_size )
   write_bit_value(p + 1, 0, data_size, DATA_SIZE_BITS_NB);
 }
 
+void write_data( unsigned char * p, unsigned char * data, uint16_t data_size )
+{
+  uint16_t i;
+  for (i = 0; i < data_size; i++) {
+    write_bit_value(p+3+i, 0, data[i], 8);
+  }
+}
+
+void write_checksum( unsigned char * p, uint8_t checksum, uint16_t data_size )
+{
+    write_bit_value(p+3+data_size, 0, checksum, CHECKSUM_BITS_NB);
+}
+
 void write_header( unsigned char * p, uint8_t cmd_no,
                    uint8_t pin_type, uint8_t mask_p, uint16_t data_size )
 {

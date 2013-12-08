@@ -26,13 +26,16 @@ void display_binary( unsigned char v );
 void display_packet     ( const unsigned char * p, uint16_t packet_size );
 void display_packet_hexa( const unsigned char * p, uint16_t packet_size );
 
-void write_cmd      ( unsigned char * p, uint8_t cmd_no     );
-void write_pin_type ( unsigned char * p, uint8_t pin_type   );
-void write_mask_p   ( unsigned char * p, uint8_t mask_p     );
-void write_param    ( unsigned char * p, uint8_t param      );
-void write_data_size( unsigned char * p, uint16_t data_size );
-void write_header   ( unsigned char * p, uint8_t cmd_no,
-                      uint8_t pin_type, uint8_t mask_p, uint16_t data_size );
+void write_cmd      ( unsigned char * p, uint8_t  cmd_no     );
+void write_pin_type ( unsigned char * p, uint8_t  pin_type   );
+void write_mask_p   ( unsigned char * p, uint8_t  mask_p     );
+void write_param    ( unsigned char * p, uint8_t  param      );
+void write_data_size( unsigned char * p, uint16_t data_size  );
+void write_header   ( unsigned char * p, uint8_t  cmd_no,
+                      uint8_t  pin_type, uint8_t mask_p, uint16_t data_size );
+void write_data     ( unsigned char * p, unsigned char * data,
+                      uint16_t data_size );
+void write_checksum ( unsigned char * p, uint8_t checksum, uint16_t data_size );
 
 void write_value_list ( unsigned char  * p,
                         unsigned int     offset,
