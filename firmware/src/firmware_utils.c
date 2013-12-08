@@ -39,15 +39,13 @@ void connection_close( struct connection * c )
 }
 
 void connection_write( struct connection   * c,
-                       const unsigned char * packet,
-                       int                   size )
+                       const struct packet * p )
 {
   //TODO
 }
 
 void connection_read( struct connection * c,
-                      unsigned char     * packet,
-                      int               * size )
+                      struct packet     * p )
 {
   //TODO
 }
