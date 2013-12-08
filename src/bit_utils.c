@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "protocol.h"
 #include "bit_utils.h"
@@ -158,6 +159,11 @@ uint8_t read_param( const unsigned char * p )
 uint16_t read_data_size( const unsigned char * p )
 {
   return read_bit_value(p, 8, DATA_SIZE_BITS_NB);
+}
+
+void read_data( const unsigned char * p, unsigned char * dst, uint16_t size )
+{
+  memcpy( dst, p + 3, size );
 }
 
 void read_value_list( const unsigned char * p,

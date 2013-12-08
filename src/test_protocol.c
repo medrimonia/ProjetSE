@@ -14,11 +14,11 @@ void print_separator()
 
 void print_packet( struct packet * p )
 {
-  unsigned char * buffer = malloc( p->size + 3 );
+  unsigned char * buffer = malloc( p->size + 4 );
 
   printf("Packet: ");
   packet_write( buffer, p );
-  display_packet_hexa( buffer, p->size+3 );
+  display_packet_hexa( buffer, p->size + 4 );
   printf("\n");
 
   free( buffer );
@@ -61,10 +61,37 @@ void test_checksum(void)
 
 }
 
+void test_packet_conversion(void)
+{
+  printf("\nTest packet conversion\n");
+  printf("-------------------------\n\n");
+
+  struct packet src, dst;
+  src.header  = 0x12;
+  src.size    = 0x04;
+  src.data    = malloc( src.size );
+  src.data[0] = 0xDE; src.data[1] = 0xAD; src.data[2] = 0xBE; src.data[3] = 0xEF;
+
+  unsigned char * buffer = malloc( src.size + 4 );
+  packet_write( buffer, &src );
+  packet_read(  buffer, &dst );
+
+  printf("Src ");
+  print_packet( &src );
+  printf("Dst ");
+  print_packet( &dst );
+  printf("\n");
+
+  packet_free( &src );
+  packet_free( &dst );
+}
+
 int main(void)
 {
   print_separator();
   test_checksum();
+  print_separator();
+  test_packet_conversion();
   print_separator();
 
   return 0;

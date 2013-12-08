@@ -46,6 +46,8 @@ void write_value_list ( unsigned char  * p,
 uint8_t  read_cmd      ( const unsigned char * p );
 uint8_t  read_param    ( const unsigned char * p );
 uint16_t read_data_size( const unsigned char * p );
+void     read_data     ( const unsigned char * p,
+                               unsigned char * dst, uint16_t size );
 
 void read_value_list ( const unsigned char  * p,
                        unsigned int           offset,

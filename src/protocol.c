@@ -37,9 +37,9 @@ void packet_read( const unsigned char * buffer, struct packet * p )
   p->data = malloc(size);
   //p->checksum = read_checksum(buffer);
 
-  write_cmd  ( &p->header, read_cmd  (buffer)       );
-  write_param( &p->header, read_param(buffer)       );
-  //write_data ( p->data  , read_data (buffer), size );
+  write_cmd  ( &p->header, read_cmd  (buffer)          );
+  write_param( &p->header, read_param(buffer)          );
+  read_data  ( buffer    , p->data           , p->size );
 }
 
 void packet_free( struct packet * p )
