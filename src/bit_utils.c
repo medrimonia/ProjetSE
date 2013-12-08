@@ -85,7 +85,7 @@ void display_packet_hexa( const unsigned char * p, int packet_size )
   }
 }
 
-void write_cmd( unsigned char * p, int cmd_no )
+void write_cmd( unsigned char * p, uint8_t cmd_no )
 {
   write_bit_value(p, 0, cmd_no, CMD_BITS_NB);
 }
@@ -100,18 +100,18 @@ void write_mask_p( unsigned char * p, uint8_t mask_p )
   write_bit_value(p, CMD_BITS_NB+PIN_TYPE_BITS_NB, mask_p, 1);
 }
 
-void write_param( unsigned char * p, int param_no )
+void write_param( unsigned char * p, uint8_t param_no )
 {
   write_bit_value(p, CMD_BITS_NB, param_no, PARAM_BITS_NB);
 }
 
-void write_data_size( unsigned char * p, int16_t data_size )
+void write_data_size( unsigned char * p, uint16_t data_size )
 {
   write_bit_value(p + 1, 0, data_size, DATA_SIZE_BITS_NB);
 }
 
-void write_header( unsigned char * p, int cmd_no,
-                   uint8_t pin_type, uint8_t mask_p, int16_t data_size )
+void write_header( unsigned char * p, uint8_t cmd_no,
+                   uint8_t pin_type, uint8_t mask_p, uint16_t data_size )
 {
   write_cmd(p, cmd_no);
   write_pin_type(p, pin_type);
@@ -119,11 +119,11 @@ void write_header( unsigned char * p, int cmd_no,
   write_data_size(p, data_size);
 }
 
-void write_value_list ( unsigned char * p,
-                        unsigned int offset,
-                        const uint16_t * values,
-                        unsigned int nb_values,
-                        unsigned int value_size )
+void write_value_list( unsigned char * p,
+                       unsigned int offset,
+                       const uint16_t * values,
+                       unsigned int nb_values,
+                       unsigned int value_size )
 {
   unsigned int i;
   for (i = 0; i < nb_values; i++) {
@@ -132,17 +132,17 @@ void write_value_list ( unsigned char * p,
   }
 }
 
-int16_t read_cmd( const unsigned char * p )
+uint8_t read_cmd( const unsigned char * p )
 {
   return read_bit_value(p, 0, CMD_BITS_NB);
 }
 
-int16_t read_param( const unsigned char * p )
+uint8_t read_param( const unsigned char * p )
 {
   return read_bit_value(p, 4, PARAM_BITS_NB);
 }
 
-int16_t read_data_size( const unsigned char * p )
+uint16_t read_data_size( const unsigned char * p )
 {
   return read_bit_value(p, 8, DATA_SIZE_BITS_NB);
 }
@@ -158,21 +158,4 @@ void read_value_list( const unsigned char * p,
     values[i] = read_bit_value(p, offset, value_size);
     offset += value_size;
   }
-}
-
-uint8_t compute_checksum( const unsigned char * p, int packet_size )
-{
-  uint8_t sum = 0;
-  int i = 0;
-  for (; i < packet_size; i++ ) {
-    sum += p[i];
-  }
-  sum = ~sum;
-
-  return sum;
-}
-
-bool packet_valid ( const unsigned char * p, int packet_size )
-{
-  return false;
 }

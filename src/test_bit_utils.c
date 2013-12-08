@@ -77,22 +77,24 @@ void test2()
   printf("data_size : %d\n", data_size);
 }
 
-void test_checksum( void )
-{
-  printf("Test checksum\n");
-  unsigned char p1[2] = { 0, 0 };
-  printf("Computed checksum: 0x%X\n", compute_checksum(p1, 2));
-  printf("Expected checksum: 0xFF\n");
-  unsigned char p2[2] = { 0xFF, 0xFF };
-  printf("Computed checksum: %X\n", compute_checksum(p2, 2));
-  printf("Expected checksum: 1\n");
-  unsigned char p3[2] = { 0xF0, 0x0F };
-  printf("Computed checksum: %X\n", compute_checksum(p3, 2));
-  printf("Expected checksum: 0\n");
-  unsigned char p4[2] = { 0x4A, 0xB3 };
-  printf("Computed checksum: 0x0%X\n", compute_checksum(p4, 2));
-  printf("Expected checksum: 0x02\n");
-}
+//void test_checksum( void )
+//{
+//  printf("Test checksum computation\n");
+//  unsigned char p1[2] = { 0, 0 };
+//  printf("Computed checksum: 0x%X\n", compute_checksum(p1, 2));
+//  printf("Expected checksum: 0xFF\n");
+//  unsigned char p2[2] = { 0xFF, 0xFF };
+//  printf("Computed checksum: %X\n", compute_checksum(p2, 2));
+//  printf("Expected checksum: 1\n");
+//  unsigned char p3[2] = { 0xF0, 0x0F };
+//  printf("Computed checksum: %X\n", compute_checksum(p3, 2));
+//  printf("Expected checksum: 0\n");
+//  unsigned char p4[2] = { 0x4A, 0xB3 };
+//  printf("Computed checksum: 0x0%X\n", compute_checksum(p4, 2));
+//  printf("Expected checksum: 0x02\n");
+//  printf("\n");
+//  printf("Packet validation\n");
+//}
 
 int main( void )
 {
@@ -101,7 +103,7 @@ int main( void )
   print_separator();
   test2();
   print_separator();
-  test_checksum();
-  print_separator();
+//  test_checksum();
+//  print_separator();
   exit(EXIT_SUCCESS);
 }
