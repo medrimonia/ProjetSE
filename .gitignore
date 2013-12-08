@@ -18,3 +18,4 @@
 *.app
 test_bit_utils
 test_driver
+test_protocol

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "protocol.h"
 #include "bit_utils.h"
 
@@ -59,15 +60,12 @@ void test_checksum(void)
   compute_and_cmp_checksum( &p, 0x68 );
   free(p.data);
   printf("\n");
-
-  //printf("Packet validation\n");
-
 }
 
 void test_packet_conversion(void)
 {
   printf("\nTest packet conversion\n");
-  printf("-------------------------\n\n");
+  printf("----------------------\n\n");
 
   struct packet src, dst;
   src.header  = 0x12;
@@ -92,12 +90,34 @@ void test_packet_conversion(void)
   packet_free( &dst );
 }
 
+void test_packet_validation(void)
+{
+  printf("\nTest packet validation\n");
+  printf("----------------------\n\n");
+
+  struct packet p;
+  p.header  = 0x34;
+  p.size    = 0x04;
+  p.data    = malloc( p.size );
+  p.data[0] = 0xDE; p.data[1] = 0xAD; p.data[2] = 0xBE; p.data[3] = 0xEF;
+  p.checksum = compute_checksum( &p );
+
+  print_packet( &p );
+  assert( packet_valid( &p ) );
+  printf("Checksum checked!\n");
+  printf("\n");
+
+  packet_free( &p );
+}
+
 int main(void)
 {
   print_separator();
   test_checksum();
   print_separator();
   test_packet_conversion();
+  print_separator();
+  test_packet_validation();
   print_separator();
 
   return 0;
