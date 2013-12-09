@@ -8,9 +8,9 @@
 
 /* TYPE (3 bits) */
 #define PIN_TYPE_BITS_NB   3
-#define PIN_TYPE_ANALOG8   0
-#define PIN_TYPE_ANALOG16  1
-#define PIN_TYPE_DIGITAL   2
+#define PIN_TYPE_DIGITAL   0
+#define PIN_TYPE_ANALOG8   1
+#define PIN_TYPE_ANALOG16  2
 #define PIN_TYPE_PWM8      3
 #define PIN_TYPE_PWM16     4
 #define PIN_TYPE_USE_STATE 7
@@ -36,6 +36,7 @@
 #define CHECKSUM_BITS_NB   8
 
 #define VERSION_BYTES_NB   1
+#define PINS_NO_BITS_NB    8
 
 // Possible values for the mask_p bit
 #define USE_PIN_ID         0

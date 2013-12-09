@@ -27,6 +27,31 @@ void test_ping( struct connection * c )
   ping(c, 3);
 }
 
+void test_digital_read( struct connection * c )
+{
+  print_title("Digital read on pin 5  :");
+  digital_read(c, 5, NULL);
+}
+
+void test_analogic_read( struct connection * c )
+{
+  print_title("Analogic read on pin 2  :");
+  analogic_read(c, 2, NULL);
+}
+
+void test_pwm8_read( struct connection * c )
+{
+  print_title("Pwm8 read on pin 7  :");
+  pwm8_read(c, 7, NULL);
+}
+
+void test_pwm16_read( struct connection * c )
+{
+  print_title("Pwm16 read on pin 13  :");
+  pwm16_read(c, 13, NULL);
+}
+
+
 
 /*
 void set_type_mask_test( struct connection * c )
@@ -98,9 +123,11 @@ int main( void )
   test_get_caps(c);
   test_reset(c);
   test_ping(c);
+  test_digital_read(c);
+  test_analogic_read(c);
+  test_pwm8_read(c);
+  test_pwm16_read(c);
 /*
-  printf("Ping 3 : ");
-  ping(c, 3);
   printf("Digital read on pin 5  : ");
   digital_read(c, 5, NULL);
   printf("Analogic read on pin 2 : ");

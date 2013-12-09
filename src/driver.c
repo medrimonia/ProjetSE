@@ -46,20 +46,22 @@ void ping( struct connection * connection,
   struct packet p;
   set_packet_header(&p, CMD_PING, 0, 1);
   unsigned char buffer[VERSION_BYTES_NB];
+  init_packet(buffer, VERSION_BYTES_NB);
   write_bit_value(buffer, 0, protocol_version, 8);
   p.data = buffer;
   send_packet(connection, &p);
 }
 
-/*
 int16_t generic_read( struct connection * c,
                       uint8_t pin_id, uint8_t pin_mode )
 {
-  unsigned char p[CMD_SIZE];
-  init_packet(p, CMD_SIZE);
-  write_header(p, CMD_READ, pin_mode, USE_PIN_ID, 1);
-  write_bit_value(p + 3, 0, pin_id, 8);
-  send_packet(c, p, 4);
+  struct packet p;
+  set_packet_header(&p, CMD_READ, (pin_mode << 1) + USE_PIN_ID, 1);
+  unsigned char buffer[PINS_NO_BITS_NB / 8];
+  init_packet(buffer, PINS_NO_BITS_NB / 8);
+  write_bit_value(buffer, 0, pin_id, 8);
+  p.data = buffer;
+  send_packet(c, &p);
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
@@ -91,6 +93,7 @@ int pwm16_read( struct connection * c, uint8_t pin_id, int16_t * val)
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
+/*
 int generic_write( struct connection * c,
                    uint8_t pin_id, int pin_mode, int16_t val, int val_size )
 {

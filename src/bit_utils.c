@@ -6,6 +6,7 @@
 #include "protocol.h"
 #include "bit_utils.h"
 
+//TODO switch name to init_buffer
 void init_packet( unsigned char * p, uint16_t packet_size )
 {
   uint16_t i;
