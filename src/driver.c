@@ -32,25 +32,26 @@ void get_caps( struct connection * connection )
   set_packet_header(&p, CMD_GET_CAPS, 0, 0);
   send_packet(connection, &p);
 }
-/*
+
 void reset( struct connection * connection )
 {
-  unsigned char p[CMD_SIZE];
-  init_packet(p, CMD_SIZE);
-  write_header(p, CMD_RESET, 0, 0, 0);
-  send_packet(connection, p, 3);
+  struct packet p;
+  set_packet_header(&p, CMD_RESET, 0, 0);
+  send_packet(connection, &p);
 }
 
 void ping( struct connection * connection,
            char protocol_version )
 {
-  unsigned char p[CMD_SIZE];
-  init_packet(p, CMD_SIZE);
-  write_header(p, CMD_PING, 0, 0, 1);
-  write_bit_value(p + 3, 0, protocol_version, 8);
-  send_packet(connection, p, 4);
+  struct packet p;
+  set_packet_header(&p, CMD_PING, 0, 1);
+  unsigned char buffer[VERSION_BYTES_NB];
+  write_bit_value(buffer, 0, protocol_version, 8);
+  p.data = buffer;
+  send_packet(connection, &p);
 }
 
+/*
 int16_t generic_read( struct connection * c,
                       uint8_t pin_id, uint8_t pin_mode )
 {
@@ -240,6 +241,7 @@ int send_packet ( struct connection   * connection,
     perror("Failed to write");
     exit(EXIT_FAILURE);
   }
+  free(buffer);
   //packet_print(p);
   //ignoring connection, just dumping for now
   //TODO calculate checksum

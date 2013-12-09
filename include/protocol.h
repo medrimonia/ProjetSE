@@ -35,6 +35,8 @@
 #define DATA_SIZE_BITS_NB 16
 #define CHECKSUM_BITS_NB   8
 
+#define VERSION_BYTES_NB   1
+
 // Possible values for the mask_p bit
 #define USE_PIN_ID         0
 #define USE_MASK           1

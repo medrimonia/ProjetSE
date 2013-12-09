@@ -8,12 +8,25 @@
 
 #define NB_PINS 12
 
-void get_caps_test( struct connection * c )
+void test_get_caps( struct connection * c )
 {
-  print_title("Get caps : ");
+  print_title("Get caps :");
   get_caps(c);
   //TODO treat answer
 }
+
+void test_reset( struct connection * c )
+{
+  print_title("Reset :");
+  reset(c);
+}
+
+void test_ping( struct connection * c )
+{
+  print_title("Ping 3 :");
+  ping(c, 3);
+}
+
 
 /*
 void set_type_mask_test( struct connection * c )
@@ -82,10 +95,10 @@ int main( void )
   c->fd_out = STDERR_FILENO;
   c->nb_pins = NB_PINS;
   print_separator();
-  get_caps_test(c);
+  test_get_caps(c);
+  test_reset(c);
+  test_ping(c);
 /*
-  printf("Reset : ");
-  reset(c);
   printf("Ping 3 : ");
   ping(c, 3);
   printf("Digital read on pin 5  : ");
