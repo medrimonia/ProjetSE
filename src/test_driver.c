@@ -88,7 +88,7 @@ void test_get_type_mask( struct connection * c )
   m[3]  = MASK_PIN_ON;
   m[6]  = MASK_PIN_ON;
   m[10] = MASK_PIN_ON;
-  get_type_mask(c, &m, NULL);
+  get_type_mask(c, m, NULL);
   // Expected: |51|00|02|12|20|7a|;
   free(m);
 }
@@ -107,7 +107,7 @@ void test_set_type_mask( struct connection * c )
   m[7] = MASK_PIN_ON;
   m[9] = MASK_PIN_ON;
   uint16_t values[3] = { PIN_TYPE_DIGITAL, PIN_TYPE_ANALOG8, PIN_TYPE_PWM16 };
-  set_type_mask(c, &m,  values);
+  set_type_mask(c, m,  values);
   // Expected Data :
   //      mask    |   values   |
   //     4  7  9  | 4 |  7 | 9 |

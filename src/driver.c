@@ -136,8 +136,8 @@ int pwm16_write   ( struct connection * c, uint8_t pin_id, int16_t val )
 
 /*
 int write_value_mask( const struct connection * c,
-                      const mask              * mask,
-                      val_list2               * types,
+                      const mask                mask,
+                      val_list2                 types,
                       val_list16              * vals )
 {
   //TODO
@@ -159,15 +159,15 @@ int get_type( struct connection * c, uint8_t pin_id, int8_t * type )
 }
 
 int get_type_mask( struct connection * c,
-                   const mask        * mask,
-                   val_list2         * types )
+                   const mask          mask,
+                   uint16_t          * types )
 {
   struct packet p;
   unsigned int data_size = (c->nb_pins-1) / 8 + 1;
   set_packet_header(&p, CMD_GET_TYPE, USE_MASK, data_size);
   unsigned char * buffer = malloc(data_size);
   init_packet(buffer, data_size);
-  write_mask(buffer, *mask, c->nb_pins);
+  write_mask(buffer, mask, c->nb_pins);
   p.data = buffer;
   send_packet(c, &p);
   //TODO read values
@@ -192,17 +192,17 @@ int set_type( struct connection * c, uint8_t pin_id, char type )
 
 
 int set_type_mask( struct connection * c,
-                   const mask        * mask,
+                   const mask          mask,
                    const uint16_t    * values )
 {
-  int nb_values = nb_pins_used(*mask, c->nb_pins);
+  int nb_values = nb_pins_used(mask, c->nb_pins);
   struct packet p;
   int data_bits_nb = c->nb_pins + PIN_TYPE_BITS_NB * nb_values;
   unsigned int data_bytes = BITS2BYTES(data_bits_nb);
   set_packet_header(&p, CMD_SET_TYPE, USE_MASK, data_bytes);
   p.data = malloc(data_bytes);
   init_packet(p.data, data_bytes);
-  write_mask(p.data, *mask, c->nb_pins);
+  write_mask(p.data, mask, c->nb_pins);
   write_value_list(p.data, c->nb_pins, values, nb_values, PIN_TYPE_BITS_NB);
   send_packet(c, &p);
   //TODO read reply
@@ -224,7 +224,7 @@ int get_failsafe( struct connection   * c,
 }
 
 int get_failsafe_mask( struct connection       * c,
-                       const mask              * mask,
+                       const mask                mask,
                        struct failsafe         * failsafe )
 {
   unsigned char p[CMD_SIZE];
