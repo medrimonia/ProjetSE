@@ -56,7 +56,8 @@ int16_t generic_read( struct connection * c,
                       uint8_t pin_id, uint8_t pin_mode )
 {
   struct packet p;
-  set_packet_header(&p, CMD_READ, (pin_mode << 1) + USE_PIN_ID, 1);
+  set_packet_header(&p, CMD_READ, (pin_mode << 1) + USE_PIN_ID,
+                    PINS_NO_BITS_NB / 8);
   unsigned char buffer[PINS_NO_BITS_NB / 8];
   init_packet(buffer, PINS_NO_BITS_NB / 8);
   write_bit_value(buffer, 0, pin_id, 8);
@@ -93,17 +94,19 @@ int pwm16_read( struct connection * c, uint8_t pin_id, int16_t * val)
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
-/*
 int generic_write( struct connection * c,
                    uint8_t pin_id, int pin_mode, int16_t val, int val_size )
 {
-  unsigned char p[CMD_SIZE];
-  init_packet(p, CMD_SIZE);
-  int packet_size = 1 + 2 + 1 + (val_size - 1) / 8 + 1;
-  write_header(p, CMD_WRITE, pin_mode, USE_PIN_ID, packet_size - 3);
-  write_bit_value(p + 3, 0, pin_id, 8);
-  write_bit_value(p + 4, 0, val, val_size);
-  send_packet(c, p, packet_size);
+  struct packet p;
+  int data_bytes = (PINS_NO_BITS_NB + val_size - 1) / 8 + 1;
+  set_packet_header(&p, CMD_WRITE, (pin_mode << 1) + USE_PIN_ID, data_bytes);
+  unsigned char * buffer = malloc(data_bytes);
+  init_packet(buffer, data_bytes);
+  write_bit_value(buffer, 0, pin_id, PINS_NO_BITS_NB);
+  write_bit_value(buffer + 1, 0, val, val_size);
+  p.data = buffer;
+  send_packet(c, &p);
+  free(buffer);
   return EXIT_FAILURE;
 }
 
@@ -131,6 +134,7 @@ int pwm16_write   ( struct connection * c, uint8_t pin_id, int16_t val )
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
+/*
 int write_value_mask( const struct connection * c,
                       const mask              * mask,
                       val_list2               * types,

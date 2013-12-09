@@ -51,7 +51,29 @@ void test_pwm16_read( struct connection * c )
   pwm16_read(c, 13, NULL);
 }
 
+void test_digital_write( struct connection * c )
+{
+  print_title("Digital write of 'on' on pin 1 :");
+  digital_write (c, 1, true);
+}
 
+void test_analogic_write( struct connection * c )
+{
+  print_title("Analogic write of '510' on pin 6 :");
+  analogic_write (c, 6, 510);
+}
+
+void test_pwm8_write( struct connection * c )
+{
+  print_title("Pwm8 write of '24' on pin 3 :");
+  pwm8_write (c, 3, 24);
+}
+
+void test_pwm16_write( struct connection * c )
+{
+  print_title("Pwm16 write of '515' on pin 9 :");
+  pwm16_write (c, 9, 515);
+}
 
 /*
 void set_type_mask_test( struct connection * c )
@@ -127,17 +149,11 @@ int main( void )
   test_analogic_read(c);
   test_pwm8_read(c);
   test_pwm16_read(c);
+  test_digital_write(c);
+  test_analogic_write(c);
+  test_pwm8_write(c);
+  test_pwm16_write(c);
 /*
-  printf("Digital read on pin 5  : ");
-  digital_read(c, 5, NULL);
-  printf("Analogic read on pin 2 : ");
-  analogic_read(c, 2, NULL);
-  printf("PWM8 read on pin 7     : ");
-  pwm8_read(c, 7, NULL);
-  printf("PWM16 read on pin 13   : ");
-  pwm16_read(c, 13, NULL);
-  printf("Digital write of  'on' on pin 1 : ");
-  digital_write (c, 1, true);
   printf("Analog  write of '510' on pin 6 : ");
   analogic_write(c, 6,  510);
   printf("PWM8    write of  '24' on pin 3 : ");
