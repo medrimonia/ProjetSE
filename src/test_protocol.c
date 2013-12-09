@@ -4,28 +4,6 @@
 #include "protocol.h"
 #include "bit_utils.h"
 
-void print_separator()
-{
-  int i;
-  for (i = 0; i < 80; i++) {
-    printf("-");
-  }
-  printf("\n");
-}
-
-void print_packet( struct packet * p )
-{
-  unsigned char * buffer = malloc( p->size + 4 );
-  init_packet( buffer, p->size + 4 );
-
-  printf("Packet: ");
-  packet_write( buffer, p );
-  display_packet_hexa( buffer, p->size + 4 );
-  printf("\n");
-
-  free( buffer );
-}
-
 void compute_and_cmp_checksum( struct packet * p, uint8_t expected_checksum )
 {
   p->checksum = compute_checksum( p );
@@ -36,8 +14,7 @@ void compute_and_cmp_checksum( struct packet * p, uint8_t expected_checksum )
 
 void test_checksum(void)
 {
-  printf("\nTest checksum computation\n");
-  printf("-------------------------\n\n");
+  print_title("Test checksum computation");
   struct packet p;
 
   p.header = 0x2;
@@ -64,8 +41,7 @@ void test_checksum(void)
 
 void test_packet_conversion(void)
 {
-  printf("\nTest packet conversion\n");
-  printf("----------------------\n\n");
+  print_title("Test packet conversion");
 
   struct packet src, dst;
   src.header  = 0x12;
@@ -92,8 +68,7 @@ void test_packet_conversion(void)
 
 void test_packet_validation(void)
 {
-  printf("\nTest packet validation\n");
-  printf("----------------------\n\n");
+  print_title("Test packet validation");
 
   struct packet p;
   p.header  = 0x34;

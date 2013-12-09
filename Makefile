@@ -25,7 +25,8 @@ test_driver: ${SRC_FOLDER}/bit_utils.o   \
 
 test_protocol: ${SRC_FOLDER}/test_protocol.o \
                ${SRC_FOLDER}/protocol.o      \
-               ${SRC_FOLDER}/bit_utils.o
+               ${SRC_FOLDER}/bit_utils.o     \
+               ${SRC_FOLDER}/test_utils.o
 	${CC} -o $@  $^ ${LDFLAGS}
 
 ${SRC_FOLDER}/bit_utils.o: ${HEADER_FOLDER}/bit_utils.h \
@@ -33,6 +34,9 @@ ${SRC_FOLDER}/bit_utils.o: ${HEADER_FOLDER}/bit_utils.h \
 
 ${SRC_FOLDER}/test_bit_utils.o: ${HEADER_FOLDER}/bit_utils.h \
                                 ${HEADER_FOLDER}/protocol.h
+
+${SRC_FOLDER}/test_utils.o: ${HEADER_FOLDER}/test_utils.h \
+                            ${HEADER_FOLDER}/bit_utils.h
 
 ${SRC_FOLDER}/test_driver.o: ${HEADER_FOLDER}/driver.h
 
