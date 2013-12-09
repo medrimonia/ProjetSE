@@ -75,13 +75,13 @@ void test_pwm16_write( struct connection * c )
   pwm16_write (c, 9, 515);
 }
 
-void get_type_test( struct connection * c )
+void test_get_type( struct connection * c )
 {
   printf("Get type of pin 8 : ");
   get_type(c, 8, NULL);
 }
 
-void get_type_mask_test( struct connection * c )
+void test_get_type_mask( struct connection * c )
 {
   print_title("Get type mask of pin 3,6,10:\n\t");
   mask m = new_mask(NB_PINS);
@@ -91,6 +91,12 @@ void get_type_mask_test( struct connection * c )
   get_type_mask(c, &m, NULL);
   // Expected: |51|00|02|12|20|7a|;
   free(m);
+}
+
+void test_set_type( struct connection * c )
+{
+  print_title("Set type of pin 8 to digital :");
+  set_type(c, 8,  PIN_TYPE_DIGITAL);
 }
 
 /*
@@ -153,11 +159,10 @@ int main( void )
   test_analogic_write(c);
   test_pwm8_write(c);
   test_pwm16_write(c);
-  get_type_test(c);
-  get_type_mask_test(c);
+  test_get_type(c);
+  test_get_type_mask(c);
+  test_set_type(c);
 /*
-  printf("Set type of pin 8 to digital    : ");
-  set_type(c, 8,  PIN_TYPE_DIGITAL);
   set_type_mask_test(c);
   set_failsafe_test(c);
 */
