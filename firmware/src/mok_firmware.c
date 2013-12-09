@@ -10,6 +10,8 @@ int main(void)
   struct connection * c = connection_open( "driver_to_device", "device_to_driver" );
   int16_t cmd;
 
+  // TODO: init device caps and state
+
   if ( c == NULL ) {
     return EXIT_FAILURE;
   }
@@ -23,31 +25,31 @@ int main(void)
     cmd = read_cmd( &p->header );
     switch ( cmd ) {
       case CMD_GET_CAPS:
-        process_get_caps( p );
+        reply_get_caps( c, p );
         break;
       case CMD_RESET:
-        process_reset( p );
+        reply_reset( c, p );
         break;
       case CMD_PING:
-        process_ping( p );
+        reply_ping( c, p );
         break;
       case CMD_READ:
-        process_read( p );
+        reply_read( c, p );
         break;
       case CMD_WRITE:
-        process_write( p );
+        reply_write( c, p );
         break;
       case CMD_GET_TYPE:
-        process_get_type( p );
+        reply_get_type( c, p );
         break;
       case CMD_SET_TYPE:
-        process_set_type( p );
+        reply_set_type( c, p );
         break;
       case CMD_GET_FAILSAFE:
-        process_get_failsafe( p );
+        reply_get_failsafe( c, p );
         break;
       case CMD_SET_FAILSAFE:
-        process_get_failsafe( p );
+        reply_get_failsafe( c, p );
         break;
       default:
         break;
