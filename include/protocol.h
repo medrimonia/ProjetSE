@@ -45,7 +45,6 @@
 #define PINS_NO_BYTES_NB   1
 
 /* TYPES ASSOCIATED BITS NB */
-
 // Possible values for the mask_p bit
 #define USE_PIN_ID         0
 #define USE_MASK           1

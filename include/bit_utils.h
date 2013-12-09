@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define BITS2BYTES(a) ((a - 1) / 8 + 1)
+
 // Fill the given packet with 0
 void init_packet( unsigned char * p, uint16_t packet_size );
 

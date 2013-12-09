@@ -61,17 +61,16 @@ int get_type( struct connection * c, uint8_t pin_id, int8_t * type );
 
 /** Get the device-stored type of a set of pins */
 int get_type_mask( struct connection * c,
-                   const mask        * mask,
-                   val_list2         * types );
+                   const mask          mask,
+                   uint16_t           * types );
 
 /** Set and store the type of one pin on the device. */
 int set_type( struct connection * c, uint8_t pin_id, char type );
 
 /** Set and store the type of a set of pins on the device. */
 int set_type_mask( struct connection * c,
-                   const mask        * mask,
-                   const uint16_t    * values,
-                   unsigned int        nb_values );
+                   const mask          mask,
+                   const uint16_t    * values );
 
 /** Get the failsafe state of the device connected by the specified connection */
 int get_failsafe( struct connection   * c,
@@ -79,7 +78,7 @@ int get_failsafe( struct connection   * c,
                   struct pin_failsafe * failsafe );
 
 int get_failsafe_mask( struct connection * c,
-                       const mask        * mask,
+                       const mask          mask,
                        struct failsafe   * failsafe );
 
 /** Set the failsafe state of the device connected by the specified connection */
@@ -101,7 +100,7 @@ int pwm16_read   ( struct connection * c, uint8_t pin_id, int16_t * val );
  * \param types  The mask of the types in which the values have to be read
  *               (@see val_list2) */
 int read_value_mask( const struct connection * c,
-                     const mask              * mask,
+                     const mask                mask,
                      val_list2               * types,
                      val_list16              * vals );
 
@@ -116,7 +115,7 @@ int pwm16_write   ( struct connection * c, uint8_t pin_id, int16_t val );
  * \param types  The mask of the types in which the values have to be written
  *               (@see val_list2) */
 int write_value_mask( const struct connection * c,
-                      const mask              * mask,
+                      const mask                mask,
                       val_list2               * types,
                       val_list16              * vals );
 //TODO it seems that write_value_mask should write for only one type
