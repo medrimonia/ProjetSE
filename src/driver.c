@@ -190,24 +190,26 @@ int set_type( struct connection * c, uint8_t pin_id, char type )
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
-/*
+
 int set_type_mask( struct connection * c,
                    const mask        * mask,
-                   const uint16_t    * values,
-                   unsigned int        nb_values )
+                   const uint16_t    * values )
 {
-  unsigned char p[CMD_SIZE];
-  init_packet(p, CMD_SIZE);
+  int nb_values = nb_pins_used(*mask, c->nb_pins);
+  struct packet p;
   int data_bits_nb = c->nb_pins + PIN_TYPE_BITS_NB * nb_values;
-  int packet_size = 3 + (data_bits_nb - 1) / 8 + 1;
-  write_header(p, CMD_SET_TYPE, 0, USE_MASK, packet_size - 3);
-  write_mask(p + 3, *mask, c->nb_pins);
-  write_value_list(p + 3, c->nb_pins, values, nb_values, PIN_TYPE_BITS_NB);
-  send_packet(c, p, packet_size);
+  unsigned int data_bytes = BITS2BYTES(data_bits_nb);
+  set_packet_header(&p, CMD_SET_TYPE, USE_MASK, data_bytes);
+  p.data = malloc(data_bytes);
+  init_packet(p.data, data_bytes);
+  write_mask(p.data, *mask, c->nb_pins);
+  write_value_list(p.data, c->nb_pins, values, nb_values, PIN_TYPE_BITS_NB);
+  send_packet(c, &p);
   //TODO read reply
+  free(p.data);
   return EXIT_FAILURE;
 }
-
+/*
 int get_failsafe( struct connection   * c,
                   uint8_t               pin_id,
                   struct pin_failsafe * failsafe )

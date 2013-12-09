@@ -13,6 +13,18 @@ mask new_mask( unsigned int nb_pins )
   return m;
 }
 
+int nb_pins_used( const mask m , unsigned int mask_length)
+{
+  unsigned int i;
+  unsigned int pins_used = 0;
+  for (i = 0; i < mask_length; i++){
+    if (m[i] == MASK_PIN_ON){
+      pins_used ++;
+    }
+  }
+  return pins_used;
+}
+
 int write_mask( unsigned char * buffer, const mask m, unsigned int mask_length )
 {
   unsigned int i;
