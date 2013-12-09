@@ -158,20 +158,23 @@ int get_type( struct connection * c, uint8_t pin_id, int8_t * type )
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
-/*
 int get_type_mask( struct connection * c,
                    const mask        * mask,
                    val_list2         * types )
 {
-  unsigned char p[CMD_SIZE];
-  init_packet(p, CMD_SIZE);
-  write_header(p, CMD_GET_TYPE, 0, USE_MASK, (c->nb_pins-1) / 8 + 1);
-  write_mask(p + 3, *mask, c->nb_pins);
-  send_packet(c, p, 5);
+  struct packet p;
+  unsigned int data_size = (c->nb_pins-1) / 8 + 1;
+  set_packet_header(&p, CMD_GET_TYPE, USE_MASK, data_size);
+  unsigned char * buffer = malloc(data_size);
+  init_packet(buffer, data_size);
+  write_mask(buffer, *mask, c->nb_pins);
+  p.data = buffer;
+  send_packet(c, &p);
   //TODO read values
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
+/*
 int set_type( struct connection * c, uint8_t pin_id, char type )
 {
   unsigned char p[CMD_SIZE];
