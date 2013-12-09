@@ -209,20 +209,22 @@ int set_type_mask( struct connection * c,
   free(p.data);
   return EXIT_FAILURE;
 }
-/*
+
 int get_failsafe( struct connection   * c,
                   uint8_t               pin_id,
                   struct pin_failsafe * failsafe )
 {
-  unsigned char p[CMD_SIZE];
-  init_packet(p, CMD_SIZE);
-  write_header(p, CMD_GET_FAILSAFE, 0, USE_PIN_ID, 1);
-  write_bit_value(p + 3, 0, pin_id, 8);
-  send_packet(c, p, 4);
+  struct packet p;
+  set_packet_header(&p, CMD_GET_FAILSAFE, USE_PIN_ID, PINS_NO_BYTES_NB);
+  unsigned char buffer[PINS_NO_BYTES_NB];
+  init_packet(buffer, PINS_NO_BYTES_NB);
+  write_bit_value(buffer, 0, pin_id, 8);
+  p.data = buffer;
+  send_packet(c, &p);
   //TODO read reply and parse it
   return EXIT_FAILURE;
 }
-
+/*
 int get_failsafe_mask( struct connection       * c,
                        const mask                mask,
                        struct failsafe         * failsafe )

@@ -101,7 +101,7 @@ void test_set_type( struct connection * c )
 
 void test_set_type_mask( struct connection * c )
 {
-  printf("Set type mask of pin 4,7,9 to digit, analog8, pwm16 :\n\t");
+  print_title("Set type mask of pin 4,7,9 to digit, analog8, pwm16 :");
   mask m = new_mask(NB_PINS);
   m[4] = MASK_PIN_ON;
   m[7] = MASK_PIN_ON;
@@ -115,6 +115,12 @@ void test_set_type_mask( struct connection * c )
   //    09   |    40    |   60
   // Expected    : |61|00|03|09|40|60|f2|
   free(m);
+}
+
+void test_get_failsafe( struct connection * c )
+{
+  print_title("Get failsafe on pin 7");
+  get_failsafe(c, 7, NULL);
 }
 
 /*
@@ -163,6 +169,7 @@ int main( void )
   test_get_type_mask(c);
   test_set_type(c);
   test_set_type_mask(c);
+  test_get_failsafe(c);
 /* TODO discuss it
   set_failsafe_test(c);
 */
