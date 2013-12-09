@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define OVERHEAD_SIZE      4
+
 /* TYPE (3 bits) */
 #define PIN_TYPE_BITS_NB   3
 #define PIN_TYPE_ANALOG8   0
@@ -44,10 +46,17 @@ struct packet {
   uint8_t         checksum; // (   1 byte )
 };
 
-uint8_t compute_checksum( struct packet * p );
+uint8_t compute_checksum( const struct packet * p );
 /** Computes the checksum and compare it with the one received */
 
+int packet_bytes_nb( const struct packet * p );
+
 bool packet_valid( struct packet * p );
+
+void set_packet_header( struct packet * p,
+                        uint8_t cmd_no,
+                        uint8_t param,
+                        uint16_t size );
 
 void packet_write( unsigned char * buffer, const struct packet * p );
 /** Memory for data is allocated here to match data size */
@@ -57,5 +66,7 @@ void packet_free ( struct packet * p );
 
 // Return the size of values of the specified type in bits
 uint8_t get_type_bits_nb( uint8_t pin_type );
+
+void packet_print( struct packet * p );
 
 #endif//PROTOCOLES_H

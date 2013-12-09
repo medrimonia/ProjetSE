@@ -1,11 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "driver.h"
 #include "protocol.h"
+#include "test_utils.h"
 
 #define NB_PINS 12
 
+void get_caps_test( struct connection * c )
+{
+  print_title("Get caps : ");
+  get_caps(c);
+  //TODO treat answer
+}
+
+/*
 void set_type_mask_test( struct connection * c )
 {
   printf("Set type mask of pin 4,7,9 to digit, analog8, pwm16 :\n\t");
@@ -64,13 +74,16 @@ void set_failsafe_test( struct connection * c )
   //    50   |    44    |   63    |    24    |    08   |   28    |
   printf("\tExpected    : |81|00|08|02|02|50|44|63|24|08|28|\n");
 }
+*/
 
 int main( void )
 {
   struct connection * c = new_connection();
+  c->fd_out = STDERR_FILENO;
   c->nb_pins = NB_PINS;
-  printf("Get caps : ");
-  get_caps(c);
+  print_separator();
+  get_caps_test(c);
+/*
   printf("Reset : ");
   reset(c);
   printf("Ping 3 : ");
@@ -97,6 +110,8 @@ int main( void )
   set_type(c, 8,  PIN_TYPE_DIGITAL);
   set_type_mask_test(c);
   set_failsafe_test(c);
+*/
+  print_separator();
   destroy_connection(c);
   exit(EXIT_SUCCESS);
 }

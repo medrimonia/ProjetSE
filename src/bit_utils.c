@@ -124,15 +124,6 @@ void write_checksum( unsigned char * p, uint8_t checksum, uint16_t data_size )
   write_bit_value(p+3+data_size, 0, checksum, CHECKSUM_BITS_NB);
 }
 
-void write_header( unsigned char * p, uint8_t cmd_no,
-                   uint8_t pin_type, uint8_t mask_p, uint16_t data_size )
-{
-  write_cmd(p, cmd_no);
-  write_pin_type(p, pin_type);
-  write_mask_p(p, mask_p);
-  write_data_size(p, data_size);
-}
-
 void write_value_list( unsigned char * p,
                        unsigned int offset,
                        const uint16_t * values,

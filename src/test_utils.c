@@ -24,17 +24,3 @@ void print_title( const char * title )
   }
   printf("\n\n");
 }
-
-void print_packet( struct packet * p )
-{
-  //TODO avoid malloc for print if we have enough time
-  unsigned char * buffer = malloc( p->size + 4 );
-  init_packet( buffer, p->size + 4 );
-
-  printf("Packet: ");
-  packet_write( buffer, p );
-  display_packet_hexa( buffer, p->size + 4 );
-  printf("\n");
-
-  free( buffer );
-}

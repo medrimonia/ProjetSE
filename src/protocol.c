@@ -1,8 +1,10 @@
+#include <stdio.h>
 #include <stdlib.h>
+
 #include "protocol.h"
 #include "bit_utils.h"
 
-uint8_t compute_checksum( struct packet * p )
+uint8_t compute_checksum( const struct packet * p )
 {
   uint8_t sum = p->header;
   sum += (uint8_t)(p->size % (1<<8)); // First  byte of p->size
@@ -16,10 +18,25 @@ uint8_t compute_checksum( struct packet * p )
   return sum;
 }
 
+int packet_bytes_nb( const struct packet * p )
+{
+  return p->size + OVERHEAD_SIZE;
+}
+
 bool packet_valid( struct packet * p )
 {
   return compute_checksum( p ) == p->checksum;
 }
+
+void set_packet_header( struct packet * p,
+                        uint8_t cmd_no,
+                        uint8_t param,
+                        uint16_t size )
+{
+  p->header = (cmd_no << 4) + param;
+  p->size = size;
+}
+
 
 void packet_write( unsigned char * buffer, const struct packet * p )
 {
@@ -59,4 +76,18 @@ uint8_t get_type_bits_nb( uint8_t pin_type )
   }
   // Invalid mode
   return 0;
+}
+
+void packet_print( struct packet * p )
+{
+  //TODO avoid malloc for print if we have enough time
+  unsigned char * buffer = malloc( p->size + 4 );
+  init_packet( buffer, p->size + 4 );
+
+  printf("Packet: ");
+  packet_write( buffer, p );
+  display_packet_hexa( buffer, p->size + 4 );
+  printf("\n");
+
+  free( buffer );
 }

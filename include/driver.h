@@ -14,6 +14,7 @@
 #define DRIVER_H
 
 #include "failsafe.h"
+#include "protocol.h"
 #include "value_list.h"
 
 /**
@@ -121,8 +122,7 @@ int write_value_mask( const struct connection * c,
 //TODO it seems that write_value_mask should write for only one type
 
 // Handle the checksum calculation
-int send_packet( struct connection   * connection,
-                 const unsigned char * p,
-                 int                   packet_size);
+int send_packet( struct connection * connection,
+                 struct packet     * p);
 
 #endif//DRIVER_H

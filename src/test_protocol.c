@@ -1,13 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+
 #include "protocol.h"
+#include "test_utils.h"
 #include "bit_utils.h"
 
 void compute_and_cmp_checksum( struct packet * p, uint8_t expected_checksum )
 {
   p->checksum = compute_checksum( p );
-  print_packet( p );
+  packet_print( p );
   printf("Computed checksum: 0x%02X\n", p->checksum);
   printf("Expected checksum: 0x%02X\n", expected_checksum);
 }
@@ -56,9 +58,9 @@ void test_packet_conversion(void)
   packet_read(  buffer, &dst );
 
   printf("Src ");
-  print_packet( &src );
+  packet_print( &src );
   printf("Dst ");
-  print_packet( &dst );
+  packet_print( &dst );
   printf("\n");
 
   free( buffer );
@@ -77,7 +79,7 @@ void test_packet_validation(void)
   p.data[0] = 0xDE; p.data[1] = 0xAD; p.data[2] = 0xBE; p.data[3] = 0xEF;
   p.checksum = compute_checksum( &p );
 
-  print_packet( &p );
+  packet_print( &p );
   assert( packet_valid( &p ) );
   printf("Checksum checked!\n");
   printf("\n");

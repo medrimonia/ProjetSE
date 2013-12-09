@@ -1,5 +1,7 @@
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "driver.h"
 
@@ -26,12 +28,11 @@ void destroy_connection( struct connection * c )
 
 void get_caps( struct connection * connection )
 {
-  unsigned char p[CMD_SIZE];
-  init_packet(p, CMD_SIZE);
-  write_header(p, CMD_GET_CAPS, 0, 0, 0);
-  send_packet(connection, p, 3);
+  struct packet p;
+  set_packet_header(&p, CMD_GET_CAPS, 0, 0);
+  send_packet(connection, &p);
 }
-
+/*
 void reset( struct connection * connection )
 {
   unsigned char p[CMD_SIZE];
@@ -226,15 +227,20 @@ int set_failsafe( struct connection       * c,
   //TODO
   return EXIT_FAILURE;
 }
+*/
 
-
-int send_packet ( struct connection * connection,
-                  const unsigned char * p,
-                  int packet_size )
+int send_packet ( struct connection   * connection,
+                  struct packet * p )
 {
-  printf("Sent packet : ");
-  display_packet_hexa( p, packet_size );
-  printf("\n");
+  p->checksum  = compute_checksum(p);
+  unsigned char * buffer = malloc(packet_bytes_nb(p));
+  packet_write(buffer, p);
+  int n = write(connection->fd_out, buffer, packet_bytes_nb(p));
+  if (n != packet_bytes_nb(p)){
+    perror("Failed to write");
+    exit(EXIT_FAILURE);
+  }
+  //packet_print(p);
   //ignoring connection, just dumping for now
   //TODO calculate checksum
   //TODO send to connection
