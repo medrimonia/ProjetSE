@@ -57,9 +57,9 @@ int16_t generic_read( struct connection * c,
 {
   struct packet p;
   set_packet_header(&p, CMD_READ, (pin_mode << 1) + USE_PIN_ID,
-                    PINS_NO_BITS_NB / 8);
-  unsigned char buffer[PINS_NO_BITS_NB / 8];
-  init_packet(buffer, PINS_NO_BITS_NB / 8);
+                    PINS_NO_BYTES_NB);
+  unsigned char buffer[PINS_NO_BYTES_NB];
+  init_packet(buffer, PINS_NO_BYTES_NB);
   write_bit_value(buffer, 0, pin_id, 8);
   p.data = buffer;
   send_packet(c, &p);
@@ -103,7 +103,7 @@ int generic_write( struct connection * c,
   unsigned char * buffer = malloc(data_bytes);
   init_packet(buffer, data_bytes);
   write_bit_value(buffer, 0, pin_id, PINS_NO_BITS_NB);
-  write_bit_value(buffer + 1, 0, val, val_size);
+  write_bit_value(buffer, PINS_NO_BITS_NB, val, val_size);
   p.data = buffer;
   send_packet(c, &p);
   free(buffer);
@@ -143,18 +143,22 @@ int write_value_mask( const struct connection * c,
   //TODO
   return EXIT_FAILURE;
 }
+*/
 
 int get_type( struct connection * c, uint8_t pin_id, int8_t * type )
 {
-  unsigned char p[CMD_SIZE];
-  init_packet(p, CMD_SIZE);
-  write_header(p, CMD_GET_TYPE, 0, USE_PIN_ID, 1);
-  write_bit_value(p + 3, 0, pin_id, 8);
-  send_packet(c, p, 4);
+  struct packet p;
+  set_packet_header(&p, CMD_GET_TYPE, USE_PIN_ID, PINS_NO_BYTES_NB);
+  unsigned char buffer[PINS_NO_BYTES_NB];
+  init_packet(buffer, PINS_NO_BYTES_NB);
+  write_bit_value(buffer, 0, pin_id, PINS_NO_BITS_NB);
+  p.data = buffer;
+  send_packet(c, &p);
   //TODO set value at end
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
+/*
 int get_type_mask( struct connection * c,
                    const mask        * mask,
                    val_list2         * types )
@@ -242,6 +246,7 @@ int send_packet ( struct connection   * connection,
 {
   p->checksum  = compute_checksum(p);
   unsigned char * buffer = malloc(packet_bytes_nb(p));
+  init_packet(buffer, packet_bytes_nb(p));
   packet_write(buffer, p);
   int n = write(connection->fd_out, buffer, packet_bytes_nb(p));
   if (n != packet_bytes_nb(p)){
