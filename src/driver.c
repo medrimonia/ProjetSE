@@ -224,20 +224,24 @@ int get_failsafe( struct connection   * c,
   //TODO read reply and parse it
   return EXIT_FAILURE;
 }
-/*
+
 int get_failsafe_mask( struct connection       * c,
                        const mask                mask,
                        struct failsafe         * failsafe )
 {
-  unsigned char p[CMD_SIZE];
-  init_packet(p, CMD_SIZE);
-  write_header(p, CMD_GET_FAILSAFE, 0, USE_MASK, (c->nb_pins - 1) / 8 + 1);
-  write_mask(p + 3, *mask, c->nb_pins);
-  send_packet(c, p, 4);
+  struct packet p;
+  unsigned int data_bits = nb_pins_used(mask, c->nb_pins) * PIN_TYPE_BITS_NB;
+  unsigned int data_bytes = BITS2BYTES(data_bits);
+  set_packet_header(&p, CMD_GET_FAILSAFE, USE_MASK, data_bytes);
+  p.data = malloc(data_bytes);
+  init_packet(p.data, data_bytes);
+  write_mask(p.data, mask, c->nb_pins);
+  send_packet(c, &p);
   //TODO read and use values
+  free(p.data);
   return EXIT_FAILURE;
 }
-*/
+
 int set_failsafe( struct connection         * c,
                   uint8_t                     pin_no,
                   uint16_t                    timeout,

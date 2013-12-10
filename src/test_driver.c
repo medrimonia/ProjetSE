@@ -123,6 +123,17 @@ void test_get_failsafe( struct connection * c )
   get_failsafe(c, 7, NULL);
 }
 
+void test_get_failsafe_mask( struct connection * c )
+{
+  print_title("Get failsafe mask on pin 1, 3, 9");
+  mask m = new_mask(c->nb_pins);
+  m[1] = true;
+  m[3] = true;
+  m[9] = true;
+  get_failsafe_mask(c, m, NULL);
+  destroy_mask(m);
+}
+
 void test_set_failsafe( struct connection * c )
 {
   print_title("Test set failsafe on 3 to PWM8 5 with timeout 515 :");
@@ -179,6 +190,7 @@ int main( void )
   test_set_type(c);
   test_set_type_mask(c);
   test_get_failsafe(c);
+  test_get_failsafe_mask(c);
   test_set_failsafe(c);
 /* TODO discuss it
   test_set_failsafe_mask(c);
