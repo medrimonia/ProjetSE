@@ -237,7 +237,33 @@ int get_failsafe_mask( struct connection       * c,
   //TODO read and use values
   return EXIT_FAILURE;
 }
+*/
+int set_failsafe( struct connection         * c,
+                  uint8_t                     pin_no,
+                  uint16_t                    timeout,
+                  const struct pin_failsafe * failsafe_state )
+{
+  struct packet p;
+  uint8_t type = failsafe_state->pin_state;
+  uint8_t type_bits = get_type_bits_nb(type);
+  unsigned int data_bits = TIMEOUT_BITS_NB + PINS_NO_BYTES_NB + type_bits;
+  unsigned int data_bytes = BITS2BYTES(data_bits);
+  set_packet_header(&p, CMD_SET_FAILSAFE, (type << 1) + USE_PIN_ID, data_bytes);
+  p.data = malloc(data_bytes);
+  init_packet(p.data, data_bytes);
+  unsigned int offset = 0;
+  write_bit_value(p.data, offset, timeout, TIMEOUT_BITS_NB);
+  offset += TIMEOUT_BITS_NB;
+  write_bit_value(p.data, offset, pin_no, PINS_NO_BITS_NB);
+  offset += PINS_NO_BITS_NB;
+  write_bit_value(p.data, offset, failsafe_state->pin_value, type_bits);
+  send_packet(c, &p);
+  free(p.data);
+  //TODO check answer
+  return EXIT_FAILURE;
+}
 
+/*
 int set_failsafe( struct connection       * c,
                   const struct failsafe   * failsafe_state)
 {

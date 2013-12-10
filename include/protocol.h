@@ -39,6 +39,8 @@
 #define PINS_NO_BITS_NB    8
 #define PINS_NO_BYTES_NB   1
 
+#define TIMEOUT_BITS_NB   16
+
 /* TYPES ASSOCIATED BITS NB */
 // Possible values for the mask_p bit
 #define USE_PIN_ID         0

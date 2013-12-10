@@ -123,8 +123,17 @@ void test_get_failsafe( struct connection * c )
   get_failsafe(c, 7, NULL);
 }
 
+void test_set_failsafe( struct connection * c )
+{
+  print_title("Test set failsafe on 3 to PWM8 5 with timeout 515 :");
+  struct pin_failsafe fs;
+  fs.pin_value = 5;
+  fs.pin_state = PIN_TYPE_PWM8;
+  set_failsafe( c, 3, 515, &fs);
+}
+
 /*
-void set_failsafe_test( struct connection * c )
+void set_failsafe_test( struct connection * c ) mask version!
 {
   printf("Set failsafe : {1:DIGITAL:OFF, 3:PWM8:25, 9:ANALOG16:522} timeout 514\n\t");
   struct failsafe * f = new_failsafe(c->nb_pins);
@@ -170,8 +179,9 @@ int main( void )
   test_set_type(c);
   test_set_type_mask(c);
   test_get_failsafe(c);
+  test_set_failsafe(c);
 /* TODO discuss it
-  set_failsafe_test(c);
+  test_set_failsafe_mask(c);
 */
   print_separator();
   destroy_connection(c);

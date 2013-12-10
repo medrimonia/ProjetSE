@@ -82,8 +82,13 @@ int get_failsafe_mask( struct connection * c,
                        struct failsafe   * failsafe );
 
 /** Set the failsafe state of the device connected by the specified connection */
-int set_failsafe( struct connection     * c,
-                  const struct failsafe * failsafe_state );
+int set_failsafe( struct connection         * c,
+                  uint8_t                     pin_no,
+                  uint16_t                    timeout,
+                  const struct pin_failsafe * failsafe_state );
+
+int set_failsafe_mask( struct connection     * c,
+                       const struct failsafe * failsafe_state );
 
 /** Read the value of the pin in it's current state, value will be placed in
  * an int in order to be able to stock any type of value. */
