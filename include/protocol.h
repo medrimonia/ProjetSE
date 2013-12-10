@@ -31,6 +31,11 @@
 // messages from the device in a future version
 #define CMD_RESERVED      15
 
+/* REPLY CODES (4 bits) */
+#define REP_CODE_SUCCESS          0
+#define REP_CODE_PARTIAL_SUCCESS  1
+#define REP_CODE_FAILURE          7
+
 #define PARAM_BITS_NB      4
 #define DATA_SIZE_BITS_NB 16
 #define CHECKSUM_BITS_NB   8
