@@ -126,7 +126,7 @@ void test_get_failsafe( struct connection * c )
 void test_get_failsafe_mask( struct connection * c )
 {
   print_title("Get failsafe mask on pin 1, 3, 9");
-  mask m = new_mask(c->nb_pins);
+  mask m = new_mask(c->caps.nb_pins);
   m[1] = true;
   m[3] = true;
   m[9] = true;
@@ -170,9 +170,9 @@ void set_failsafe_test( struct connection * c ) mask version!
 
 int main( void )
 {
-  struct connection * c = new_connection();
+  struct connection * c = malloc(sizeof(struct connection));
   c->fd_out = STDERR_FILENO;
-  c->nb_pins = NB_PINS;
+  c->caps.nb_pins = NB_PINS;
   print_separator();
   test_get_caps(c);
   test_reset(c);
@@ -196,6 +196,6 @@ int main( void )
   test_set_failsafe_mask(c);
 */
   print_separator();
-  destroy_connection(c);
+  free(c);
   exit(EXIT_SUCCESS);
 }

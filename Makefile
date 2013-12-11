@@ -19,13 +19,13 @@ all: ${BINS}
 %.o: %.c
 	${CC} ${CFLAGS} -o $@ -c $^
 
-test_bit_utils: ${OBJ}
+test_bit_utils: src/tests/test_bit_utils.o ${OBJ}
 	${CC} -o $@  $^ ${LDFLAGS}
 
-test_driver: ${OBJ}
+test_driver: driver/tests/test_driver.o ${OBJ}
 	${CC} -o $@  $^ ${LDFLAGS}
 
-test_protocol: ${OBJ}
+test_protocol: src/tests/test_protocol.o ${OBJ}
 	${CC} -o $@  $^ ${LDFLAGS}
 
 depend: .depend
