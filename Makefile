@@ -38,7 +38,7 @@ include .depend
 
 
 clean:
-	@rm -f ${BINDIR}/*
+	@find . -name *.o -delete
 
 mrproper: clean
-	@find . -name *.o -delete
+	@rm -f ${BINS}
