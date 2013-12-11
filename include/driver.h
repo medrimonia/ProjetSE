@@ -13,22 +13,11 @@
 #ifndef DRIVER_H
 #define DRIVER_H
 
+#include "connection.h"
+#include "device_state.h"
 #include "failsafe.h"
 #include "protocol.h"
 #include "value_list.h"
-
-/**
- * A connection is a pair of file descriptor, one is used to send
- * informations to the other side and the other is used to receive
- * informations
- */
-struct connection {
-  int fd_in;
-  int fd_out;
-  int nb_pins;
-  //TODO adding things !!! (nb pins, pins states)
-  // maybe adding time stamps or unknown pins
-};
 
 struct connection * new_connection();
 

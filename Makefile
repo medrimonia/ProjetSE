@@ -1,69 +1,44 @@
-SRC_FOLDER=src
-HEADER_FOLDER=include
-CFLAGS=-Wextra -Wall -I${HEADER_FOLDER} -g
+SRCDIR=src
+INCDIR=include
+
+CC=gcc
+CFLAGS= -Wall -Wextra -I${INCDIR} -g
+LDFLAGS=
+
+SRC=$(wildcard $(SRCDIR)/*.c)
+OBJ=$(SRC:.c=.o)
+
+.PHONY: all depend clean
 
 BINS=test_bit_utils \
      test_driver    \
      test_protocol
 
-binaries: ${BINS}
+all: ${BINS}
 
 %.o: %.c
-	${CC} -o $@ -c $< ${CFLAGS}
+	${CC} ${CFLAGS} -o $@ -c $^
 
-test_bit_utils: ${SRC_FOLDER}/test_bit_utils.o \
-                ${SRC_FOLDER}/bit_utils.o
+test_bit_utils: ${OBJ}
 	${CC} -o $@  $^ ${LDFLAGS}
 
-test_driver: ${SRC_FOLDER}/bit_utils.o   \
-             ${SRC_FOLDER}/driver.o      \
-             ${SRC_FOLDER}/test_driver.o \
-             ${SRC_FOLDER}/mask.o        \
-             ${SRC_FOLDER}/protocol.o    \
-             ${SRC_FOLDER}/failsafe.o    \
-             ${SRC_FOLDER}/test_utils.o
+test_driver: ${OBJ}
 	${CC} -o $@  $^ ${LDFLAGS}
 
-test_protocol: ${SRC_FOLDER}/test_protocol.o \
-               ${SRC_FOLDER}/protocol.o      \
-               ${SRC_FOLDER}/bit_utils.o     \
-               ${SRC_FOLDER}/test_utils.o
+test_protocol: ${OBJ}
 	${CC} -o $@  $^ ${LDFLAGS}
 
-${SRC_FOLDER}/bit_utils.o: ${HEADER_FOLDER}/bit_utils.h \
-                           ${HEADER_FOLDER}/protocol.h
+depend: .depend
 
-${SRC_FOLDER}/test_bit_utils.o: ${HEADER_FOLDER}/bit_utils.h \
-                                ${HEADER_FOLDER}/protocol.h
+.depend: $(SRC)
+	rm -f ./.depend
+	$(CC) -I${INCDIR} -MM $^ > ./.depend;
 
-${SRC_FOLDER}/test_utils.o: ${HEADER_FOLDER}/test_utils.h \
-                            ${HEADER_FOLDER}/bit_utils.h
+include .depend
 
-${SRC_FOLDER}/test_driver.o: ${HEADER_FOLDER}/driver.h     \
-                             ${HEADER_FOLDER}/test_utils.h
-
-${SRC_FOLDER}/test_protocol.o: ${HEADER_FOLDER}/protocol.h
-
-${SRC_FOLDER}/driver.o: ${HEADER_FOLDER}/driver.h    \
-                        ${HEADER_FOLDER}/bit_utils.h \
-                        ${HEADER_FOLDER}/protocol.h  \
-                        ${HEADER_FOLDER}/failsafe.h
-
-${SRC_FOLDER}/mask.o: ${HEADER_FOLDER}/mask.h      \
-                      ${HEADER_FOLDER}/bit_utils.h
-
-${SRC_FOLDER}/failsafe.o: ${HEADER_FOLDER}/failsafe.h  \
-                          ${HEADER_FOLDER}/bit_utils.h \
-                          ${HEADER_FOLDER}/mask.h      \
-                          ${HEADER_FOLDER}/protocol.h
-
-${SRC_FOLDER}/protocol.o: ${HEADER_FOLDER}/protocol.h  \
-                          ${HEADER_FOLDER}/bit_utils.h
-
-.PHONY: clean mrproper
 
 clean:
-	rm -rf ${SRC_FOLDER}/*.o
+	@rm -f ${BINDIR}/*
 
 mrproper: clean
-	rm -rf ${BINS}
+	@find . -name *.o -delete

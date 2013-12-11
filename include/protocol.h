@@ -36,6 +36,9 @@
 #define REP_CODE_PARTIAL_SUCCESS  1
 #define REP_CODE_FAILURE          7
 
+//TODO : to change on arduino
+#define REPLY_SIZE     1000
+
 #define PARAM_BITS_NB      4
 #define DATA_SIZE_BITS_NB 16
 #define CHECKSUM_BITS_NB   8

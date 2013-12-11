@@ -1,6 +1,8 @@
 #ifndef DEVICE_STATE_H
 #define DEVICE_STATE_H
 
+#include <stdint.h>
+
 struct device_caps {
   uint8_t          nb_pins;
   unsigned char *  pins_mask_type;

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "firmware_utils.h"
+#include "connection.h"
 
 /** BUFF_SIZE should be high enough to read up to 256 pin status (3 bits)
  * and value (up to 16 bits)
@@ -17,6 +17,8 @@ struct connection * connection_open( const char * in_filename,
                                      const char * out_filename )
 {
   struct connection * c = malloc( sizeof *c );
+  c->caps.nb_pins = 0;
+  c->state.pins_state = NULL;
 
   c->fd_in = open( in_filename, O_WRONLY );
 

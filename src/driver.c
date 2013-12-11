@@ -12,18 +12,15 @@
 //TODO cmd_size should depend on connection
 #define CMD_SIZE 15
 
-struct connection * new_connection()
+int read_next_packet( struct connection * c )
 {
-  struct connection * c = malloc(sizeof(struct connection));
-  c->fd_in = -1;
-  c->fd_out = -1;
-  c->nb_pins = 0;
-  return c;
 }
 
-void destroy_connection( struct connection * c )
+void handle_get_caps_reply( struct connection * c )
 {
-  free(c);
+  unsigned int n;
+  unsigned char buffer[REPLY_SIZE];
+  //n = read(
 }
 
 void get_caps( struct connection * connection )
@@ -163,11 +160,12 @@ int get_type_mask( struct connection * c,
                    uint16_t          * types )
 {
   struct packet p;
-  unsigned int data_size = (c->nb_pins-1) / 8 + 1;
-  set_packet_header(&p, CMD_GET_TYPE, USE_MASK, data_size);
-  unsigned char * buffer = malloc(data_size);
-  init_packet(buffer, data_size);
-  write_mask(buffer, mask, c->nb_pins);
+  unsigned int data_bits = c->caps.nb_pins-1;
+  unsigned int data_bytes = BITS2BYTES(data_bits);
+  set_packet_header(&p, CMD_GET_TYPE, USE_MASK, data_bytes);
+  unsigned char * buffer = malloc(data_bytes);
+  init_packet(buffer, data_bytes);
+  write_mask(buffer, mask, data_bits);
   p.data = buffer;
   send_packet(c, &p);
   //TODO read values
@@ -195,15 +193,15 @@ int set_type_mask( struct connection * c,
                    const mask          mask,
                    const uint16_t    * values )
 {
-  int nb_values = nb_pins_used(mask, c->nb_pins);
+  int nb_values = nb_pins_used(mask, c->caps.nb_pins);
   struct packet p;
-  int data_bits_nb = c->nb_pins + PIN_TYPE_BITS_NB * nb_values;
+  int data_bits_nb = c->caps.nb_pins + PIN_TYPE_BITS_NB * nb_values;
   unsigned int data_bytes = BITS2BYTES(data_bits_nb);
   set_packet_header(&p, CMD_SET_TYPE, USE_MASK, data_bytes);
   p.data = malloc(data_bytes);
   init_packet(p.data, data_bytes);
-  write_mask(p.data, mask, c->nb_pins);
-  write_value_list(p.data, c->nb_pins, values, nb_values, PIN_TYPE_BITS_NB);
+  write_mask(p.data, mask, c->caps.nb_pins);
+  write_value_list(p.data, c->caps.nb_pins, values, nb_values, PIN_TYPE_BITS_NB);
   send_packet(c, &p);
   //TODO read reply
   free(p.data);
@@ -230,12 +228,12 @@ int get_failsafe_mask( struct connection       * c,
                        struct failsafe         * failsafe )
 {
   struct packet p;
-  unsigned int data_bits = nb_pins_used(mask, c->nb_pins) * PIN_TYPE_BITS_NB;
+  unsigned int data_bits = nb_pins_used(mask, c->caps.nb_pins) * PIN_TYPE_BITS_NB;
   unsigned int data_bytes = BITS2BYTES(data_bits);
   set_packet_header(&p, CMD_GET_FAILSAFE, USE_MASK, data_bytes);
   p.data = malloc(data_bytes);
   init_packet(p.data, data_bytes);
-  write_mask(p.data, mask, c->nb_pins);
+  write_mask(p.data, mask, c->caps.nb_pins);
   send_packet(c, &p);
   //TODO read and use values
   free(p.data);
@@ -268,8 +266,8 @@ int set_failsafe( struct connection         * c,
 }
 
 /*
-int set_failsafe( struct connection       * c,
-                  const struct failsafe   * failsafe_state)
+int set_failsafe_mask( struct connection       * c,
+                       const struct failsafe   * failsafe_state)
 {
   unsigned char p[CMD_SIZE];
   init_packet(p, CMD_SIZE);
