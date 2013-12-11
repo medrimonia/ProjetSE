@@ -3,17 +3,9 @@
 #include <stdlib.h>
 
 #include "bit_utils.h"
+#include "test_utils.h"
 
 #define CMD_SIZE 5
-
-void print_separator()
-{
-  int i;
-  for (i = 0; i < 80; i++) {
-    printf("-");
-  }
-  printf("\n");
-}
 
 void test1()
 {
