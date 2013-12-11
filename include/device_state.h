@@ -17,7 +17,7 @@ struct device_state {
   struct pin_state * pins_state;
 };
 
-uint8_t get_id( void );
+uint8_t get_reply_id( void );
 
 void device_caps_init  ( struct device_caps * dc, uint8_t nb_pins,
                          unsigned char * pins_mask_type );

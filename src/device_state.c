@@ -5,7 +5,7 @@
 
 static uint8_t ID = 0;
 
-uint8_t get_id( void )
+uint8_t get_reply_id( void )
 {
   uint8_t id = ID;
   ID++;

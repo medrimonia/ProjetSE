@@ -4,6 +4,22 @@
 #include "firmware_utils.h"
 #include "firmware_packet_process.h"
 
+void init_device( struct device_caps * dc, struct device_state * ds )
+{
+  unsigned char pins_mask_type[ATM8_NB_PINS];
+  int i;
+  for (i = 0; i < ATM8_NB_PINS; i++) {
+    pins_mask_type[i] = (1 << PIN_TYPE_DIGITAL)
+                      + (1 << PIN_TYPE_ANALOG8)
+                      + (1 << PIN_TYPE_ANALOG16)
+                      + (1 << PIN_TYPE_PWM8)
+                      + (1 << PIN_TYPE_PWM16);
+  }
+
+  device_caps_init (&dc, ATM8_NB_PINS, pins_mask_type);
+  device_state_init(&ds, &dc);
+}
+
 int main(void)
 {
   struct packet * p = malloc( sizeof(*p) );
@@ -15,6 +31,8 @@ int main(void)
   if ( c == NULL ) {
     return EXIT_FAILURE;
   }
+
+  init_device(c->caps, c->state);
 
   while ( 1 ) {
     connection_read( c, p );

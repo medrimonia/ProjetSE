@@ -7,8 +7,12 @@
 void reply_get_caps( struct connection * c, const struct packet * p )
 {
   struct packet rep;
-  set_packet_header(&rep, CMD_GET_CAPS, REP_CODE_SUCCESS, 0/* device_caps.nb_pins*/);
-  // TODO: Transform state to data
+  set_packet_header(&rep, CMD_GET_CAPS, REP_CODE_SUCCESS, c->caps.nb_pins);
+  rep.data = malloc(1 + 1 + c->caps.nb_pins);
+  data[0] = get_reply_id();
+  data[1] += c->caps.nb_pins;
+  memset(data + 2, c->caps.pins_mask_type, c->caps.nb_pins);
+  rep.checksum = compute_checksum(&rep);
   connection_write(c, &rep);
 }
 
