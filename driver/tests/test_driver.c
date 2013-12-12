@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "bit_utils.h"
 #include "driver.h"
 #include "protocol.h"
 #include "test_utils.h"
@@ -12,8 +13,11 @@ void test_get_caps( struct connection * c )
 {
   print_title("Get caps :");
   get_caps(c);
-  printf( "Read number of pins : %d\n", c->caps.nb_pins );
-  //TODO print expected and pinsmask
+  printf( "Read number of pins     : %d\n", c->caps.nb_pins );
+  printf( "Expected number of pins : 2\n" );
+  printf( "Read type mask          : " );
+  display_packet_hexa( c->caps.pins_mask_type, c->caps.nb_pins );
+  printf( "\nExpected type mask      : |ff|0d|\n");
 }
 
 void test_reset( struct connection * c )
