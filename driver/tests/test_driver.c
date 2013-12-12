@@ -12,7 +12,8 @@ void test_get_caps( struct connection * c )
 {
   print_title("Get caps :");
   get_caps(c);
-  //TODO treat answer
+  printf( "Read number of pins : %d\n", c->caps.nb_pins );
+  //TODO print expected and pinsmask
 }
 
 void test_reset( struct connection * c )
@@ -171,10 +172,13 @@ void set_failsafe_test( struct connection * c ) mask version!
 int main( void )
 {
   struct connection * c = malloc(sizeof(struct connection));
+  c->fd_in = STDIN_FILENO;
   c->fd_out = STDERR_FILENO;
   c->caps.nb_pins = NB_PINS;
   print_separator();
   test_get_caps(c);
+  print_separator();
+  return 0;
   test_reset(c);
   test_ping(c);
   test_digital_read(c);

@@ -12,15 +12,18 @@
 //TODO cmd_size should depend on connection
 #define CMD_SIZE 15
 
-int read_next_packet( struct connection * c )
+// Read the next packet, place it in reply and verify the reply id.
+int read_reply( struct connection * c, struct packet * reply )
 {
-}
-
-void handle_get_caps_reply( struct connection * c )
-{
-  unsigned int n;
-  unsigned char buffer[REPLY_SIZE];
-  //n = read(
+  int n;
+  n = connection_read( c, reply );
+  if (n == -1){
+    perror("Failed to read a packet");
+    exit(EXIT_FAILURE);
+  }
+  uint8_t reply_id = read_bit_value( reply->data, 0, REPLY_ID_BITS_NB );
+  //TODO treat reply_id
+  return n;
 }
 
 void get_caps( struct connection * connection )
@@ -28,6 +31,9 @@ void get_caps( struct connection * connection )
   struct packet p;
   set_packet_header(&p, CMD_GET_CAPS, 0, 0);
   send_packet(connection, &p);
+  struct packet reply;
+  read_reply( connection, &reply );
+  read_device_caps( &(connection->caps), &reply );
 }
 
 void reset( struct connection * connection )
