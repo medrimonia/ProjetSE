@@ -47,7 +47,11 @@ void test_ping( struct connection * c )
 void test_digital_read( struct connection * c )
 {
   print_title("Digital read on pin 5  :");
-  digital_read(c, 5, NULL);
+  set_input( c, "driver/tests/test_digital_read_reply" );
+  bool val;
+  digital_read(c, 5, &val);
+  printf("Pin state      : %s\n", DIGPIN2STR(val));
+  printf("Expected state : %s\n", DIGPIN2STR(  1));
 }
 
 void test_analogic_read( struct connection * c )
@@ -198,8 +202,9 @@ int main( void )
   print_separator();
   test_ping(c);
   print_separator();
-  exit(EXIT_FAILURE);
   test_digital_read(c);
+  print_separator();
+  exit(EXIT_FAILURE);
   test_analogic_read(c);
   test_pwm8_read(c);
   test_pwm16_read(c);

@@ -39,6 +39,11 @@
 
 #define REPLY_ID_BITS_NB          8
 
+
+#define DIGITAL_ON      true
+#define DIGITAL_OFF     false
+#define DIGPIN2STR(x) (x == DIGITAL_ON ? "ON" : "OFF")
+
 //TODO : to change on arduino
 #define REPLY_SIZE     1000
 

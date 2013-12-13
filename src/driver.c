@@ -76,7 +76,9 @@ void ping( struct connection * connection,
 }
 
 int16_t generic_read( struct connection * c,
-                      uint8_t pin_id, uint8_t pin_mode )
+                      uint8_t pin_id,
+                      uint8_t pin_mode,
+                      uint16_t * val)
 {
   struct packet p;
   set_packet_header(&p, CMD_READ, (pin_mode << 1) + USE_PIN_ID,
@@ -86,33 +88,39 @@ int16_t generic_read( struct connection * c,
   write_bit_value(buffer, 0, pin_id, 8);
   p.data = buffer;
   send_packet(c, &p);
-  return EXIT_FAILURE;//TODO wait and parse answer
+  // Read answer and store result
+  struct packet reply;
+  read_reply( c, &reply );
+  unsigned int type_bits_nb = get_type_bits_nb(pin_mode);
+  *val = read_bit_value( reply.data, REPLY_ID_BITS_NB, type_bits_nb );
+  return EXIT_SUCCESS;
 }
 
 int digital_read( struct connection * c, uint8_t pin_id, bool * val )
 {
-  generic_read( c, pin_id, PIN_TYPE_DIGITAL);
-  //TODO read value
-  return EXIT_FAILURE;//TODO wait and parse answer
+  uint16_t tmp_val;
+  generic_read( c, pin_id, PIN_TYPE_DIGITAL, &tmp_val );//TODO test return
+  *val = tmp_val;
+  return EXIT_FAILURE;
 }
 
 int analogic_read( struct connection * c, uint8_t pin_id, int16_t * val )
 {
-  generic_read( c, pin_id, PIN_TYPE_ANALOG16);
+  generic_read( c, pin_id, PIN_TYPE_ANALOG16, NULL );
   //TODO read value
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
 int pwm8_read( struct connection * c, uint8_t pin_id, int8_t * val )
 {
-  generic_read( c, pin_id, PIN_TYPE_PWM8);
+  generic_read( c, pin_id, PIN_TYPE_PWM8, NULL );
   //TODO read value
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
 int pwm16_read( struct connection * c, uint8_t pin_id, int16_t * val)
 {
-  generic_read( c, pin_id, PIN_TYPE_PWM16);
+  generic_read( c, pin_id, PIN_TYPE_PWM16, NULL );
   //TODO read value
   return EXIT_FAILURE;//TODO wait and parse answer
 }
