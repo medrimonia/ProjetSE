@@ -41,7 +41,10 @@ void test_ping( struct connection * c )
 {
   print_title("Ping 3 :");
   set_input( c, "driver/tests/test_ping_reply" );
-  ping(c, 3);
+  uint8_t device_protocol_version;
+  ping(c, 3, &device_protocol_version);
+  printf( "Expected protocol version : 1\n" );
+  printf( "Real protocol version     : %d\n", device_protocol_version );
 }
 
 void test_digital_read( struct connection * c )
@@ -57,7 +60,11 @@ void test_digital_read( struct connection * c )
 void test_analogic_read( struct connection * c )
 {
   print_title("Analogic read on pin 2  :");
-  analogic_read(c, 2, NULL);
+  set_input( c, "driver/tests/test_analogic_read_reply" );
+  uint16_t val;
+  analogic_read(c, 5, &val);
+  printf("Pin state      : %u\n", val);
+  printf("Expected state : %u\n", 510);
 }
 
 void test_pwm8_read( struct connection * c )
@@ -204,8 +211,9 @@ int main( void )
   print_separator();
   test_digital_read(c);
   print_separator();
-  exit(EXIT_FAILURE);
   test_analogic_read(c);
+  print_separator();
+  exit(EXIT_FAILURE);
   test_pwm8_read(c);
   test_pwm16_read(c);
   test_digital_write(c);

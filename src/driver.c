@@ -58,7 +58,8 @@ void reset( struct connection * connection )
 }
 
 void ping( struct connection * connection,
-           char protocol_version )
+           char protocol_version,
+           uint8_t * device_protocol_version)
 {
   struct packet p;
   set_packet_header(&p, CMD_PING, 0, 1);
@@ -69,10 +70,8 @@ void ping( struct connection * connection,
   send_packet(connection, &p);
   struct packet reply;
   read_reply( connection, &reply );
-  uint8_t device_protocol_version = read_bit_value( reply.data + 1, 0,
-                                                    VERSION_BITS_NB );
-  printf( "Expected protocol version : 1\n" );
-  printf( "Real protocol version     : %d\n", device_protocol_version );
+  *device_protocol_version = read_bit_value( reply.data + 1, 0,
+                                             VERSION_BITS_NB );
 }
 
 int16_t generic_read( struct connection * c,
@@ -104,25 +103,24 @@ int digital_read( struct connection * c, uint8_t pin_id, bool * val )
   return EXIT_FAILURE;
 }
 
-int analogic_read( struct connection * c, uint8_t pin_id, int16_t * val )
+int analogic_read( struct connection * c, uint8_t pin_id, uint16_t * val )
 {
-  generic_read( c, pin_id, PIN_TYPE_ANALOG16, NULL );
-  //TODO read value
-  return EXIT_FAILURE;//TODO wait and parse answer
+  generic_read( c, pin_id, PIN_TYPE_ANALOG16, val );//TODO test return
+  return EXIT_FAILURE;
 }
 
-int pwm8_read( struct connection * c, uint8_t pin_id, int8_t * val )
+int pwm8_read( struct connection * c, uint8_t pin_id, uint8_t * val )
 {
-  generic_read( c, pin_id, PIN_TYPE_PWM8, NULL );
-  //TODO read value
-  return EXIT_FAILURE;//TODO wait and parse answer
+  uint16_t tmp_val;
+  generic_read( c, pin_id, PIN_TYPE_PWM8, &tmp_val );//TODO test return
+  *val = tmp_val;
+  return EXIT_FAILURE;
 }
 
-int pwm16_read( struct connection * c, uint8_t pin_id, int16_t * val)
+int pwm16_read( struct connection * c, uint8_t pin_id, uint16_t * val)
 {
-  generic_read( c, pin_id, PIN_TYPE_PWM16, NULL );
-  //TODO read value
-  return EXIT_FAILURE;//TODO wait and parse answer
+  generic_read( c, pin_id, PIN_TYPE_PWM16, val );//TODO test return
+  return EXIT_FAILURE;
 }
 
 int generic_write( struct connection * c,

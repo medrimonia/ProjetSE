@@ -43,7 +43,8 @@ void get_caps( struct connection * c );
 void reset( struct connection * c );
 
 /** Send a ping request to check if the board is alive */
-void ping( struct connection * c, char protocol_version );
+void ping( struct connection * c, char protocol_version,
+           uint8_t * device_protocol_version );
 
 /** Get the device-stored type of one pin */
 int get_type( struct connection * c, uint8_t pin_id, int8_t * type );
@@ -86,9 +87,9 @@ int read_value( const struct connection * c, uint8_t pin_id, const int * val );
 /** The following read function set the pin to the right type before if needed.
  *  Pins values are return through the value parameter */
 int digital_read ( struct connection * c, uint8_t pin_id, bool    * val );
-int analogic_read( struct connection * c, uint8_t pin_id, int16_t * val );
-int pwm8_read    ( struct connection * c, uint8_t pin_id, int8_t  * val );
-int pwm16_read   ( struct connection * c, uint8_t pin_id, int16_t * val );
+int analogic_read( struct connection * c, uint8_t pin_id, uint16_t * val );
+int pwm8_read    ( struct connection * c, uint8_t pin_id, uint8_t  * val );
+int pwm16_read   ( struct connection * c, uint8_t pin_id, uint16_t * val );
 
 /** Read several pins values using a mask.
  * \param types  The mask of the types in which the values have to be read
