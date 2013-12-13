@@ -70,13 +70,21 @@ void test_analogic_read( struct connection * c )
 void test_pwm8_read( struct connection * c )
 {
   print_title("Pwm8 read on pin 7  :");
-  pwm8_read(c, 7, NULL);
+  set_input( c, "driver/tests/test_pwm8_read_reply" );
+  uint8_t val;
+  pwm8_read(c, 7, &val);
+  printf("Pin state      : %u\n", val);
+  printf("Expected state : %u\n", 42);
 }
 
 void test_pwm16_read( struct connection * c )
 {
   print_title("Pwm16 read on pin 13  :");
-  pwm16_read(c, 13, NULL);
+  set_input( c, "driver/tests/test_pwm16_read_reply" );
+  uint16_t val;
+  pwm16_read(c, 13, &val);
+  printf("Pin state      : %u\n", val);
+  printf("Expected state : %u\n", 515);
 }
 
 void test_digital_write( struct connection * c )
@@ -213,9 +221,11 @@ int main( void )
   print_separator();
   test_analogic_read(c);
   print_separator();
-  exit(EXIT_FAILURE);
   test_pwm8_read(c);
+  print_separator();
   test_pwm16_read(c);
+  print_separator();
+  exit(EXIT_FAILURE);
   test_digital_write(c);
   test_analogic_write(c);
   test_pwm8_write(c);
