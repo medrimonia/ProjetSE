@@ -1,3 +1,4 @@
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -9,9 +10,18 @@
 
 #define NB_PINS 12
 
+void set_input( struct connection * c, const char * path ){
+  if (c->fd_in != -1){
+    close(c->fd_in);
+  }
+  c->fd_in = open( path, O_RDONLY );
+}
+
+
 void test_get_caps( struct connection * c )
 {
   print_title("Get caps :");
+  set_input( c, "driver/tests/test_get_caps_reply" );
   get_caps(c);
   printf( "Read number of pins     : %d\n", c->caps.nb_pins );
   printf( "Expected number of pins : 2\n" );
@@ -23,6 +33,7 @@ void test_get_caps( struct connection * c )
 void test_reset( struct connection * c )
 {
   print_title("Reset :");
+  set_input( c, "driver/tests/test_reset_reply" );
   reset(c);
 }
 
@@ -176,15 +187,17 @@ void set_failsafe_test( struct connection * c ) mask version!
 int main( void )
 {
   struct connection * c = malloc(sizeof(struct connection));
-  c->fd_in = STDIN_FILENO;
-  c->fd_out = STDERR_FILENO;
+  c->fd_in = -1;
+  c->fd_out = open("/dev/null", O_WRONLY);
   c->caps.nb_pins = NB_PINS;
   print_separator();
   test_get_caps(c);
   print_separator();
-  return 0;
   test_reset(c);
+  print_separator();
   test_ping(c);
+  print_separator();
+  exit(EXIT_FAILURE);
   test_digital_read(c);
   test_analogic_read(c);
   test_pwm8_read(c);

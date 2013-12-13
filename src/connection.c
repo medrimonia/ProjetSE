@@ -72,9 +72,13 @@ ssize_t connection_read( struct connection * c,
 {
   unsigned char buffer[BUFF_SIZE] = {0};
   ssize_t nb_bytes = read( c->fd_in, buffer, BUFF_SIZE );
-  if ( nb_bytes == -1 ) {
-    perror("read");
-    return -1;
+  if ( nb_bytes == -1 ){
+    perror("Failed to read");
+    exit(EXIT_FAILURE);
+  }
+  if ( nb_bytes < OVERHEAD_SIZE ) {
+    fprintf( stderr, "Not enough bytes available (%d read)\n", nb_bytes );
+    exit(EXIT_FAILURE);
   }
 
   packet_read( buffer, p );

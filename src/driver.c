@@ -21,10 +21,16 @@ int read_reply( struct connection * c, struct packet * reply )
     perror("Failed to read a packet");
     exit(EXIT_FAILURE);
   }
+  uint8_t reply_code = reply->header % 16;
+  if (reply_code != REP_CODE_SUCCESS){
+    printf("Invalid reply code received : %d\n", reply_code);
+  }
   uint8_t reply_id = read_bit_value( reply->data, 0, REPLY_ID_BITS_NB );
-  if (reply_id != REP_CODE_SUCCESS){
+  /* TODO
+  if (reply_id != expected){
     printf("Invalid reply id received : %d\n", reply_id);
   }
+  */
   if (!packet_valid( reply )){
     printf("Invalid checksum!\n");
   }
@@ -46,6 +52,9 @@ void reset( struct connection * connection )
   struct packet p;
   set_packet_header(&p, CMD_RESET, 0, 0);
   send_packet(connection, &p);
+  struct packet reply;
+  read_reply( connection, &reply );
+  // No reading action needed
 }
 
 void ping( struct connection * connection,
