@@ -46,6 +46,7 @@
 #define DATA_SIZE_BITS_NB 16
 #define CHECKSUM_BITS_NB   8
 
+#define VERSION_BITS_NB    8
 #define VERSION_BYTES_NB   1
 #define PINS_NO_BITS_NB    8
 #define PINS_NO_BYTES_NB   1

@@ -67,6 +67,12 @@ void ping( struct connection * connection,
   write_bit_value(buffer, 0, protocol_version, 8);
   p.data = buffer;
   send_packet(connection, &p);
+  struct packet reply;
+  read_reply( connection, &reply );
+  uint8_t device_protocol_version = read_bit_value( reply.data + 1, 0,
+                                                    VERSION_BITS_NB );
+  printf( "Expected protocol version : 1\n" );
+  printf( "Real protocol version     : %d\n", device_protocol_version );
 }
 
 int16_t generic_read( struct connection * c,

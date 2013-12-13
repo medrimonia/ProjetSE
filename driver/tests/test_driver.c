@@ -40,6 +40,7 @@ void test_reset( struct connection * c )
 void test_ping( struct connection * c )
 {
   print_title("Ping 3 :");
+  set_input( c, "driver/tests/test_ping_reply" );
   ping(c, 3);
 }
 
