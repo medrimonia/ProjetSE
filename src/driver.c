@@ -22,7 +22,12 @@ int read_reply( struct connection * c, struct packet * reply )
     exit(EXIT_FAILURE);
   }
   uint8_t reply_id = read_bit_value( reply->data, 0, REPLY_ID_BITS_NB );
-  //TODO treat reply_id
+  if (reply_id != REP_CODE_SUCCESS){
+    printf("Invalid reply id received : %d\n", reply_id);
+  }
+  if (!packet_valid( reply )){
+    printf("Invalid checksum!\n");
+  }
   return n;
 }
 

@@ -68,7 +68,7 @@ ssize_t connection_write( struct connection   * c,
 /** Returns -1 if there was an error reading.
  *  Otherwise the number of bytes read is returned */
 ssize_t connection_read( struct connection * c,
-                      struct packet     * p )
+                         struct packet     * p )
 {
   unsigned char buffer[BUFF_SIZE] = {0};
   ssize_t nb_bytes = read( c->fd_in, buffer, BUFF_SIZE );
