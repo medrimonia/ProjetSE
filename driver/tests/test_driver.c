@@ -134,6 +134,8 @@ void test_get_type( struct connection * c )
   // get type reply : |50|00|02|08|60|45|
   uint8_t type;
   get_type( c, 8, &type );
+  uint16_t stored_type = c->state.pins_state[8].pins_type;
+  printf("Stored type   : %u\n", stored_type);
   printf("Pin type      : %u\n", type);
   printf("Expected type : %u\n", 3);
 

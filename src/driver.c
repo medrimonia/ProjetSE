@@ -191,6 +191,7 @@ int get_type( struct connection * c, uint8_t pin_id, uint8_t * type )
   struct packet reply;
   read_reply( c, &reply );
   *type = read_bit_value( reply.data, REPLY_ID_BITS_NB, PIN_TYPE_BITS_NB );
+  c->state.pins_state[pin_id].pins_type = *type;
   return EXIT_SUCCESS;
 }
 
