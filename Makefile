@@ -14,12 +14,16 @@ OBJ=$(SRC:.c=.o)
 BINS=test_bit_utils \
      test_driver    \
      test_protocol  \
-     mok_firmware
+     mok_firmware   \
+     device
 
 all: ${BINS}
 
 %.o: %.c
 	${CC} ${CFLAGS} -o $@ -c $<
+
+device: firmware/firmware.o ${OBJ}
+	${CC} -o $@  $^ ${LDFLAGS}
 
 test_bit_utils: src/tests/test_bit_utils.o ${OBJ}
 	${CC} -o $@  $^ ${LDFLAGS}
