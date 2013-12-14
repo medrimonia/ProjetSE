@@ -177,7 +177,7 @@ int write_value_mask( const struct connection * c,
 }
 */
 
-int get_type( struct connection * c, uint8_t pin_id, int8_t * type )
+int get_type( struct connection * c, uint8_t pin_id, uint8_t * type )
 {
   struct packet p;
   set_packet_header(&p, CMD_GET_TYPE, USE_PIN_ID, PINS_NO_BYTES_NB);
@@ -211,7 +211,7 @@ int get_type_mask( struct connection * c,
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
-int set_type( struct connection * c, uint8_t pin_id, char type )
+int set_type( struct connection * c, uint8_t pin_id, uint8_t type )
 {
   struct packet p;
   unsigned int data_size = BITS2BYTES(PINS_NO_BITS_NB + PIN_TYPE_BITS_NB);

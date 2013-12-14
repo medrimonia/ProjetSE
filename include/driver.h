@@ -47,7 +47,7 @@ void ping( struct connection * c, char protocol_version,
            uint8_t * device_protocol_version );
 
 /** Get the device-stored type of one pin */
-int get_type( struct connection * c, uint8_t pin_id, int8_t * type );
+int get_type( struct connection * c, uint8_t pin_id, uint8_t * type );
 
 /** Get the device-stored type of a set of pins */
 int get_type_mask( struct connection * c,
@@ -55,7 +55,7 @@ int get_type_mask( struct connection * c,
                    uint16_t           * types );
 
 /** Set and store the type of one pin on the device. */
-int set_type( struct connection * c, uint8_t pin_id, char type );
+int set_type( struct connection * c, uint8_t pin_id, uint8_t type );
 
 /** Set and store the type of a set of pins on the device. */
 int set_type_mask( struct connection * c,

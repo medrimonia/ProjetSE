@@ -18,7 +18,8 @@ struct connection * connection_open( const char * in_filename,
 {
   struct connection * c = malloc( sizeof *c );
   c->caps.nb_pins = 0;
-  c->state.pins_state = NULL;
+  c->caps.pins_mask_type = NULL;
+  c->state.pins_state    = NULL;
 
   c->fd_in = open( in_filename, O_WRONLY );
 
@@ -40,8 +41,31 @@ struct connection * connection_open( const char * in_filename,
   return c;
 }
 
+void connection_init_resources( struct connection * c )
+{
+  // In order to avoid memory leaks, always relase resources first
+  connection_release_resources( c );
+  c->caps.pins_mask_type = malloc(c->caps.nb_pins);
+  c->state.pins_state = malloc(c->caps.nb_pins * sizeof(struct pin_state));
+  unsigned int pin_no;
+  for ( pin_no = 0; pin_no < c->caps.nb_pins; pin_no++ ){
+    //Unknown state should maybe be initialized
+    c->caps.pins_mask_type[pin_no] = 0;// No available states at start
+    c->state.pins_state[pin_no].pins_type = PIN_TYPE_DISABLED;
+  }
+}
+
+void connection_release_resources( struct connection * c )
+{
+  if ( c->caps.pins_mask_type != NULL)
+    free( c->caps.pins_mask_type );
+  if ( c->state.pins_state != NULL)
+    free( c->state.pins_state );
+}
+
 void connection_close( struct connection * c )
 {
+  connection_release_resources( c );
   close( c->fd_in  );
   close( c->fd_out );
 

@@ -224,6 +224,7 @@ int main( void )
   c->fd_in = -1;
   c->fd_out = open("/dev/null", O_WRONLY);
   c->caps.nb_pins = NB_PINS;
+  connection_init_resources( c );
   print_separator();
   test_get_caps(c);
   print_separator();
@@ -260,6 +261,6 @@ int main( void )
   test_set_failsafe_mask(c);
 */
   print_separator();
-  free(c);
+  connection_close( c );
   exit(EXIT_SUCCESS);
 }
