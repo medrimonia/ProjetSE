@@ -14,8 +14,6 @@ struct pin_failsafe {
 };
 
 struct failsafe{
-  /** Failsafe can set only some pins when connection fails.  */
-  mask                   pins_used;
   uint16_t               timeout;
   struct  pin_failsafe * pins_failsafe;
 };
@@ -24,9 +22,20 @@ struct failsafe * new_failsafe( unsigned int nb_pins );
 
 uint16_t failsafe_nb_bits( const struct failsafe * f, unsigned int nb_pins );
 
+//TODO refactoring needed, consistency with read_failsafe
 void write_failsafe( unsigned char         * p,
+                     uint16_t                offset,
                      const struct failsafe * f,
                      unsigned int            nb_pins);
+
+/**
+ * Read only the stream corresponding to pins status and values,
+ * offset must be specified in bits
+ */
+void read_failsafe(const unsigned char * buffer,
+                   uint16_t              offset,
+                   struct failsafe     * f,
+                   unsigned int          nb_pins);
 
 void destroy_failsafe( struct failsafe * f);
 
