@@ -1,0 +1,5 @@
+- Should set_... modify ... stored in connection ?
+- Should types be checked and error sent before sending packet?
+- Should type of answer be checked?
+- How to treat errors?
+- How to treat device reset?
