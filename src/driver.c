@@ -257,6 +257,8 @@ int set_type( struct connection * c, uint8_t pin_id, uint8_t type )
   struct packet reply;
   read_reply( c, &reply );//TODO check return code  
   packet_free( &reply );
+  // apply change
+  c->state.pins_state[pin_id].pins_type = type;
   return EXIT_FAILURE;
 }
 
