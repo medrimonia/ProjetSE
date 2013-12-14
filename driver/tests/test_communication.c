@@ -37,6 +37,8 @@ void digital_full_test()
   get_type( c, pin_id, &verif_type );
   assert( verif_type == PIN_TYPE_DIGITAL );
   // Writing value
+  digital_write( c, pin_id, DIGITAL_ON );
+  assert( c->state.pins_state[pin_id].pins_val == DIGITAL_ON );
   // Verifying value
 }
 

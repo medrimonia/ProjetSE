@@ -33,8 +33,18 @@ void reply_read( struct connection * c, const struct packet * p )
 {
 }
 
+void treat_write( struct connection * c, const struct packet * p )
+{
+}
+
 void reply_write( struct connection * c, const struct packet * p )
 {
+  treat_write( c, p );
+  struct packet rep;
+  set_packet_header( &rep, CMD_WRITE, REP_CODE_SUCCESS, 1 );
+  unsigned char rep_id = get_reply_id();
+  rep.data = &rep_id;
+  send_packet( c, &rep );
 }
 
 void reply_get_type( struct connection * c, const struct packet * p )

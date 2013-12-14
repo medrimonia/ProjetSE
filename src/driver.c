@@ -150,8 +150,10 @@ int generic_write( struct connection * c,
   free(buffer);
   // Reading :
   struct packet reply;
-  read_reply( c,&reply );
+  read_reply( c, &reply );
   packet_free( &reply );
+  // Applying :
+  c->state.pins_state[pin_id].pins_val = val;
   return EXIT_SUCCESS;
 }
 
