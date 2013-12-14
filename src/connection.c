@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "bit_utils.h"
 #include "connection.h"
 
 /** BUFF_SIZE should be high enough to read up to 256 pin status (3 bits)
@@ -90,13 +91,14 @@ ssize_t connection_write( struct connection   * c,
 {
   int buff_size = p->size + 4;
   unsigned char * buffer = malloc( buff_size );
+  init_packet( buffer, p->size + 4 );
   packet_write( buffer, p );
   ssize_t nb_bytes = write( c->fd_out, buffer, buff_size );
   if ( nb_bytes == -1 ) {
     perror("write");
     return -1;
   }
-
+  free( buffer );
   return nb_bytes;
 }
 
