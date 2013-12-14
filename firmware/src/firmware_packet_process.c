@@ -8,7 +8,7 @@
 void reply_get_caps( struct connection * c )
 {
   struct packet rep;
-  set_packet_header(&rep, CMD_GET_CAPS, REP_CODE_SUCCESS, c->caps.nb_pins);
+  set_packet_header(&rep, CMD_GET_CAPS, REP_CODE_SUCCESS, c->caps.nb_pins + 2);
   rep.data = malloc(1 + 1 + c->caps.nb_pins);
   rep.data[0] = get_reply_id();
   rep.data[1] += c->caps.nb_pins;
