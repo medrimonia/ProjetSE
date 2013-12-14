@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "bit_utils.h"
 #include "protocol.h"
 #include "connection.h"
@@ -22,10 +23,21 @@ void init_device( struct device_caps * dc, struct device_state * ds )
   device_state_init(ds, dc);
 }
 
-int main(void)
+void print_help( char ** argv )
+{
+  fprintf(stderr, "Usage: %s <input> <output>\n", argv[0]);
+}
+
+int main(int argc, char **argv)
 {
   struct packet * p = malloc( sizeof(*p) );
-  struct connection * c = connection_open( "driver_to_device", "device_to_driver" );
+
+  if ( argc != 3 ) {
+    print_help( argv );
+    return EXIT_FAILURE;
+  }
+
+  struct connection * c = connection_open( argv[1], argv[2] );
   int16_t cmd;
 
   if ( c == NULL ) {
@@ -34,10 +46,10 @@ int main(void)
 
   init_device(&c->caps, &c->state);
 
-  while ( 1 ) {
+  //while ( 1 ) {
     connection_read( c, p );
     if ( !packet_valid(p) ) {
-      continue;
+      return 1;
     }
 
     cmd = read_cmd( &p->header );
@@ -74,7 +86,7 @@ int main(void)
     }
 
     packet_free( p );
-  }
+  //}
 
   connection_close( c );
 
