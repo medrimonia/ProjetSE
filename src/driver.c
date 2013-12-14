@@ -46,6 +46,11 @@ void get_caps( struct connection * connection )
   send_packet(connection, &p);
   struct packet reply;
   read_reply( connection, &reply );
+  //TODO here something should be done about init_resources followed by rd_caps
+  connection->caps.nb_pins = read_bit_value( reply.data,
+                                             REPLY_ID_BITS_NB,
+                                             PINS_NO_BITS_NB );
+  connection_init_resources( connection );
   read_device_caps( &(connection->caps), &reply );
   packet_free( &reply );
 }

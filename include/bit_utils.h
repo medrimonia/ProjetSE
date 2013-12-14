@@ -18,7 +18,7 @@ void write_bit_value( unsigned char * dst,
                       int16_t         val,
                       int             val_size );
 
-int16_t read_bit_value( const unsigned char * dst, int offset, int val_size );
+int16_t read_bit_value( const unsigned char * src, int offset, int val_size );
 
 void display_binary( unsigned char v );
 

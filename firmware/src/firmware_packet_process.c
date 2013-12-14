@@ -1,4 +1,7 @@
+#include <stdbool.h>
+#include <stdio.h>
 #include <string.h>
+
 #include "bit_utils.h"
 #include "protocol.h"
 #include "failsafe.h"
@@ -36,11 +39,41 @@ void reply_write( struct connection * c, const struct packet * p )
 
 void reply_get_type( struct connection * c, const struct packet * p )
 {
+  bool use_mask = p->header % 1 == USE_MASK;
+  struct packet rep;
+  if (!use_mask) {
+    uint8_t pin_id = read_bit_value( p->data, 0, PINS_NO_BITS_NB );
+    uint8_t pin_type = c->state.pins_state[pin_id].pins_type;
+    set_packet_header( &rep, CMD_SET_TYPE, REP_CODE_SUCCESS, 2 );
+    rep.data = malloc(2);
+    init_packet( rep.data, 2 );
+    write_bit_value( rep.data, REPLY_ID_BITS_NB, pin_type, PIN_TYPE_BITS_NB );
+  }
+  else {
+    fprintf( stderr, "Get type for mask unimplemented !\n" );
+    return;
+  }
+  rep.data[0] = get_reply_id();
+  send_packet( c, &rep );
+  free( rep.data );
+}
+
+void treat_set_type( struct connection * c, const struct packet * p )
+{
+  bool use_mask = p->header % 1 == USE_MASK;
+  if (!use_mask) {
+    uint8_t pin_id = read_bit_value( p->data, 0, PINS_NO_BITS_NB );
+    uint8_t type = read_bit_value( p->data, PINS_NO_BITS_NB, PIN_TYPE_BITS_NB );
+    c->state.pins_state[pin_id].pins_type = type;
+  }
+  else {
+    fprintf( stderr, "Set type for mask unimplemented !\n" );
+  }
 }
 
 void reply_set_type( struct connection * c, const struct packet * p )
 {
-  //TODO treat packet
+  treat_set_type( c, p );
   struct packet rep;
   set_packet_header( &rep, CMD_SET_TYPE, REP_CODE_SUCCESS, 1 );
   unsigned char rep_id = get_reply_id();

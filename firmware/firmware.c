@@ -104,9 +104,11 @@ void mainloop()
         reply_write( device, &p );
         break;
       case CMD_GET_TYPE:
+        printf( "Treating a get type cmd\n" );
         reply_get_type( device, &p );
         break;
       case CMD_SET_TYPE:
+        printf( "Treating a set type cmd\n" );
         reply_set_type( device, &p );
         break;
       case CMD_GET_FAILSAFE:

@@ -31,7 +31,11 @@ void digital_full_test()
   uint8_t pin_id = 3;
   // Writing type
   set_type( c, pin_id, PIN_TYPE_DIGITAL );
+  assert( c->state.pins_state[pin_id].pins_type == PIN_TYPE_DIGITAL );
   // Verifying type
+  uint8_t verif_type;
+  get_type( c, pin_id, &verif_type );
+  assert( verif_type == PIN_TYPE_DIGITAL );
   // Writing value
   // Verifying value
 }
