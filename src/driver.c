@@ -257,8 +257,10 @@ int set_type_mask( struct connection * c,
   write_mask(p.data, mask, c->caps.nb_pins);
   write_value_list(p.data, c->caps.nb_pins, values, nb_values, PIN_TYPE_BITS_NB);
   send_packet(c, &p);
-  //TODO read reply
   free(p.data);
+  //Verifying reply
+  struct packet reply;
+  read_reply( c, &reply );//TODO check return code
   return EXIT_FAILURE;
 }
 

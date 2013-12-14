@@ -152,7 +152,7 @@ void test_get_type_mask( struct connection * c )
   m[6]  = MASK_PIN_ON;
   m[10] = MASK_PIN_ON;
   uint16_t types[3];
-  uint8_t  pins_no[3]  = {3, 6, 10};
+  uint8_t  pins_no[3]  = {3, 6, };
   uint8_t  expected[3] = {2, 3, 4};
   get_type_mask(c, m, types);
   // Expected sent packet: |51|00|02|12|20|7a|;
@@ -174,6 +174,7 @@ void test_set_type( struct connection * c )
 {
   print_title("Set type of pin 8 to digital :");
   set_type(c, 8,  PIN_TYPE_DIGITAL);
+  printf("Transmission Successful\n");
 }
 
 void test_set_type_mask( struct connection * c )
@@ -191,6 +192,7 @@ void test_set_type_mask( struct connection * c )
   // 00001001|0100-000-0|01-100-000|
   //    09   |    40    |   60
   // Expected    : |61|00|03|09|40|60|f2|
+  printf("Transmission Successful\n");
   free(m);
 }
 
@@ -279,8 +281,9 @@ int main( void )
   print_separator();
   test_get_type_mask(c);
   print_separator();
-  exit(EXIT_FAILURE);
   test_set_type(c);
+  print_separator();
+  exit(EXIT_FAILURE);
   test_set_type_mask(c);
   test_get_failsafe(c);
   test_get_failsafe_mask(c);
