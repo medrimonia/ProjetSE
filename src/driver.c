@@ -45,6 +45,7 @@ void get_caps( struct connection * connection )
   struct packet reply;
   read_reply( connection, &reply );
   read_device_caps( &(connection->caps), &reply );
+  packet_free( &reply );
 }
 
 void reset( struct connection * connection )
@@ -54,6 +55,7 @@ void reset( struct connection * connection )
   send_packet(connection, &p);
   struct packet reply;
   read_reply( connection, &reply );
+  packet_free( &reply );
   // No reading action needed
 }
 
@@ -72,6 +74,7 @@ void ping( struct connection * connection,
   read_reply( connection, &reply );
   *device_protocol_version = read_bit_value( reply.data + 1, 0,
                                              VERSION_BITS_NB );
+  packet_free( &reply );
 }
 
 int16_t generic_read( struct connection * c,
@@ -93,6 +96,7 @@ int16_t generic_read( struct connection * c,
   unsigned int type_bits_nb = get_type_bits_nb(pin_mode);
   *val = read_bit_value( reply.data, REPLY_ID_BITS_NB, type_bits_nb );
   c->state.pins_state[pin_id].pins_val = *val;
+  packet_free( &reply );
   return EXIT_SUCCESS;
 }
 
@@ -140,6 +144,7 @@ int generic_write( struct connection * c,
   // Reading :
   struct packet reply;
   read_reply( c,&reply );
+  packet_free( &reply );
   return EXIT_SUCCESS;
 }
 
@@ -192,6 +197,7 @@ int get_type( struct connection * c, uint8_t pin_id, uint8_t * type )
   read_reply( c, &reply );
   *type = read_bit_value( reply.data, REPLY_ID_BITS_NB, PIN_TYPE_BITS_NB );
   c->state.pins_state[pin_id].pins_type = *type;
+  packet_free( &reply );
   return EXIT_SUCCESS;
 }
 
@@ -208,6 +214,7 @@ int get_type_mask( struct connection * c,
   write_mask(buffer, mask, data_bits);
   p.data = buffer;
   send_packet(c, &p);
+  free(buffer);
   // Parsing reply
   struct packet reply;
   unsigned int nb_pins_used = mask_nb_pins_used( mask, c->caps.nb_pins);
@@ -223,7 +230,7 @@ int get_type_mask( struct connection * c,
     i++;
     pin_id++;
   }while(true);
-  free(buffer);
+  packet_free( &reply );
   return EXIT_FAILURE;//TODO wait and parse answer
 }
 
@@ -242,6 +249,7 @@ int set_type( struct connection * c, uint8_t pin_id, uint8_t type )
   //Verifying reply
   struct packet reply;
   read_reply( c, &reply );//TODO check return code  
+  packet_free( &reply );
   return EXIT_FAILURE;
 }
 
@@ -264,6 +272,7 @@ int set_type_mask( struct connection * c,
   //Verifying reply
   struct packet reply;
   read_reply( c, &reply );//TODO check return code
+  packet_free( &reply );
   return EXIT_FAILURE;
 }
 
@@ -286,6 +295,7 @@ int get_failsafe( struct connection   * c,
   offset += PIN_TYPE_BITS_NB;
   failsafe->pin_value = read_bit_value( reply.data, offset,
                                         get_type_bits_nb(failsafe->pin_state) );
+  packet_free( &reply );
   return EXIT_FAILURE;
 }
 

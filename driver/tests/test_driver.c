@@ -8,7 +8,7 @@
 #include "protocol.h"
 #include "test_utils.h"
 
-#define NB_PINS 12
+#define NB_PINS 16
 
 void set_input( struct connection * c, const char * path ){
   if (c->fd_in != -1){
@@ -255,7 +255,9 @@ int main( void )
   struct connection * c = malloc(sizeof(struct connection));
   c->fd_in = -1;
   c->fd_out = open("/dev/null", O_WRONLY);
+  c->caps.pins_mask_type = NULL;
   c->caps.nb_pins = NB_PINS;
+  c->state.pins_state = NULL;
   connection_init_resources( c );
   print_separator();
   test_get_caps(c);
@@ -288,6 +290,7 @@ int main( void )
   print_separator();
   test_set_type_mask(c);
   print_separator();
+  connection_close( c );
   exit(EXIT_FAILURE);
   // get_failsafe is definitely an issue
   test_get_failsafe(c);
@@ -298,6 +301,4 @@ int main( void )
   test_set_failsafe_mask(c);
 */
   print_separator();
-  connection_close( c );
-  exit(EXIT_SUCCESS);
 }
