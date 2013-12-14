@@ -26,7 +26,7 @@ all: ${BINS}
 test_communication: driver/tests/test_communication.o ${OBJ}
 	${CC} -o $@  $^ ${LDFLAGS}
 
-device: firmware/firmware.o ${OBJ}
+device: firmware/firmware.o firmware/src/firmware_packet_process.o ${OBJ}
 	${CC} -o $@  $^ ${LDFLAGS}
 
 test_bit_utils: src/tests/test_bit_utils.o ${OBJ}

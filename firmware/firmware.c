@@ -8,7 +8,8 @@
 #include <unistd.h>
 #endif
 
-
+#include "bit_utils.h"
+#include "firmware_packet_process.h"
 #include "connection.h"
 
 #define NB_PINS 16
@@ -74,11 +75,59 @@ void end_communication()
   unlink( DEV2DRIV_FILENAME );
 }
 
+void mainloop()
+{
+  while ( true ) {
+    struct packet p;
+    connection_read( device, &p );
+    if ( !packet_valid(&p) ) {
+      return;
+    }
+
+    int16_t cmd = read_cmd( &p.header );
+    switch ( cmd ) {
+      case CMD_GET_CAPS:
+        printf( "Treating a getcaps cmd\n" );
+        reply_get_caps( device );
+        break;
+      case CMD_RESET:
+        reply_reset( device, &p );
+        break;
+      case CMD_PING:
+        reply_ping( device, &p );
+        break;
+      case CMD_READ:
+        reply_read( device, &p );
+        break;
+      case CMD_WRITE:
+        reply_write( device, &p );
+        break;
+      case CMD_GET_TYPE:
+        reply_get_type( device, &p );
+        break;
+      case CMD_SET_TYPE:
+        reply_set_type( device, &p );
+        break;
+      case CMD_GET_FAILSAFE:
+        reply_get_failsafe( device, &p );
+        break;
+      case CMD_SET_FAILSAFE:
+        reply_get_failsafe( device, &p );
+        break;
+      default:
+        break;
+    }
+
+    packet_free( &p );
+  }
+}
+
 int main(void)
 {
   init_device_content();
   init_communication();
   printf( "Communication started\n" );
+  mainloop();
   end_communication();
   return EXIT_SUCCESS;
 }
