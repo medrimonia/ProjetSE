@@ -31,10 +31,43 @@ void reply_ping( struct connection * c, const struct packet * p )
 
 void reply_read( struct connection * c, const struct packet * p )
 {
+  bool use_mask = p->header % 1 == USE_MASK;
+  struct packet rep;
+  if (!use_mask) {
+    uint8_t pin_id = read_bit_value( p->data, 0, PINS_NO_BITS_NB );
+    uint8_t pin_type = c->state.pins_state[pin_id].pins_type;
+    uint8_t val_bits = get_type_bits_nb( pin_type );
+    uint8_t val_bytes = BITS2BYTES( val_bits );
+    uint16_t val = c->state.pins_state[pin_id].pins_val;
+    set_packet_header( &rep, CMD_READ, REP_CODE_SUCCESS, 1 + val_bytes );
+    rep.data = malloc( 1 + val_bytes );
+    init_packet( rep.data, 1 + val_bytes );
+    write_bit_value( rep.data, REPLY_ID_BITS_NB, val, val_bits );
+  }
+  else {
+    fprintf( stderr, "Get type for mask unimplemented !\n" );
+    return;
+  }
+  rep.data[0] = get_reply_id();
+  send_packet( c, &rep );
+  free( rep.data );
 }
 
 void treat_write( struct connection * c, const struct packet * p )
 {
+  bool use_mask = p->header % 1 == USE_MASK;
+  if (!use_mask) {
+    uint8_t pin_id = read_bit_value( p->data, 0, PINS_NO_BITS_NB );
+    uint8_t pin_type = read_param( &(p->header) ) >> 1;
+    uint8_t val_bits_nb = get_type_bits_nb( pin_type );
+    uint16_t val = read_bit_value( p->data, PINS_NO_BITS_NB, val_bits_nb );
+    //TODO allow type switch with write or not?
+    c->state.pins_state[pin_id].pins_type = pin_type;
+    c->state.pins_state[pin_id].pins_val = val;
+  }
+  else {
+    fprintf( stderr, "Set type for mask unimplemented !\n" );
+  }
 }
 
 void reply_write( struct connection * c, const struct packet * p )

@@ -37,9 +37,13 @@ void digital_full_test()
   get_type( c, pin_id, &verif_type );
   assert( verif_type == PIN_TYPE_DIGITAL );
   // Writing value
-  digital_write( c, pin_id, DIGITAL_ON );
-  assert( c->state.pins_state[pin_id].pins_val == DIGITAL_ON );
+  uint16_t wished_val  = DIGITAL_ON;
+  digital_write( c, pin_id, wished_val );
+  assert( c->state.pins_state[pin_id].pins_val == wished_val );
   // Verifying value
+  bool verif_val;
+  digital_read( c, pin_id, &verif_val );
+  assert( verif_val == wished_val );
 }
 
 
