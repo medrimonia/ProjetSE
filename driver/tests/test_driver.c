@@ -152,7 +152,7 @@ void test_get_type_mask( struct connection * c )
   m[6]  = MASK_PIN_ON;
   m[10] = MASK_PIN_ON;
   uint16_t types[3];
-  uint8_t  pins_no[3]  = {3, 6, };
+  uint8_t  pins_no[3]  = {3, 6, 10};
   uint8_t  expected[3] = {2, 3, 4};
   get_type_mask(c, m, types);
   // Expected sent packet: |51|00|02|12|20|7a|;
