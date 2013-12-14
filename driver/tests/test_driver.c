@@ -246,7 +246,7 @@ void test_get_failsafe_mask( struct connection * c )
   for ( i = 0; i < 3; i++ ){
     uint16_t pin_id = pins_no[i];
     uint8_t stored_type = c->failsafe->pins_failsafe[pin_id].pin_state;
-    uint8_t stored_val  = c->failsafe->pins_failsafe[pin_id].pin_value;
+    uint16_t stored_val = c->failsafe->pins_failsafe[pin_id].pin_value;
     printf( "%d,type -> Stored   : %3u\n", i, stored_type                   );
     printf( "%d,type -> Received : %3u\n", i, f->pins_failsafe[i].pin_state );
     printf( "%d,type -> Expected : %3u\n", i, expected_type[i]              );
