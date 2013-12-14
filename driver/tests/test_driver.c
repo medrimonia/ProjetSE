@@ -244,12 +244,15 @@ void test_get_failsafe_mask( struct connection * c )
   uint16_t expected_type[3] = {0, 3, 2};
   uint16_t expected_val[3] = {0, 25, 522};
   for ( i = 0; i < 3; i++ ){
-    //printf( "%d,type -> Stored   : %3u\n", i, storedState                   );
+    uint16_t pin_id = pins_no[i];
+    uint8_t stored_type = c->failsafe->pins_failsafe[pin_id].pin_state;
+    uint8_t stored_val  = c->failsafe->pins_failsafe[pin_id].pin_value;
+    printf( "%d,type -> Stored   : %3u\n", i, stored_type                   );
     printf( "%d,type -> Received : %3u\n", i, f->pins_failsafe[i].pin_state );
     printf( "%d,type -> Expected : %3u\n", i, expected_type[i]              );
-    //printf( "%d,val  -> Stored   : %3u\n" , i, storedState                   );
-    printf( "%d,val  -> Received : %3u\n" , i, f->pins_failsafe[i].pin_value );
-    printf( "%d,val  -> Expected : %3u\n" , i, expected_val[i]               );
+    printf( "%d,val  -> Stored   : %3u\n", i, stored_val                    );
+    printf( "%d,val  -> Received : %3u\n", i, f->pins_failsafe[i].pin_value );
+    printf( "%d,val  -> Expected : %3u\n", i, expected_val[i]               );
   }
   destroy_failsafe( f );
   destroy_mask( m );

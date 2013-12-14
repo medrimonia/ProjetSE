@@ -326,10 +326,8 @@ int get_failsafe_mask( struct connection       * c,
   do{
     pin_id = mask_next_pin_used( mask, pin_id, c->caps.nb_pins );
     if (pin_id == -1) break;
-    /* TODO failsafe should be copied on the connection properties
-    c->state.fs[pin_id].pins_type = f->pins_failsafe[i].pin_state;
-    c->state.fs[pin_id].pins_val = f->pins_failsafe[i].pin_val;
-    */
+    c->failsafe->pins_failsafe[pin_id].pin_state = f->pins_failsafe[i].pin_state;
+    c->failsafe->pins_failsafe[pin_id].pin_value = f->pins_failsafe[i].pin_value;
     i++;
     pin_id++;
   }while(true);
