@@ -57,10 +57,14 @@ void connection_init_resources( struct connection * c )
 
 void connection_release_resources( struct connection * c )
 {
-  if ( c->caps.pins_mask_type != NULL)
+  if ( c->caps.pins_mask_type != NULL) {
     free( c->caps.pins_mask_type );
-  if ( c->state.pins_state != NULL)
+    c->caps.pins_mask_type = NULL;
+  }
+  if ( c->state.pins_state != NULL) {
     free( c->state.pins_state );
+    c->state.pins_state = NULL;
+  }
 }
 
 void connection_close( struct connection * c )
@@ -70,6 +74,7 @@ void connection_close( struct connection * c )
   close( c->fd_out );
 
   free( c );
+  c = NULL;
 }
 
 /** Returns -1 if there was an error writing.
