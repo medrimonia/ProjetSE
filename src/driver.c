@@ -239,7 +239,10 @@ int set_type( struct connection * c, uint8_t pin_id, uint8_t type )
   p.data = buffer;
   send_packet(c, &p);
   free(buffer);
-  return EXIT_FAILURE;//TODO wait and parse answer
+  //Verifying reply
+  struct packet reply;
+  read_reply( c, &reply );//TODO check return code  
+  return EXIT_FAILURE;
 }
 
 

@@ -173,6 +173,7 @@ void test_get_type_mask( struct connection * c )
 void test_set_type( struct connection * c )
 {
   print_title("Set type of pin 8 to digital :");
+  set_input( c, "driver/tests/test_set_type_reply" );
   set_type(c, 8,  PIN_TYPE_DIGITAL);
   printf("Transmission Successful\n");
 }
@@ -180,6 +181,7 @@ void test_set_type( struct connection * c )
 void test_set_type_mask( struct connection * c )
 {
   print_title("Set type mask of pin 4,7,9 to digit, analog8, pwm16 :");
+  set_input( c, "driver/tests/test_set_type_mask_reply" );
   mask m = new_mask(NB_PINS);
   m[4] = MASK_PIN_ON;
   m[7] = MASK_PIN_ON;
@@ -283,8 +285,9 @@ int main( void )
   print_separator();
   test_set_type(c);
   print_separator();
-  exit(EXIT_FAILURE);
   test_set_type_mask(c);
+  print_separator();
+  exit(EXIT_FAILURE);
   test_get_failsafe(c);
   test_get_failsafe_mask(c);
   test_set_failsafe(c);
