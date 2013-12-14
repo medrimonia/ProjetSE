@@ -14,9 +14,13 @@ mask new_mask( unsigned int nb_pins );
  * Return the number of pins used in a mask
  * \param m The mask to analyze
  */
-int nb_pins_used( const mask m , unsigned int mask_length);
+int mask_nb_pins_used( const mask m , unsigned int mask_length);
 
-int next_pin_used( const mask m, int start, int mask_length );
+/**
+ * Return -1, if no next pin used can be found
+ * start research at m[start]
+ */
+int mask_next_pin_used( const mask m, int start, int mask_length );
 
 /**
  * Write the content of a mask in a buffer

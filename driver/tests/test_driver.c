@@ -28,6 +28,8 @@ void test_get_caps( struct connection * c )
   printf( "Read type mask          : " );
   display_packet_hexa( c->caps.pins_mask_type, c->caps.nb_pins );
   printf( "\nExpected type mask      : |ff|0d|\n");
+  // Recovering the number of pins
+  c->caps.nb_pins = NB_PINS;
 }
 
 void test_reset( struct connection * c )
@@ -144,12 +146,27 @@ void test_get_type( struct connection * c )
 void test_get_type_mask( struct connection * c )
 {
   print_title("Get type mask of pin 3,6,10:\n\t");
+  set_input( c, "driver/tests/test_get_type_mask_reply" );
   mask m = new_mask(NB_PINS);
   m[3]  = MASK_PIN_ON;
   m[6]  = MASK_PIN_ON;
   m[10] = MASK_PIN_ON;
-  get_type_mask(c, m, NULL);
-  // Expected: |51|00|02|12|20|7a|;
+  uint16_t types[3];
+  uint8_t  pins_no[3]  = {3, 6, 10};
+  uint8_t  expected[3] = {2, 3, 4};
+  get_type_mask(c, m, types);
+  // Expected sent packet: |51|00|02|12|20|7a|;
+  // Expected received data :
+  // |010-011-10|0-0000000|
+  // |   4e     |    00   |
+  // Verifying :
+  unsigned int i;
+  for (i = 0; i < 3; i++){
+    uint8_t stored = c->state.pins_state[pins_no[i]].pins_type;
+    printf("pin %d -> Stored   : %u\n", i, stored);
+    printf("pin %d -> Received : %u\n", i, types[i]);
+    printf("pin %d -> Expected : %u\n", i, expected[i]);
+  }
   free(m);
 }
 
@@ -260,8 +277,9 @@ int main( void )
   print_separator();
   test_get_type(c);
   print_separator();
-  exit(EXIT_FAILURE);
   test_get_type_mask(c);
+  print_separator();
+  exit(EXIT_FAILURE);
   test_set_type(c);
   test_set_type_mask(c);
   test_get_failsafe(c);

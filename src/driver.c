@@ -208,7 +208,21 @@ int get_type_mask( struct connection * c,
   write_mask(buffer, mask, data_bits);
   p.data = buffer;
   send_packet(c, &p);
-  //TODO read values
+  // Parsing reply
+  struct packet reply;
+  unsigned int nb_pins_used = mask_nb_pins_used( mask, c->caps.nb_pins);
+  read_reply( c, &reply );//TODO check reply
+  read_value_list( reply.data, REPLY_ID_BITS_NB, types,
+                   nb_pins_used, PIN_TYPE_BITS_NB );
+  int pin_id = 0;
+  int i = 0;
+  do{
+    pin_id = mask_next_pin_used( mask, pin_id, c->caps.nb_pins );
+    if (pin_id == -1) break;
+    c->state.pins_state[pin_id].pins_type = types[i];
+    i++;
+    pin_id++;
+  }while(true);
   free(buffer);
   return EXIT_FAILURE;//TODO wait and parse answer
 }
@@ -233,7 +247,7 @@ int set_type_mask( struct connection * c,
                    const mask          mask,
                    const uint16_t    * values )
 {
-  int nb_values = nb_pins_used(mask, c->caps.nb_pins);
+  int nb_values = mask_nb_pins_used(mask, c->caps.nb_pins);
   struct packet p;
   int data_bits_nb = c->caps.nb_pins + PIN_TYPE_BITS_NB * nb_values;
   unsigned int data_bytes = BITS2BYTES(data_bits_nb);
@@ -268,7 +282,8 @@ int get_failsafe_mask( struct connection       * c,
                        struct failsafe         * failsafe )
 {
   struct packet p;
-  unsigned int data_bits = nb_pins_used(mask, c->caps.nb_pins) * PIN_TYPE_BITS_NB;
+  unsigned int nb_pins_used = mask_nb_pins_used(mask, c->caps.nb_pins);
+  unsigned int data_bits = nb_pins_used * PIN_TYPE_BITS_NB;
   unsigned int data_bytes = BITS2BYTES(data_bits);
   set_packet_header(&p, CMD_GET_FAILSAFE, USE_MASK, data_bytes);
   p.data = malloc(data_bytes);

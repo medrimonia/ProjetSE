@@ -13,7 +13,15 @@ mask new_mask( unsigned int nb_pins )
   return m;
 }
 
-int nb_pins_used( const mask m , unsigned int mask_length)
+int mask_next_pin_used( const mask m, int start, int mask_length ){
+  while ( start < mask_length){
+    if (m[start]) return start;
+    start++;
+  }
+  return -1;
+}
+
+int mask_nb_pins_used( const mask m , unsigned int mask_length)
 {
   unsigned int i;
   unsigned int pins_used = 0;
