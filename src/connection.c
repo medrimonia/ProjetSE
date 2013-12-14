@@ -21,18 +21,18 @@ struct connection * connection_open( const char * in_filename,
   c->caps.pins_mask_type = NULL;
   c->state.pins_state    = NULL;
 
-  c->fd_in = open( in_filename, O_WRONLY );
+  c->fd_in = open( in_filename, O_RDONLY );
 
   if ( c->fd_in == -1 ) {
-    perror( "open" );
+    perror( "Input file open" );
     free( c );
     return NULL;
   }
 
-  c->fd_out = open( out_filename, O_RDONLY );
+  c->fd_out = open( out_filename, O_WRONLY );
 
   if ( c->fd_out == -1 ) {
-    perror( "open" );
+    perror( "Output file open" );
     close( c->fd_in );
     free( c );
     return NULL;
