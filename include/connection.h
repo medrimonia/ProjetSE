@@ -6,6 +6,11 @@
 #include "failsafe.h"
 #include "protocol.h"
 
+#ifndef EMBEDDED
+#define DRIV2DEV_FILENAME "/tmp/driver2device"
+#define DEV2DRIV_FILENAME "/tmp/device2driver"
+#endif
+
 struct connection {
   int fd_in;
   int fd_out;

@@ -11,16 +11,20 @@ OBJ=$(SRC:.c=.o)
 
 .PHONY: all depend clean
 
-BINS=test_bit_utils \
-     test_driver    \
-     test_protocol  \
-     mok_firmware   \
-     device
+BINS=test_bit_utils     \
+     test_driver        \
+     test_protocol      \
+     mok_firmware       \
+     device             \
+     test_communication
 
 all: ${BINS}
 
 %.o: %.c
 	${CC} ${CFLAGS} -o $@ -c $<
+
+test_communication: driver/tests/test_communication.o ${OBJ}
+	${CC} -o $@  $^ ${LDFLAGS}
 
 device: firmware/firmware.o ${OBJ}
 	${CC} -o $@  $^ ${LDFLAGS}

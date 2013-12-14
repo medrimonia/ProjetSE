@@ -24,3 +24,4 @@ test_driver
 test_protocol
 device
 mok_firmware
+test_communication
