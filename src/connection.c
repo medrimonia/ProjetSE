@@ -47,6 +47,7 @@ void connection_init_resources( struct connection * c )
   connection_release_resources( c );
   c->caps.pins_mask_type = malloc(c->caps.nb_pins);
   c->state.pins_state = malloc(c->caps.nb_pins * sizeof(struct pin_state));
+  c->failsafe = new_failsafe( c->caps.nb_pins );
   unsigned int pin_no;
   for ( pin_no = 0; pin_no < c->caps.nb_pins; pin_no++ ){
     //Unknown state should maybe be initialized
@@ -64,6 +65,10 @@ void connection_release_resources( struct connection * c )
   if ( c->state.pins_state != NULL) {
     free( c->state.pins_state );
     c->state.pins_state = NULL;
+  }
+  if ( c->failsafe != NULL ) {
+    destroy_failsafe( c->failsafe );
+    c->failsafe = NULL;
   }
 }
 

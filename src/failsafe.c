@@ -9,6 +9,11 @@ struct failsafe * new_failsafe( unsigned int nb_pins )
   struct failsafe * f = malloc(sizeof(struct failsafe));
   f->timeout       = 0;
   f->pins_failsafe = malloc(nb_pins * sizeof(struct pin_failsafe));
+  unsigned int i;
+  for (i = 0; i < nb_pins; i++){
+    f->pins_failsafe[i].pin_state = PIN_TYPE_DISABLED;
+    f->pins_failsafe[i].pin_value = 0;
+  }
   return f;
 }
 

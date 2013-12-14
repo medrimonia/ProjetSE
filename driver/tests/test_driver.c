@@ -297,6 +297,7 @@ int main( void )
   c->caps.pins_mask_type = NULL;
   c->caps.nb_pins = NB_PINS;
   c->state.pins_state = NULL;
+  c->failsafe = NULL;
   connection_init_resources( c );
   print_separator();
   test_get_caps(c);

@@ -333,7 +333,7 @@ int get_failsafe_mask( struct connection       * c,
     i++;
     pin_id++;
   }while(true);
-  
+  packet_free( &reply );
   return EXIT_FAILURE;
 }
 
