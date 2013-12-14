@@ -289,6 +289,7 @@ int get_failsafe( struct connection   * c,
   write_bit_value(buffer, 0, pin_id, 8);
   p.data = buffer;
   send_packet(c, &p);
+  // Handling reply
   struct packet reply;
   read_reply( c, &reply );//TODO treat return code
   //TODO treat timeout
@@ -303,7 +304,7 @@ int get_failsafe( struct connection   * c,
 
 int get_failsafe_mask( struct connection       * c,
                        const mask                mask,
-                       struct failsafe         * failsafe )
+                       struct failsafe         * f )
 {
   struct packet p;
   unsigned int nb_pins_used = mask_nb_pins_used(mask, c->caps.nb_pins);
@@ -314,8 +315,23 @@ int get_failsafe_mask( struct connection       * c,
   init_packet(p.data, data_bytes);
   write_mask(p.data, mask, c->caps.nb_pins);
   send_packet(c, &p);
-  //TODO read and use values
   free(p.data);
+  // Handling reply
+  struct packet reply;
+  read_reply( c, &reply );//TODO treat return code
+  unsigned int offset = REPLY_ID_BITS_NB + TIMEOUT_BITS_NB;
+  read_failsafe( reply.data, offset, f, nb_pins_used );
+  int pin_id = 0;
+  int i = 0;
+  do{
+    pin_id = mask_next_pin_used( mask, pin_id, c->caps.nb_pins );
+    if (pin_id == -1) break;
+    c->failsafe->pins_failsafe[pin_id].pin_state = f->pins_failsafe[i].pin_state;
+    c->failsafe->pins_failsafe[pin_id].pin_value = f->pins_failsafe[i].pin_value;
+    i++;
+    pin_id++;
+  }while(true);
+  packet_free( &reply );
   return EXIT_FAILURE;
 }
 
@@ -344,7 +360,7 @@ int set_failsafe( struct connection         * c,
   return EXIT_FAILURE;
 }
 
-/*
+/* Multiple changes, needs to be reworked
 int set_failsafe_mask( struct connection       * c,
                        const struct failsafe   * failsafe_state)
 {

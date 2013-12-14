@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include "device_state.h"
+#include "failsafe.h"
 #include "protocol.h"
 
 struct connection {
@@ -10,6 +11,7 @@ struct connection {
   int fd_out;
   struct device_caps caps;
   struct device_state state;
+  struct failsafe * failsafe;
 };
 
 struct connection * connection_open( const char * in_filename,

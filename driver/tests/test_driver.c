@@ -152,7 +152,7 @@ void test_get_type_mask( struct connection * c )
   m[6]  = MASK_PIN_ON;
   m[10] = MASK_PIN_ON;
   uint16_t types[3];
-  uint8_t  pins_no[3]  = {3, 6, };
+  uint8_t  pins_no[3]  = {3, 6, 10};
   uint8_t  expected[3] = {2, 3, 4};
   get_type_mask(c, m, types);
   // Expected sent packet: |51|00|02|12|20|7a|;
@@ -222,13 +222,40 @@ void test_get_failsafe( struct connection * c )
 
 void test_get_failsafe_mask( struct connection * c )
 {
-  print_title("Get failsafe mask on pin 1, 3, 9");
-  mask m = new_mask(c->caps.nb_pins);
+  print_title( "Get failsafe mask on pin 1, 3, 9" );
+  set_input( c, "driver/tests/test_get_failsafe_mask_reply" );
+  mask m = new_mask( c->caps.nb_pins );
   m[1] = true;
   m[3] = true;
   m[9] = true;
-  get_failsafe_mask(c, m, NULL);
-  destroy_mask(m);
+  struct failsafe * f = new_failsafe( 3 );
+  get_failsafe_mask( c, m, f );
+  // Expected Data in Reply :
+  // | Timeout |  1  |      3      |           9              | Pad  |
+  // |    |    | D | | P8|   25    |A16 |       522           |      |
+  // |   515   |000-0-011-0|0011001-0|10-0000-00|10-0000-10|10-000000|
+  // | 02 | 03 |    06     |    32   |    80    |    82    |   80    |
+  // header : |70|00|07|00| <- id de message de 0
+  // checksum = xy :
+  // y : 8 + 2 + 3 + 6 + 2 + 2 = 23 -> y = 8 (f - 7) (reste 1 pour le x)
+  // x : 1 + 7 + 3 + 8 + 8 + 8 = 35 -> y = c (f - 3)
+  unsigned int i;
+  uint8_t pins_no[3] = {1, 3, 9};
+  uint16_t expected_type[3] = {0, 3, 2};
+  uint16_t expected_val[3] = {0, 25, 522};
+  for ( i = 0; i < 3; i++ ){
+    uint16_t pin_id = pins_no[i];
+    uint8_t stored_type = c->failsafe->pins_failsafe[pin_id].pin_state;
+    uint16_t stored_val = c->failsafe->pins_failsafe[pin_id].pin_value;
+    printf( "%d,type -> Stored   : %3u\n", i, stored_type                   );
+    printf( "%d,type -> Received : %3u\n", i, f->pins_failsafe[i].pin_state );
+    printf( "%d,type -> Expected : %3u\n", i, expected_type[i]              );
+    printf( "%d,val  -> Stored   : %3u\n", i, stored_val                    );
+    printf( "%d,val  -> Received : %3u\n", i, f->pins_failsafe[i].pin_value );
+    printf( "%d,val  -> Expected : %3u\n", i, expected_val[i]               );
+  }
+  destroy_failsafe( f );
+  destroy_mask( m );
 }
 
 void test_set_failsafe( struct connection * c )
@@ -257,8 +284,8 @@ void set_failsafe_test( struct connection * c ) mask version!
   f->timeout = 514;
   set_failsafe(c, f);
   // Expected Data :
-  //      mask    |  1  |      3      |          9            |
-  //  1 3      9  | D | | P8|   25    |A16|       522         |
+  //      mask    |  1  |      3      |          9               |
+  //  1 3      9  | D | | P8|   25    |A16|       522            |
   // 01010000|0100-010-0|011-00011|001-001-00|000010-00|001010-00|
   //    50   |    44    |   63    |    24    |    08   |   28    |
   printf("\tExpected    : |81|00|08|02|02|50|44|63|24|08|28|\n");
@@ -273,6 +300,7 @@ int main( void )
   c->caps.pins_mask_type = NULL;
   c->caps.nb_pins = NB_PINS;
   c->state.pins_state = NULL;
+  c->failsafe = NULL;
   connection_init_resources( c );
   print_separator();
   test_get_caps(c);
@@ -307,9 +335,10 @@ int main( void )
   print_separator();
   test_get_failsafe(c);//get_failsafe will need to be verified
   print_separator();
+  test_get_failsafe_mask(c);//get_failsafe_mask will need to be verified
+  print_separator();
   connection_close( c );
   exit(EXIT_FAILURE);
-  test_get_failsafe_mask(c);
   test_set_failsafe(c);
 /* TODO discuss it
   test_set_failsafe_mask(c);
