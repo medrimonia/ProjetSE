@@ -32,7 +32,9 @@ int read_reply( struct connection * c, struct packet * reply )
   }
   */
   if (!packet_valid( reply )){
-    printf("Invalid checksum!\n");
+    printf( "Invalid checksum!\n" );
+    printf( "\tExpected : %d\n", reply->checksum );
+    printf( "\tReceived : %d\n", compute_checksum( reply ) );
   }
   return n;
 }

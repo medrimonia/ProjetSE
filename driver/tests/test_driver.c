@@ -202,7 +202,22 @@ void test_get_failsafe( struct connection * c )
 {
   print_title("Get failsafe on pin 7");
   set_input( c, "driver/tests/test_get_failsafe_reply" );
-  get_failsafe(c, 7, NULL);
+  struct pin_failsafe f;
+  get_failsafe(c, 7, &f);
+  // Expected data :
+  // Reply id : ...
+  // Timeout : 5 s = 500 hundredth of seconds
+  // type : PWM8 -> 3 -> 011
+  // val : 42    -> 00101010
+  // data = |..|01|f4|011-00101|010-00000|
+  //                     65        40
+  //TODO compute store (needs to add a field to connection)
+  //printf( "type -> Stored   : %u\n", storedType  );
+  printf( "type -> Received : %u\n", f.pin_state );
+  printf( "type -> Expected : %u\n", 3           );
+  //printf( "type -> Stored   : %u\n", storedVal      );
+  printf( "type -> Received : %u\n", f.pin_value );
+  printf( "type -> Expected : %u\n", 42          );
 }
 
 void test_get_failsafe_mask( struct connection * c )
@@ -290,11 +305,10 @@ int main( void )
   print_separator();
   test_set_type_mask(c);
   print_separator();
+  test_get_failsafe(c);//get_failsafe will need to be verified
+  print_separator();
   connection_close( c );
   exit(EXIT_FAILURE);
-  // get_failsafe is definitely an issue
-  test_get_failsafe(c);
-  print_separator();
   test_get_failsafe_mask(c);
   test_set_failsafe(c);
 /* TODO discuss it
