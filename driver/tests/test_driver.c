@@ -53,6 +53,8 @@ void test_digital_read( struct connection * c )
   set_input( c, "driver/tests/test_digital_read_reply" );
   bool val;
   digital_read(c, 5, &val);
+  bool stored_val = c->state.pins_state[5].pins_val;
+  printf("Stored state   : %s\n", DIGPIN2STR(stored_val));
   printf("Pin state      : %s\n", DIGPIN2STR(val));
   printf("Expected state : %s\n", DIGPIN2STR(  1));
 }
@@ -62,7 +64,9 @@ void test_analogic_read( struct connection * c )
   print_title("Analogic read on pin 2  :");
   set_input( c, "driver/tests/test_analogic_read_reply" );
   uint16_t val;
-  analogic_read(c, 5, &val);
+  analogic_read(c, 2, &val);
+  uint16_t stored_val = c->state.pins_state[2].pins_val;
+  printf("Stored state   : %u\n", stored_val);
   printf("Pin state      : %u\n", val);
   printf("Expected state : %u\n", 510);
 }
@@ -73,6 +77,8 @@ void test_pwm8_read( struct connection * c )
   set_input( c, "driver/tests/test_pwm8_read_reply" );
   uint8_t val;
   pwm8_read(c, 7, &val);
+  uint8_t stored_val = c->state.pins_state[7].pins_val;
+  printf("Stored state   : %u\n", stored_val);
   printf("Pin state      : %u\n", val);
   printf("Expected state : %u\n", 42);
 }
@@ -83,6 +89,8 @@ void test_pwm16_read( struct connection * c )
   set_input( c, "driver/tests/test_pwm16_read_reply" );
   uint16_t val;
   pwm16_read(c, 13, &val);
+  uint16_t stored_val = c->state.pins_state[13].pins_val;
+  printf("Stored state   : %u\n", stored_val);
   printf("Pin state      : %u\n", val);
   printf("Expected state : %u\n", 515);
 }

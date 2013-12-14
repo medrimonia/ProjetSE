@@ -92,6 +92,7 @@ int16_t generic_read( struct connection * c,
   read_reply( c, &reply );
   unsigned int type_bits_nb = get_type_bits_nb(pin_mode);
   *val = read_bit_value( reply.data, REPLY_ID_BITS_NB, type_bits_nb );
+  c->state.pins_state[pin_id].pins_val = *val;
   return EXIT_SUCCESS;
 }
 
