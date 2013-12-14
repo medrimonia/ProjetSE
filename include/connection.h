@@ -1,6 +1,7 @@
 #ifndef CONNECTION_H
 #define CONNECTION_H
 
+#include <stdlib.h>
 #include "device_state.h"
 #include "protocol.h"
 

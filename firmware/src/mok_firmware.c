@@ -1,8 +1,10 @@
 #include <stdlib.h>
 #include "bit_utils.h"
 #include "protocol.h"
-#include "firmware_utils.h"
+#include "connection.h"
 #include "firmware_packet_process.h"
+#include "atm8_pins.h"
+#include "device_state.h"
 
 void init_device( struct device_caps * dc, struct device_state * ds )
 {
@@ -16,8 +18,8 @@ void init_device( struct device_caps * dc, struct device_state * ds )
                       + (1 << PIN_TYPE_PWM16);
   }
 
-  device_caps_init (&dc, ATM8_NB_PINS, pins_mask_type);
-  device_state_init(&ds, &dc);
+  device_caps_init (dc, ATM8_NB_PINS, pins_mask_type);
+  device_state_init(ds, dc);
 }
 
 int main(void)
@@ -26,13 +28,11 @@ int main(void)
   struct connection * c = connection_open( "driver_to_device", "device_to_driver" );
   int16_t cmd;
 
-  // TODO: init device caps and state
-
   if ( c == NULL ) {
     return EXIT_FAILURE;
   }
 
-  init_device(c->caps, c->state);
+  init_device(&c->caps, &c->state);
 
   while ( 1 ) {
     connection_read( c, p );
@@ -43,7 +43,7 @@ int main(void)
     cmd = read_cmd( &p->header );
     switch ( cmd ) {
       case CMD_GET_CAPS:
-        reply_get_caps( c, p );
+        reply_get_caps( c );
         break;
       case CMD_RESET:
         reply_reset( c, p );
