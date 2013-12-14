@@ -20,6 +20,7 @@ struct connection * connection_open( const char * in_filename,
   c->caps.nb_pins = 0;
   c->caps.pins_mask_type = NULL;
   c->state.pins_state    = NULL;
+  c->failsafe = NULL;
 
   c->fd_in = open( in_filename, O_RDONLY );
 

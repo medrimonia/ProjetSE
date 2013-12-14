@@ -26,6 +26,7 @@ void init_device_content()
   device->fd_out = -1;
   device->caps.pins_mask_type = NULL;
   device->state.pins_state = NULL;
+  device->failsafe = NULL;
   device->caps.nb_pins = NB_PINS;
   connection_init_resources( device );
   unsigned int i;
