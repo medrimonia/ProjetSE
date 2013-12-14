@@ -26,14 +26,27 @@ void check_connection_caps()
   }
 }
 
-int main(void){
+void digital_full_test()
+{
+  uint8_t pin_id = 3;
+  // Writing type
+  set_type( c, pin_id, PIN_TYPE_DIGITAL );
+  // Verifying type
+  // Writing value
+  // Verifying value
+}
+
+
+int main(void)
+{
   c = connection_open( DEV2DRIV_FILENAME, DRIV2DEV_FILENAME );
   if ( c == NULL ) return EXIT_FAILURE;
   printf( "Connection initialized, sending getCaps :\n" );
   get_caps( c );
   // Tests
   check_connection_caps();
-
+  //test_reset();//TODO this should be done later
+  digital_full_test();
   // Ending
   connection_close( c );
   return EXIT_SUCCESS;

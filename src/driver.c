@@ -375,23 +375,3 @@ int set_failsafe_mask( struct connection       * c,
   return EXIT_FAILURE;
 }
 */
-
-int send_packet ( struct connection   * connection,
-                  struct packet * p )
-{
-  p->checksum  = compute_checksum(p);
-  unsigned char * buffer = malloc(packet_bytes_nb(p));
-  init_packet(buffer, packet_bytes_nb(p));
-  packet_write(buffer, p);
-  int n = write(connection->fd_out, buffer, packet_bytes_nb(p));
-  if (n != packet_bytes_nb(p)){
-    perror("Failed to write");
-    exit(EXIT_FAILURE);
-  }
-  free(buffer);
-  //packet_print(p);
-  //ignoring connection, just dumping for now
-  //TODO calculate checksum
-  //TODO send to connection
-  return EXIT_FAILURE;
-}

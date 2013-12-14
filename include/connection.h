@@ -33,4 +33,11 @@ void    connection_close( struct connection * c                          );
 ssize_t connection_write( struct connection * c, const struct packet * p );
 ssize_t connection_read ( struct connection * c,       struct packet * p );
 
+/**
+ * Handle the checksum calculation
+ * @return -1 if there was an error, the number of bytes written on success
+ */
+int send_packet( struct connection * connection,
+                 struct packet     * p);
+
 #endif /* CONNECTION_H */

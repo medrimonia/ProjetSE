@@ -14,8 +14,7 @@ void reply_get_caps( struct connection * c )
   rep.data[0] = get_reply_id();
   rep.data[1] += c->caps.nb_pins;
   memcpy( rep.data + 2, c->caps.pins_mask_type, c->caps.nb_pins );
-  rep.checksum = compute_checksum( &rep );
-  connection_write( c, &rep );
+  send_packet( c, &rep );
   free( rep.data );
 }
 
@@ -41,6 +40,12 @@ void reply_get_type( struct connection * c, const struct packet * p )
 
 void reply_set_type( struct connection * c, const struct packet * p )
 {
+  //TODO treat packet
+  struct packet rep;
+  set_packet_header( &rep, CMD_SET_TYPE, REP_CODE_SUCCESS, 1 );
+  unsigned char rep_id = get_reply_id();
+  rep.data = &rep_id;
+  send_packet( c, &rep );
 }
 
 void reply_get_failsafe( struct connection * c, const struct packet * p )

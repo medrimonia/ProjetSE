@@ -116,8 +116,4 @@ int write_value_mask( const struct connection * c,
                       val_list16              * vals );
 //TODO it seems that write_value_mask should write for only one type
 
-// Handle the checksum calculation
-int send_packet( struct connection * connection,
-                 struct packet     * p);
-
 #endif//DRIVER_H

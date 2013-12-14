@@ -117,3 +117,10 @@ ssize_t connection_read( struct connection * c,
 
   return nb_bytes;
 }
+
+int send_packet ( struct connection   * connection,
+                  struct packet * p )
+{
+  p->checksum  = compute_checksum( p );
+  return connection_write( connection, p );
+}
