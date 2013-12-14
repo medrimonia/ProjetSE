@@ -79,7 +79,7 @@ void mainloop()
 {
   while ( true ) {
     struct packet p;
-    connection_read( device, &p );
+    if ( connection_read( device, &p ) == -1 ) return;
     if ( !packet_valid(&p) ) {
       return;
     }
