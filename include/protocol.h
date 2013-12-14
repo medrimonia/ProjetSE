@@ -1,5 +1,5 @@
-#ifndef PROTOCOLES_H
-#define PROTOCOLES_H
+#ifndef PROTOCOL_H
+#define PROTOCOL_H
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -93,4 +93,4 @@ uint8_t get_type_bits_nb( uint8_t pin_type );
 
 void packet_print( struct packet * p );
 
-#endif//PROTOCOLES_H
+#endif//PROTOCOL_H

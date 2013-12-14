@@ -278,7 +278,14 @@ int get_failsafe( struct connection   * c,
   write_bit_value(buffer, 0, pin_id, 8);
   p.data = buffer;
   send_packet(c, &p);
-  //TODO read reply and parse it
+  struct packet reply;
+  read_reply( c, &reply );//TODO treat return code
+  //TODO treat timeout
+  unsigned int offset = REPLY_ID_BITS_NB + TIMEOUT_BITS_NB;
+  failsafe->pin_state = read_bit_value( reply.data, offset, PIN_TYPE_BITS_NB );
+  offset += PIN_TYPE_BITS_NB;
+  failsafe->pin_value = read_bit_value( reply.data, offset,
+                                        get_type_bits_nb(failsafe->pin_state) );
   return EXIT_FAILURE;
 }
 

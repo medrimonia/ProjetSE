@@ -201,6 +201,7 @@ void test_set_type_mask( struct connection * c )
 void test_get_failsafe( struct connection * c )
 {
   print_title("Get failsafe on pin 7");
+  set_input( c, "driver/tests/test_get_failsafe_reply" );
   get_failsafe(c, 7, NULL);
 }
 
@@ -288,7 +289,9 @@ int main( void )
   test_set_type_mask(c);
   print_separator();
   exit(EXIT_FAILURE);
+  // get_failsafe is definitely an issue
   test_get_failsafe(c);
+  print_separator();
   test_get_failsafe_mask(c);
   test_set_failsafe(c);
 /* TODO discuss it

@@ -4,3 +4,4 @@
 - How to treat errors?
 - How to treat device reset?
 - Checking reply ids ?
+- Timeout specific to each pin (cf protocol)
