@@ -3,3 +3,4 @@
 - Should type of answer be checked?
 - How to treat errors?
 - How to treat device reset?
+- Checking reply ids ?
