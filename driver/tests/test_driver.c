@@ -90,25 +90,33 @@ void test_pwm16_read( struct connection * c )
 void test_digital_write( struct connection * c )
 {
   print_title("Digital write of 'on' on pin 1 :");
+  set_input( c, "driver/tests/test_digital_write_reply" );
   digital_write (c, 1, true);
+  printf("Transmission Successful\n");
 }
 
 void test_analogic_write( struct connection * c )
 {
   print_title("Analogic write of '510' on pin 6 :");
+  set_input( c, "driver/tests/test_analogic_write_reply" );
   analogic_write (c, 6, 510);
+  printf("Transmission Successful\n");
 }
 
 void test_pwm8_write( struct connection * c )
 {
   print_title("Pwm8 write of '24' on pin 3 :");
+  set_input( c, "driver/tests/test_pwm8_write_reply" );
   pwm8_write (c, 3, 24);
+  printf("Transmission Successful\n");
 }
 
 void test_pwm16_write( struct connection * c )
 {
   print_title("Pwm16 write of '515' on pin 9 :");
+  set_input( c, "driver/tests/test_pwm16_write_reply" );
   pwm16_write (c, 9, 515);
+  printf("Transmission Successful\n");
 }
 
 void test_get_type( struct connection * c )
@@ -225,11 +233,15 @@ int main( void )
   print_separator();
   test_pwm16_read(c);
   print_separator();
-  exit(EXIT_FAILURE);
   test_digital_write(c);
+  print_separator();
   test_analogic_write(c);
+  print_separator();
   test_pwm8_write(c);
+  print_separator();
   test_pwm16_write(c);
+  print_separator();
+  exit(EXIT_FAILURE);
   test_get_type(c);
   test_get_type_mask(c);
   test_set_type(c);

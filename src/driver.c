@@ -100,13 +100,13 @@ int digital_read( struct connection * c, uint8_t pin_id, bool * val )
   uint16_t tmp_val;
   generic_read( c, pin_id, PIN_TYPE_DIGITAL, &tmp_val );//TODO test return
   *val = tmp_val;
-  return EXIT_FAILURE;
+  return EXIT_SUCCESS;
 }
 
 int analogic_read( struct connection * c, uint8_t pin_id, uint16_t * val )
 {
   generic_read( c, pin_id, PIN_TYPE_ANALOG16, val );//TODO test return
-  return EXIT_FAILURE;
+  return EXIT_SUCCESS;
 }
 
 int pwm8_read( struct connection * c, uint8_t pin_id, uint8_t * val )
@@ -114,13 +114,13 @@ int pwm8_read( struct connection * c, uint8_t pin_id, uint8_t * val )
   uint16_t tmp_val;
   generic_read( c, pin_id, PIN_TYPE_PWM8, &tmp_val );//TODO test return
   *val = tmp_val;
-  return EXIT_FAILURE;
+  return EXIT_SUCCESS;
 }
 
 int pwm16_read( struct connection * c, uint8_t pin_id, uint16_t * val)
 {
   generic_read( c, pin_id, PIN_TYPE_PWM16, val );//TODO test return
-  return EXIT_FAILURE;
+  return EXIT_SUCCESS;
 }
 
 int generic_write( struct connection * c,
@@ -136,7 +136,10 @@ int generic_write( struct connection * c,
   p.data = buffer;
   send_packet(c, &p);
   free(buffer);
-  return EXIT_FAILURE;
+  // Reading :
+  struct packet reply;
+  read_reply( c,&reply );
+  return EXIT_SUCCESS;
 }
 
 int digital_write ( struct connection * c, uint8_t pin_id, bool    val )
