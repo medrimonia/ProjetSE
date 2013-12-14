@@ -145,25 +145,25 @@ int generic_write( struct connection * c,
 int digital_write ( struct connection * c, uint8_t pin_id, bool    val )
 {
   generic_write(c, pin_id, PIN_TYPE_DIGITAL, val, 1);
-  return EXIT_FAILURE;//TODO wait and parse answer
+  return EXIT_SUCCESS;
 }
 
 int analogic_write( struct connection * c, uint8_t pin_id, int16_t val )
 {
   generic_write(c, pin_id, PIN_TYPE_ANALOG16, val, 16);
-  return EXIT_FAILURE;//TODO wait and parse answer
+  return EXIT_SUCCESS;
 }
 
 int pwm8_write    ( struct connection * c, uint8_t pin_id, int16_t val )
 {
   generic_write(c, pin_id, PIN_TYPE_PWM8, val, 8);
-  return EXIT_FAILURE;//TODO wait and parse answer
+  return EXIT_SUCCESS;
 }
 
 int pwm16_write   ( struct connection * c, uint8_t pin_id, int16_t val )
 {
   generic_write(c, pin_id, PIN_TYPE_PWM16, val, 16);
-  return EXIT_FAILURE;//TODO wait and parse answer
+  return EXIT_SUCCESS;
 }
 
 /*
@@ -186,8 +186,11 @@ int get_type( struct connection * c, uint8_t pin_id, int8_t * type )
   write_bit_value(buffer, 0, pin_id, PINS_NO_BITS_NB);
   p.data = buffer;
   send_packet(c, &p);
-  //TODO set value at end
-  return EXIT_FAILURE;//TODO wait and parse answer
+  // Read value
+  struct packet reply;
+  read_reply( c, &reply );
+  *type = read_bit_value( reply.data, REPLY_ID_BITS_NB, PIN_TYPE_BITS_NB );
+  return EXIT_SUCCESS;
 }
 
 int get_type_mask( struct connection * c,

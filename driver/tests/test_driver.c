@@ -121,8 +121,14 @@ void test_pwm16_write( struct connection * c )
 
 void test_get_type( struct connection * c )
 {
-  printf("Get type of pin 8 : ");
-  get_type(c, 8, NULL);
+  print_title( "Get type of pin 8 : " );
+  set_input( c, "driver/tests/test_get_type_reply" );
+  // get type reply : |50|00|02|08|60|45|
+  uint8_t type;
+  get_type( c, 8, &type );
+  printf("Pin type      : %u\n", type);
+  printf("Expected type : %u\n", 3);
+
 }
 
 void test_get_type_mask( struct connection * c )
@@ -241,8 +247,9 @@ int main( void )
   print_separator();
   test_pwm16_write(c);
   print_separator();
-  exit(EXIT_FAILURE);
   test_get_type(c);
+  print_separator();
+  exit(EXIT_FAILURE);
   test_get_type_mask(c);
   test_set_type(c);
   test_set_type_mask(c);
