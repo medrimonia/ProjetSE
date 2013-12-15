@@ -11,7 +11,7 @@ FCPU         = 16000000
 TARGET       = main
 
 OPTIMISATION = s
-CFLAGS       = -W -Wall -std=c99
+CFLAGS       = -W -Wall -std=c99 -DEMBEDDED -I../../include -I../include
 
 PROGRAMMER   = arduino
 PORT         = /dev/ttyUSB0
@@ -23,7 +23,7 @@ BAUDRATE     = 19200
 COMPILE = avr-gcc -mmcu=$(DEVICE) -O$(OPTIMISATION) $(CFLAGS) -DF_CPU=$(FCPU)
 
 
-SRC       = $(wildcard *.c) $(wildcard *.S)
+SRC       = $(wildcard *.c) $(wildcard *.S) $(wildcard ../../src/*.c)
 OBJECTS   = $(addprefix compiler_files/, $(SRC:.c=.o))
 ASSEMBLE  = $(addprefix compiler_files/, $(SRC:.c=.s))
 

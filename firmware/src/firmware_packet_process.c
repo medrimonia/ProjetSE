@@ -1,5 +1,7 @@
-#include <stdbool.h>
+//#ifndef EMBEDDED
 #include <stdio.h>
+//#endif
+#include <stdbool.h>
 #include <string.h>
 
 #include "bit_utils.h"
@@ -153,9 +155,9 @@ void reply_get_failsafe( struct connection * c, const struct packet * p )
   }
   else {
     mask m = new_mask( c->caps.nb_pins );
-    read_mask( p->data, m, c->caps.nb_pins );
+    read_mask( p->data, 0, m, c->caps.nb_pins );
     unsigned int nb_pins_used = mask_nb_pins_used( m, c->caps.nb_pins );
-    struct failsafe * masked_failsafe = sub_failsafe( c->failsafe, m );
+    struct failsafe * masked_failsafe = sub_failsafe( c->failsafe, m, nb_pins_used );
     int additional_bits = failsafe_nb_bits( masked_failsafe, nb_pins_used );
     data_bytes += BITS2BYTES( additional_bits );
     rep.data = malloc(data_bytes);

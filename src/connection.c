@@ -1,7 +1,11 @@
+#ifndef EMBEDDED
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#else
+#include "io_utils.h"
+#endif
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -14,6 +18,7 @@
 #define BUFF_SIZE 612
 
 /** Returns NULL if connection could not be opened */
+#ifndef EMBEDDED
 struct connection * connection_open( const char * in_filename,
                                      const char * out_filename )
 {
@@ -43,6 +48,7 @@ struct connection * connection_open( const char * in_filename,
 
   return c;
 }
+#endif
 
 void connection_init_resources( struct connection * c )
 {
@@ -78,25 +84,28 @@ void connection_release_resources( struct connection * c )
 void connection_close( struct connection * c )
 {
   connection_release_resources( c );
+#ifndef EMBEDDED
   close( c->fd_in  );
   close( c->fd_out );
-
+#endif
   free( c );
   c = NULL;
 }
 
 /** Returns -1 if there was an error writing.
  *  Otherwise the number of bytes written is returned */
-ssize_t connection_write( struct connection   * c,
-                          const struct packet * p )
+int connection_write( struct connection   * c,
+                      const struct packet * p )
 {
   int buff_size = p->size + 4;
   unsigned char * buffer = malloc( buff_size );
   init_packet( buffer, p->size + 4 );
   packet_write( buffer, p );
-  ssize_t nb_bytes = write( c->fd_out, buffer, buff_size );
+  int nb_bytes = write( c->fd_out, buffer, buff_size );
   if ( nb_bytes == -1 ) {
+#ifndef EMBEDDED
     perror("write");
+#endif
     return -1;
   }
   free( buffer );
@@ -105,11 +114,11 @@ ssize_t connection_write( struct connection   * c,
 
 /** Returns -1 if there was an error reading.
  *  Otherwise the number of bytes read is returned */
-ssize_t connection_read( struct connection * c,
-                         struct packet     * p )
+int connection_read( struct connection * c,
+                     struct packet     * p )
 {
   unsigned char buffer[BUFF_SIZE] = {0};
-  ssize_t nb_bytes = read( c->fd_in, buffer, BUFF_SIZE );
+  int nb_bytes = read( c->fd_in, buffer, BUFF_SIZE );
   if ( nb_bytes < OVERHEAD_SIZE ) {
     return -1;
   }

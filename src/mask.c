@@ -53,6 +53,7 @@ int read_mask( const unsigned char * buffer,
   for ( i = 0; i < mask_length; i++ ) {
     m[i] = read_bit_value( buffer, offset + i, 1 );
   }
+  return i;
 }
 
 void destroy_mask( mask m )

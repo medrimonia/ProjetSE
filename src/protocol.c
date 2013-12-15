@@ -9,7 +9,7 @@ uint8_t compute_checksum( const struct packet * p )
   uint8_t sum = p->header;
   sum += (uint8_t)(p->size % (1<<8)); // First  byte of p->size
   sum += (uint8_t)(p->size >> 8);     // Second byte
-  int i = 0;
+  unsigned int i = 0;
   for (; i < p->size; i++ ) {
     sum += p->data[i];
   }

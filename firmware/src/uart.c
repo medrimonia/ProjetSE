@@ -1,4 +1,5 @@
 #include "uart.h"
+#include "io_utils.h"
 
 fifo fifo_receiver;
 fifo fifo_transmitter;
@@ -36,12 +37,6 @@ void uart_init( uint32_t baudrate )
   /* Set frame format : 8data , 1 stop bit, no parity, Asynchronous */
 //  UCSRC = (1 << URSEL);
 //  UCSRC |= (1 <<UCSZ0) |(1 << UCSZ1);
-}
-
-void uart_write( unsigned char c )
-{
-  UDR = c;
-  while(!(UCSRA & (1<< UDRE)));
 }
 
 int main()

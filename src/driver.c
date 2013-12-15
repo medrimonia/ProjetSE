@@ -1,7 +1,9 @@
-#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#ifndef EMBEDDED
+#include <errno.h>
 #include <unistd.h>
+#endif
 
 #include "driver.h"
 
@@ -18,8 +20,10 @@ int read_reply( struct connection * c, struct packet * reply )
   int n;
   n = connection_read( c, reply );
   if (n == -1){
+#ifndef EMBEDDED
     perror("Failed to read a packet");
-    exit(EXIT_FAILURE);
+#endif
+    exit(1);
   }
   uint8_t reply_code = reply->header % 16;
   if (reply_code != REP_CODE_SUCCESS){
@@ -103,7 +107,7 @@ int16_t generic_read( struct connection * c,
   *val = read_bit_value( reply.data, REPLY_ID_BITS_NB, type_bits_nb );
   c->state.pins_state[pin_id].pins_val = *val;
   packet_free( &reply );
-  return EXIT_SUCCESS;
+  return 0;
 }
 
 int digital_read( struct connection * c, uint8_t pin_id, bool * val )
@@ -111,13 +115,13 @@ int digital_read( struct connection * c, uint8_t pin_id, bool * val )
   uint16_t tmp_val;
   generic_read( c, pin_id, PIN_TYPE_DIGITAL, &tmp_val );//TODO test return
   *val = tmp_val;
-  return EXIT_SUCCESS;
+  return 0;
 }
 
 int analogic_read( struct connection * c, uint8_t pin_id, uint16_t * val )
 {
   generic_read( c, pin_id, PIN_TYPE_ANALOG16, val );//TODO test return
-  return EXIT_SUCCESS;
+  return 0;
 }
 
 int pwm8_read( struct connection * c, uint8_t pin_id, uint8_t * val )
@@ -125,13 +129,13 @@ int pwm8_read( struct connection * c, uint8_t pin_id, uint8_t * val )
   uint16_t tmp_val;
   generic_read( c, pin_id, PIN_TYPE_PWM8, &tmp_val );//TODO test return
   *val = tmp_val;
-  return EXIT_SUCCESS;
+  return 0;
 }
 
 int pwm16_read( struct connection * c, uint8_t pin_id, uint16_t * val)
 {
   generic_read( c, pin_id, PIN_TYPE_PWM16, val );//TODO test return
-  return EXIT_SUCCESS;
+  return 0;
 }
 
 int generic_write( struct connection * c,
@@ -153,31 +157,31 @@ int generic_write( struct connection * c,
   packet_free( &reply );
   // Applying :
   c->state.pins_state[pin_id].pins_val = val;
-  return EXIT_SUCCESS;
+  return 0;
 }
 
 int digital_write ( struct connection * c, uint8_t pin_id, bool    val )
 {
   generic_write(c, pin_id, PIN_TYPE_DIGITAL, val, 1);
-  return EXIT_SUCCESS;
+  return 0;
 }
 
 int analogic_write( struct connection * c, uint8_t pin_id, int16_t val )
 {
   generic_write(c, pin_id, PIN_TYPE_ANALOG16, val, 16);
-  return EXIT_SUCCESS;
+  return 0;
 }
 
 int pwm8_write    ( struct connection * c, uint8_t pin_id, int16_t val )
 {
   generic_write(c, pin_id, PIN_TYPE_PWM8, val, 8);
-  return EXIT_SUCCESS;
+  return 0;
 }
 
 int pwm16_write   ( struct connection * c, uint8_t pin_id, int16_t val )
 {
   generic_write(c, pin_id, PIN_TYPE_PWM16, val, 16);
-  return EXIT_SUCCESS;
+  return 0;
 }
 
 /*
@@ -206,7 +210,7 @@ int get_type( struct connection * c, uint8_t pin_id, uint8_t * type )
   *type = read_bit_value( reply.data, REPLY_ID_BITS_NB, PIN_TYPE_BITS_NB );
   c->state.pins_state[pin_id].pins_type = *type;
   packet_free( &reply );
-  return EXIT_SUCCESS;
+  return 0;
 }
 
 int get_type_mask( struct connection * c,
@@ -239,7 +243,7 @@ int get_type_mask( struct connection * c,
     pin_id++;
   }while(true);
   packet_free( &reply );
-  return EXIT_FAILURE;//TODO wait and parse answer
+  return 1;//TODO wait and parse answer
 }
 
 int set_type( struct connection * c, uint8_t pin_id, uint8_t type )
@@ -260,7 +264,7 @@ int set_type( struct connection * c, uint8_t pin_id, uint8_t type )
   packet_free( &reply );
   // apply change
   c->state.pins_state[pin_id].pins_type = type;
-  return EXIT_FAILURE;
+  return 1;
 }
 
 
@@ -293,7 +297,7 @@ int set_type_mask( struct connection * c,
     val_index++;
     mask_index++;
   }while(true);
-  return EXIT_SUCCESS;
+  return 0;
 }
 
 int get_failsafe( struct connection   * c,
@@ -317,7 +321,7 @@ int get_failsafe( struct connection   * c,
   failsafe->pin_value = read_bit_value( reply.data, offset,
                                         get_type_bits_nb(failsafe->pin_state) );
   packet_free( &reply );
-  return EXIT_FAILURE;
+  return 1;
 }
 
 int get_failsafe_mask( struct connection       * c,
@@ -350,7 +354,7 @@ int get_failsafe_mask( struct connection       * c,
     pin_id++;
   }while(true);
   packet_free( &reply );
-  return EXIT_FAILURE;
+  return 1;
 }
 
 int set_failsafe( struct connection         * c,
@@ -382,7 +386,7 @@ int set_failsafe( struct connection         * c,
   c->failsafe->timeout = timeout;
   c->failsafe->pins_failsafe[pin_no].pin_value = failsafe_state->pin_value;
   c->failsafe->pins_failsafe[pin_no].pin_state = failsafe_state->pin_state;
-  return EXIT_FAILURE;
+  return 1;
 }
 
 /* Multiple changes, needs to be reworked
@@ -397,6 +401,6 @@ int set_failsafe_mask( struct connection       * c,
   write_failsafe(p + 3, failsafe_state, c->nb_pins);
   send_packet(c, p, 3 + data_bytes_nb);
   //TODO
-  return EXIT_FAILURE;
+  return 1;
 }
 */

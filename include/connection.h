@@ -20,8 +20,10 @@ struct connection {
   struct failsafe * failsafe;
 };
 
+#ifndef EMBEDDED
 struct connection * connection_open( const char * in_filename,
                                      const char * out_filename );
+#endif
 
 /** If called when resources are already allocated, free them first
  * c->caps.nb_pins must be set before ! */
@@ -30,9 +32,9 @@ void connection_init_resources( struct connection * c );
 // Can be safely called, even if resources haven't been initialized
 void connection_release_resources( struct connection * c );
 
-void    connection_close( struct connection * c                          );
-ssize_t connection_write( struct connection * c, const struct packet * p );
-ssize_t connection_read ( struct connection * c,       struct packet * p );
+void connection_close( struct connection * c                          );
+int  connection_write( struct connection * c, const struct packet * p );
+int  connection_read ( struct connection * c,       struct packet * p );
 
 /**
  * Handle the checksum calculation
