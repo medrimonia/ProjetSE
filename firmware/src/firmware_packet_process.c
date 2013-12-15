@@ -40,24 +40,38 @@ void reply_ping( struct connection * c, const struct packet * p )
 void reply_read( struct connection * c, const struct packet * p )
 {
   bool use_mask = p->header % 2 == USE_MASK;
+  uint8_t pin_type = read_param( &(p->header) ) >> 1;
+  uint8_t val_bits = get_type_bits_nb( pin_type );
+  unsigned int offset = REPLY_ID_BITS_NB;
+  uint16_t data_bytes = 0;
   struct packet rep;
   if (!use_mask) {
     uint8_t pin_id = read_bit_value( p->data, 0, PINS_NO_BITS_NB );
-    uint8_t pin_type = c->state.pins_state[pin_id].pins_type;
-    uint8_t val_bits = get_type_bits_nb( pin_type );
-    uint8_t val_bytes = BITS2BYTES( val_bits );
     uint16_t val = c->state.pins_state[pin_id].pins_val;
-    set_packet_header( &rep, CMD_READ, REP_CODE_SUCCESS, 1 + val_bytes );
-    rep.data = malloc( 1 + val_bytes );
-    init_packet( rep.data, 1 + val_bytes );
-    write_bit_value( rep.data, REPLY_ID_BITS_NB, val, val_bits );
+    data_bytes = BITS2BYTES( offset + val_bits );
+    rep.data = malloc( data_bytes );
+    init_packet( rep.data, data_bytes );
+    write_bit_value( rep.data, offset, val, val_bits );
   }
   else {
-#ifndef EMBEDDED
-    fprintf( stderr, "Get type for mask unimplemented !\n" );
-#endif
-    return;
+    mask m = new_mask( c->caps.nb_pins );
+    read_mask( p->data, 0, m, c->caps.nb_pins );
+    int nb_pins_used = mask_nb_pins_used( m, c->caps.nb_pins );
+    uint16_t data_bits = offset + nb_pins_used * val_bits;
+    data_bytes = BITS2BYTES( data_bits );
+    rep.data = malloc( data_bytes );
+    init_packet( rep.data, data_bytes );
+    int pin_index = 0;
+    do{
+      pin_index = mask_next_pin_used( m, pin_index, c->caps.nb_pins );
+      if ( pin_index == -1 ) break;
+      uint16_t val = c->state.pins_state[pin_index].pins_val;
+      write_bit_value( rep.data, offset, val, val_bits );
+      offset += val_bits;
+      pin_index++;
+    }while( true );
   }
+  set_packet_header( &rep, CMD_READ, REP_CODE_SUCCESS, data_bytes );
   rep.data[0] = get_reply_id();
   send_packet( c, &rep );
   free( rep.data );
@@ -65,20 +79,29 @@ void reply_read( struct connection * c, const struct packet * p )
 
 void treat_write( struct connection * c, const struct packet * p )
 {
+  uint8_t pin_type = read_param( &(p->header) ) >> 1;
+  uint8_t val_bits_nb = get_type_bits_nb( pin_type );
   bool use_mask = p->header % 2 == USE_MASK;
   if (!use_mask) {
     uint8_t pin_id = read_bit_value( p->data, 0, PINS_NO_BITS_NB );
-    uint8_t pin_type = read_param( &(p->header) ) >> 1;
-    uint8_t val_bits_nb = get_type_bits_nb( pin_type );
     uint16_t val = read_bit_value( p->data, PINS_NO_BITS_NB, val_bits_nb );
     //TODO allow type switch with write or not?
     c->state.pins_state[pin_id].pins_type = pin_type;
     c->state.pins_state[pin_id].pins_val = val;
   }
   else {
-#ifndef EMBEDDED
-    fprintf( stderr, "Set type for mask unimplemented !\n" );
-#endif
+    mask m = new_mask( c->caps.nb_pins );
+    read_mask( p->data, 0, m, c->caps.nb_pins );
+    int pin_index = 0;
+    unsigned int offset = c->caps.nb_pins;
+    do{
+      pin_index = mask_next_pin_used( m, pin_index, c->caps.nb_pins );
+      if ( pin_index == -1 ) break;
+      uint8_t val = read_bit_value( p->data, offset, val_bits_nb );
+      c->state.pins_state[pin_index].pins_val = val;
+      offset += val_bits_nb;
+      pin_index++;
+    }while( true );
   }
 }
 

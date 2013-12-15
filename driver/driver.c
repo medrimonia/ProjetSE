@@ -134,6 +134,38 @@ int pwm16_read( struct connection * c, uint8_t pin_id, uint16_t * val)
   return 0;
 }
 
+int read_value_mask( struct connection * c,
+                     const mask          mask,
+                     uint8_t             type,
+                     uint16_t          * values ){
+  struct packet p;
+  int data_bytes = BITS2BYTES( c->caps.nb_pins );
+  set_packet_header( &p, CMD_READ, (type << 1) + USE_MASK, data_bytes );
+  p.data = malloc( data_bytes );
+  init_packet( p.data, data_bytes );
+  write_mask( p.data, mask, c->caps.nb_pins );
+  send_packet( c, &p );
+  free( p.data );
+  // Reading and applying
+  struct packet reply;
+  read_reply( c, &reply );
+  unsigned int val_bits = get_type_bits_nb( type );
+  int pin_index = 0;
+  int index = 0;
+  unsigned int offset = REPLY_ID_BITS_NB;
+  do{
+    pin_index = mask_next_pin_used( mask, pin_index, c->caps.nb_pins );
+    if ( pin_index == -1 ) break;
+    values[index] = read_bit_value( reply.data, offset, val_bits);
+    c->state.pins_state[pin_index].pins_val = values[index];
+    offset += val_bits;
+    index++;
+    pin_index++;
+  }while( true );
+  packet_free( &reply );
+  return 0;
+}
+
 int generic_write( struct connection * c,
                    uint8_t pin_id, int pin_mode, int16_t val, int val_size )
 {
@@ -191,7 +223,7 @@ int write_value_mask( struct connection * c,
   unsigned int data_bits    = c->caps.nb_pins + nb_pins_used * value_bits;
   unsigned int data_bytes   = BITS2BYTES(data_bits);
   struct packet p;
-  set_packet_header( &p, CMD_WRITE, USE_MASK, data_bytes );
+  set_packet_header( &p, CMD_WRITE, (type << 1) + USE_MASK, data_bytes );
   p.data = malloc( data_bytes );
   init_packet( p.data, data_bytes );
   write_mask( p.data, mask, c->caps.nb_pins );

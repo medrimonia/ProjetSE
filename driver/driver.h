@@ -91,13 +91,10 @@ int analogic_read( struct connection * c, uint8_t pin_id, uint16_t * val );
 int pwm8_read    ( struct connection * c, uint8_t pin_id, uint8_t  * val );
 int pwm16_read   ( struct connection * c, uint8_t pin_id, uint16_t * val );
 
-/** Read several pins values using a mask.
- * \param types  The mask of the types in which the values have to be read
- *               (@see val_list2) */
-int read_value_mask( const struct connection * c,
-                     const mask                mask,
-                     val_list2               * types,
-                     val_list16              * vals );
+int read_value_mask( struct connection * c,
+                     const mask          mask,
+                     uint8_t             type,
+                     uint16_t          * values );
 
 /** The following write function set the pin to the right type before if needed */
 int digital_write ( struct connection * c, uint8_t pin_id, bool    val );

@@ -169,7 +169,7 @@ void full_mask_test()
   for ( i = 0; i < MASK_TEST_NB_PINS; i++ ) {
     assert( read_types[i] == wished_types[i] );
   }
-  // Values : Set + get, only on shared types
+  // Write mask
   mask write_mask = new_mask( c->caps.nb_pins );
   uint8_t write_pins[MASK_TEST_NB_PINS];
   uint16_t write_values[MASK_TEST_NB_PINS];
@@ -188,6 +188,13 @@ void full_mask_test()
     uint16_t stored_val = c->state.pins_state[write_pins[i]].pins_val;
     assert( stored_val == write_values[i] );
   }
+  // Read mask
+  uint16_t read_values[MASK_TEST_NB_PINS];
+  read_value_mask( c, write_mask, PIN_TYPE_PWM8, read_values );
+  for ( i = 0; i < nb_values; i++ ) {
+    assert( read_values[i] == write_values[i] );
+  }
+  
   destroy_mask( m );
   print_ok( "Full mask" );
 }
