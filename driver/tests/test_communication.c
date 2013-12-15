@@ -46,6 +46,26 @@ void digital_full_test()
   assert( verif_val == wished_val );
 }
 
+void analogic_full_test()
+{
+  uint8_t pin_id = 6;
+  // Writing type
+  set_type( c, pin_id, PIN_TYPE_DIGITAL );
+  assert( c->state.pins_state[pin_id].pins_type == PIN_TYPE_DIGITAL );
+  // Verifying type
+  uint8_t verif_type;
+  get_type( c, pin_id, &verif_type );
+  assert( verif_type == PIN_TYPE_DIGITAL );
+  // Writing value
+  uint16_t wished_val  = 537;
+  analogic_write( c, pin_id, wished_val );
+  assert( c->state.pins_state[pin_id].pins_val == wished_val );
+  // Verifying value
+  uint16_t verif_val;
+  analogic_read( c, pin_id, &verif_val );
+  assert( verif_val == wished_val );
+}
+
 
 int main(void)
 {
@@ -57,6 +77,7 @@ int main(void)
   check_connection_caps();
   //test_reset();//TODO this should be done later
   digital_full_test();
+  analogic_full_test();
   // Ending
   connection_close( c );
   return EXIT_SUCCESS;
