@@ -195,7 +195,7 @@ int main(void)
   pwm8_full_test();
   pwm16_full_test();
   test_failsafe();
-  //full_mask_test();
+  full_mask_test();
   //test_mask_failsafe();
   
   print_separator();

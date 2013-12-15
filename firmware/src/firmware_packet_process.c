@@ -39,7 +39,7 @@ void reply_ping( struct connection * c, const struct packet * p )
 
 void reply_read( struct connection * c, const struct packet * p )
 {
-  bool use_mask = p->header % 1 == USE_MASK;
+  bool use_mask = p->header % 2 == USE_MASK;
   struct packet rep;
   if (!use_mask) {
     uint8_t pin_id = read_bit_value( p->data, 0, PINS_NO_BITS_NB );
@@ -65,7 +65,7 @@ void reply_read( struct connection * c, const struct packet * p )
 
 void treat_write( struct connection * c, const struct packet * p )
 {
-  bool use_mask = p->header % 1 == USE_MASK;
+  bool use_mask = p->header % 2 == USE_MASK;
   if (!use_mask) {
     uint8_t pin_id = read_bit_value( p->data, 0, PINS_NO_BITS_NB );
     uint8_t pin_type = read_param( &(p->header) ) >> 1;
@@ -94,22 +94,38 @@ void reply_write( struct connection * c, const struct packet * p )
 
 void reply_get_type( struct connection * c, const struct packet * p )
 {
-  bool use_mask = p->header % 1 == USE_MASK;
+  bool use_mask = p->header % 2 == USE_MASK;
+  unsigned int data_bytes = 1;
   struct packet rep;
   if (!use_mask) {
     uint8_t pin_id = read_bit_value( p->data, 0, PINS_NO_BITS_NB );
     uint8_t pin_type = c->state.pins_state[pin_id].pins_type;
-    set_packet_header( &rep, CMD_SET_TYPE, REP_CODE_SUCCESS, 2 );
     rep.data = malloc(2);
     init_packet( rep.data, 2 );
+    data_bytes += BITS2BYTES(PIN_TYPE_BITS_NB);
     write_bit_value( rep.data, REPLY_ID_BITS_NB, pin_type, PIN_TYPE_BITS_NB );
   }
   else {
-#ifndef EMBEDDED
-    fprintf( stderr, "Get type for mask unimplemented !\n" );
-#endif
-    return;
+    mask m = new_mask( c->caps.nb_pins );
+    read_mask( p->data, 0, m, c->caps.nb_pins );
+    unsigned int offset = 8;// Reply id comes first
+    unsigned int nb_pins_used = mask_nb_pins_used( m, c->caps.nb_pins );
+    unsigned int bits_nb = nb_pins_used * PIN_TYPE_BITS_NB;
+    data_bytes += BITS2BYTES( bits_nb );
+    rep.data = malloc( data_bytes );
+    init_packet( rep.data, data_bytes );
+    int pin_index = 0;
+    do{
+      pin_index = mask_next_pin_used( m, pin_index, c->caps.nb_pins );
+      if ( pin_index == -1 ) break;
+      uint8_t pin_type = c->state.pins_state[pin_index].pins_type;
+      write_bit_value( rep.data, offset, pin_type, PIN_TYPE_BITS_NB );
+      offset += PIN_TYPE_BITS_NB;
+      pin_index++;
+    }while( true );
+    destroy_mask( m );
   }
+  set_packet_header( &rep, CMD_SET_TYPE, REP_CODE_SUCCESS, data_bytes );
   rep.data[0] = get_reply_id();
   send_packet( c, &rep );
   free( rep.data );
@@ -117,16 +133,26 @@ void reply_get_type( struct connection * c, const struct packet * p )
 
 void treat_set_type( struct connection * c, const struct packet * p )
 {
-  bool use_mask = p->header % 1 == USE_MASK;
+  bool use_mask = p->header % 2 == USE_MASK;
   if (!use_mask) {
     uint8_t pin_id = read_bit_value( p->data, 0, PINS_NO_BITS_NB );
     uint8_t type = read_bit_value( p->data, PINS_NO_BITS_NB, PIN_TYPE_BITS_NB );
     c->state.pins_state[pin_id].pins_type = type;
   }
   else {
-#ifndef EMBEDDED
-    fprintf( stderr, "Set type for mask unimplemented !\n" );
-#endif
+    mask m = new_mask( c->caps.nb_pins );
+    read_mask( p->data, 0, m, c->caps.nb_pins );
+    unsigned int offset = c->caps.nb_pins;
+    int pin_id = 0;
+    do{
+      pin_id = mask_next_pin_used( m, pin_id, c->caps.nb_pins );
+      if ( pin_id == -1 ) break;
+      uint8_t pin_type = read_bit_value( p->data, offset, PIN_TYPE_BITS_NB );
+      c->state.pins_state[pin_id].pins_type = pin_type;
+      offset += PIN_TYPE_BITS_NB;
+      pin_id++;
+    }while( true );
+    destroy_mask( m );
   }
 }
 
@@ -142,7 +168,7 @@ void reply_set_type( struct connection * c, const struct packet * p )
 
 void reply_get_failsafe( struct connection * c, const struct packet * p )
 {
-  bool use_mask = p->header % 1 == USE_MASK;
+  bool use_mask = p->header % 2 == USE_MASK;
   struct packet rep;
   uint8_t data_bytes = 3;
   uint16_t timeout = c->failsafe->timeout;
@@ -182,7 +208,7 @@ void reply_get_failsafe( struct connection * c, const struct packet * p )
 
 void reply_set_failsafe( struct connection * c, const struct packet * p )
 {
-  bool use_mask = p->header % 1 == USE_MASK;
+  bool use_mask = p->header % 2 == USE_MASK;
   uint8_t type = read_param( &p->header ) >> 1;
   uint8_t val_bits = get_type_bits_nb( type );
   unsigned int offset = 0;
