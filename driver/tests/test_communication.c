@@ -120,6 +120,33 @@ void pwm16_full_test()
   print_ok( "PWM16 full" );
 }
 
+void test_failsafe()
+{
+  uint8_t pin_id = 5;
+  struct pin_failsafe wished_state;
+  uint8_t pin_type = PIN_TYPE_PWM8;
+  uint8_t pin_value = 142;
+  wished_state.pin_state = pin_type;
+  wished_state.pin_value = pin_value;
+  uint16_t wished_timeout = 52345;
+  set_failsafe( c, pin_id, wished_timeout, &wished_state );
+  //After a successful set, all stored values should be adapted
+  assert( c->failsafe->timeout == wished_timeout );
+  assert( c->failsafe->pins_failsafe[pin_id].pin_state == pin_type  );
+  assert( c->failsafe->pins_failsafe[pin_id].pin_value == pin_value );
+  print_ok( "Failsafe" );
+}
+
+/* Faut pas mettre l'achat de la rue avant l'émeu
+void test_mask_failsafe()
+{
+  uint8_t pin_used [3] = {1, 5, 9};
+  uint16_t wished_types[3] = { PIN_TYPE_DIGITAL,
+                               PIN_TYPE_ANALOG16,
+                               PIN_TYPE_PWM8};
+  uint16_t wished_values[3] = { DIGITAL_ON, 515, 42 };
+}
+*/
 
 int main(void)
 {
@@ -136,6 +163,7 @@ int main(void)
   analogic_full_test();
   pwm8_full_test();
   pwm16_full_test();
+  test_failsafe();
 
   print_separator();
   // Ending

@@ -138,5 +138,27 @@ void reply_get_failsafe( struct connection * c, const struct packet * p )
 
 void reply_set_failsafe( struct connection * c, const struct packet * p )
 {
+  bool use_mask = p->header % 1 == USE_MASK;
+  uint8_t type = read_param( &p->header ) >> 1;
+  uint8_t val_bits = get_type_bits_nb( type );
+  unsigned int offset = 0;
+  c->failsafe->timeout = read_bit_value( p->data, 0, TIMEOUT_BITS_NB );
+  offset += TIMEOUT_BITS_NB;
+  if (!use_mask) {
+    uint8_t pin_id = read_bit_value( p->data, offset, PINS_NO_BITS_NB );
+    offset += PINS_NO_BITS_NB;
+    uint16_t val = read_bit_value( p->data, offset, val_bits );
+    c->failsafe->pins_failsafe[pin_id].pin_state = type;
+    c->failsafe->pins_failsafe[pin_id].pin_value = val;
+  }
+  else {
+    fprintf( stderr, "Set failsafe for mask unimplemented !\n" );
+  }
+  // Reply
+  struct packet rep;
+  set_packet_header( &rep, CMD_SET_TYPE, REP_CODE_SUCCESS, 1 );
+  unsigned char rep_id = get_reply_id();
+  rep.data = &rep_id;
+  send_packet( c, &rep );
 }
 

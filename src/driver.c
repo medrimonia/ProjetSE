@@ -364,7 +364,14 @@ int set_failsafe( struct connection         * c,
   write_bit_value(p.data, offset, failsafe_state->pin_value, type_bits);
   send_packet(c, &p);
   free(p.data);
-  //TODO check answer
+  //Checking reply
+  struct packet reply;
+  read_reply( c, &reply );//TODO check return code  
+  packet_free( &reply );
+  //TODO store given value
+  c->failsafe->timeout = timeout;
+  c->failsafe->pins_failsafe[pin_no].pin_value = failsafe_state->pin_value;
+  c->failsafe->pins_failsafe[pin_no].pin_state = failsafe_state->pin_state;
   return EXIT_FAILURE;
 }
 
