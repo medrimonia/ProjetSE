@@ -105,14 +105,10 @@ int analogic_write( struct connection * c, uint8_t pin_id, int16_t val );
 int pwm8_write    ( struct connection * c, uint8_t pin_id, int16_t val );
 int pwm16_write   ( struct connection * c, uint8_t pin_id, int16_t val );
 
-/**
- * Write several pins values using a mask.
- * \param types  The mask of the types in which the values have to be written
- *               (@see val_list2) */
-int write_value_mask( const struct connection * c,
-                      const mask                mask,
-                      val_list2               * types,
-                      val_list16              * vals );
+int write_value_mask( struct connection * c,
+                      const mask          mask,
+                      uint8_t             types,
+                      uint16_t          * vals );
 //TODO it seems that write_value_mask should write for only one type
 
 #endif//DRIVER_H

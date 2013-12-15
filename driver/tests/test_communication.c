@@ -152,6 +152,7 @@ void full_mask_test()
                                               PIN_TYPE_DIGITAL,
                                               PIN_TYPE_PWM8};
   uint16_t wished_values[MASK_TEST_NB_PINS] = {515, 42, DIGITAL_ON, 65};
+
   // Building needed objects
   mask m = new_mask( c->caps.nb_pins );
   unsigned int i;
@@ -168,7 +169,19 @@ void full_mask_test()
   for ( i = 0; i < MASK_TEST_NB_PINS; i++ ) {
     assert( read_types[i] == wished_types[i] );
   }
-  // Values : Set + get
+  // Values : Set + get, only on shared types
+  mask write_mask = new_mask( c->caps.nb_pins );
+  uint16_t write_values[MASK_TEST_NB_PINS];
+  int nb_values = 0;
+  for ( i = 0; i < MASK_TEST_NB_PINS; i++ ) {
+    if ( wished_types[i] == PIN_TYPE_PWM8 ) {
+      write_mask[nb_values]   = true;
+      write_values[nb_values] = wished_values[i];
+      nb_values++;
+    }
+  }
+  write_value_mask( c, write_mask, PIN_TYPE_PWM8, write_values );
+  destroy_mask( m );
   print_ok( "Full mask" );
 }
 

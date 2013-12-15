@@ -180,16 +180,40 @@ int pwm16_write   ( struct connection * c, uint8_t pin_id, int16_t val )
   return 0;
 }
 
-/*
-int write_value_mask( const struct connection * c,
-                      const mask                mask,
-                      val_list2                 types,
-                      val_list16              * vals )
+
+int write_value_mask( struct connection * c,
+                      const mask          mask,
+                      uint8_t             type,
+                      uint16_t          * values )
 {
-  //TODO
-  return EXIT_FAILURE;
+  unsigned int nb_pins_used = mask_nb_pins_used( mask, c->caps.nb_pins );
+  unsigned int value_bits   = get_type_bits_nb( type );
+  unsigned int data_bits    = c->caps.nb_pins + nb_pins_used * value_bits;
+  unsigned int data_bytes   = BITS2BYTES(data_bits);
+  struct packet p;
+  set_packet_header( &p, CMD_WRITE, USE_MASK, data_bytes );
+  p.data = malloc( data_bytes );
+  init_packet( p.data, data_bytes );
+  write_mask( p.data, mask, c->caps.nb_pins );
+  write_value_list( p.data, c->caps.nb_pins, values, nb_pins_used, value_bits );
+  send_packet( c, &p );
+  free( p.data );
+  // Consuming reply
+  struct packet reply;
+  read_reply( c, &reply );
+  packet_free( &reply );
+  // Saving datas
+  int pin_index = 0;
+  unsigned int index = 0;
+  do{
+    pin_index = mask_next_pin_used( mask, pin_index, c->caps.nb_pins );
+    if ( pin_index == -1 ) break;
+    c->state.pins_state[pin_index].pins_val = values[index];
+    index++;
+    pin_index++;
+  }while( true );
+  return 0;
 }
-*/
 
 int get_type( struct connection * c, uint8_t pin_id, uint8_t * type )
 {
