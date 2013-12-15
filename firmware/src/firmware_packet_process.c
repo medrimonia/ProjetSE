@@ -134,6 +134,33 @@ void reply_set_type( struct connection * c, const struct packet * p )
 
 void reply_get_failsafe( struct connection * c, const struct packet * p )
 {
+  bool use_mask = p->header % 1 == USE_MASK;
+  struct packet rep;
+  uint8_t data_bytes = 3;
+  uint16_t timeout = c->failsafe->timeout;
+  uint16_t offset = REPLY_ID_BITS_NB + TIMEOUT_BITS_NB;
+  if (!use_mask) {
+    uint8_t pin_id = read_bit_value( p->data, 0, PINS_NO_BITS_NB );
+    uint8_t pin_type = c->failsafe->pins_failsafe[pin_id].pin_state;
+    uint8_t val_bits = get_type_bits_nb( pin_type );
+    uint16_t value = c->failsafe->pins_failsafe[pin_id].pin_value;
+    data_bytes += BITS2BYTES( PIN_TYPE_BITS_NB + val_bits );
+    rep.data = malloc( data_bytes );
+    init_packet( rep.data, data_bytes );
+    write_bit_value( rep.data, offset, pin_type, PIN_TYPE_BITS_NB );
+    offset += PIN_TYPE_BITS_NB;
+    write_bit_value( rep.data, offset,  value, val_bits );
+  }
+  else {
+    fprintf( stderr, "Set type for mask unimplemented !\n" );
+    return;
+  }
+  set_packet_header( &rep, CMD_SET_TYPE, REP_CODE_SUCCESS, data_bytes );
+  unsigned char rep_id = get_reply_id();
+  rep.data[0] = rep_id;
+  write_bit_value( rep.data, REPLY_ID_BITS_NB, timeout, TIMEOUT_BITS_NB );
+  send_packet( c, &rep );
+  free( rep.data );
 }
 
 void reply_set_failsafe( struct connection * c, const struct packet * p )

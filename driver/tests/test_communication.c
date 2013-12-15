@@ -134,6 +134,10 @@ void test_failsafe()
   assert( c->failsafe->timeout == wished_timeout );
   assert( c->failsafe->pins_failsafe[pin_id].pin_state == pin_type  );
   assert( c->failsafe->pins_failsafe[pin_id].pin_value == pin_value );
+  struct pin_failsafe read_state;
+  get_failsafe( c, pin_id, &read_state );
+  assert( read_state.pin_state == pin_type  );
+  assert( read_state.pin_value == pin_value );
   print_ok( "Failsafe" );
 }
 
