@@ -1,6 +1,4 @@
-//#ifndef EMBEDDED
 #include <stdio.h>
-//#endif
 #include <stdbool.h>
 #include <string.h>
 
@@ -55,7 +53,9 @@ void reply_read( struct connection * c, const struct packet * p )
     write_bit_value( rep.data, REPLY_ID_BITS_NB, val, val_bits );
   }
   else {
+#ifndef EMBEDDED
     fprintf( stderr, "Get type for mask unimplemented !\n" );
+#endif
     return;
   }
   rep.data[0] = get_reply_id();
@@ -76,7 +76,9 @@ void treat_write( struct connection * c, const struct packet * p )
     c->state.pins_state[pin_id].pins_val = val;
   }
   else {
+#ifndef EMBEDDED
     fprintf( stderr, "Set type for mask unimplemented !\n" );
+#endif
   }
 }
 
@@ -103,7 +105,9 @@ void reply_get_type( struct connection * c, const struct packet * p )
     write_bit_value( rep.data, REPLY_ID_BITS_NB, pin_type, PIN_TYPE_BITS_NB );
   }
   else {
+#ifndef EMBEDDED
     fprintf( stderr, "Get type for mask unimplemented !\n" );
+#endif
     return;
   }
   rep.data[0] = get_reply_id();
@@ -120,7 +124,9 @@ void treat_set_type( struct connection * c, const struct packet * p )
     c->state.pins_state[pin_id].pins_type = type;
   }
   else {
+#ifndef EMBEDDED
     fprintf( stderr, "Set type for mask unimplemented !\n" );
+#endif EMBEDDED
   }
 }
 
@@ -190,7 +196,9 @@ void reply_set_failsafe( struct connection * c, const struct packet * p )
     c->failsafe->pins_failsafe[pin_id].pin_value = val;
   }
   else {
+#ifndef EMBEDDED
     fprintf( stderr, "Set failsafe for mask unimplemented !\n" );
+#endif
   }
   // Reply
   struct packet rep;

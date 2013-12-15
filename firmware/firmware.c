@@ -43,7 +43,6 @@ void init_device_content()
 void init_communication()
 {
 #ifdef EMBEDDED
-  printf( "Embedded init communication is not implemented yet !\n" );
   exit( EXIT_FAILURE );
 #else
   // Creating 2 fifos for communication

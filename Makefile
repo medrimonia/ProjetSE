@@ -1,6 +1,7 @@
 SRCDIR=src
 INCDIR=include
 FIRMWARE_INCLUDE=firmware/include
+DRIVER_DIR=driver
 
 CC=gcc
 CFLAGS= -Wall -Wextra -I${INCDIR} -I${FIRMWARE_INCLUDE} -g
@@ -8,6 +9,9 @@ LDFLAGS=
 
 SRC=$(wildcard $(SRCDIR)/*.c)
 OBJ=$(SRC:.c=.o)
+
+DRIVER_SRC=$(wildcard $(DRIVER_DIR)/*.c)
+DRIVER_OBJ=$(DRIVER_SRC:.c=.o)
 
 .PHONY: all depend clean
 
@@ -23,7 +27,7 @@ all: ${BINS}
 %.o: %.c
 	${CC} ${CFLAGS} -o $@ -c $<
 
-test_communication: driver/tests/test_communication.o ${OBJ}
+test_communication: driver/tests/test_communication.o ${OBJ} ${DRIVER_OBJ}
 	${CC} -o $@  $^ ${LDFLAGS}
 
 device: firmware/firmware.o firmware/src/firmware_packet_process.o ${OBJ}
@@ -32,10 +36,10 @@ device: firmware/firmware.o firmware/src/firmware_packet_process.o ${OBJ}
 test_bit_utils: src/tests/test_bit_utils.o ${OBJ}
 	${CC} -o $@  $^ ${LDFLAGS}
 
-test_driver: driver/tests/test_driver.o ${OBJ}
+test_driver: driver/tests/test_driver.o ${OBJ} ${DRIVER_OBJ}
 	${CC} -o $@  $^ ${LDFLAGS}
 
-test_protocol: src/tests/test_protocol.o ${OBJ}
+test_protocol: src/tests/test_protocol.o ${OBJ} ${DRIVER_OBJ}
 	${CC} -o $@  $^ ${LDFLAGS}
 
 mok_firmware: firmware/tests/mok_firmware.o firmware/src/firmware_packet_process.o ${OBJ}
