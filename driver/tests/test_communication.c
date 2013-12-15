@@ -11,6 +11,13 @@
 
 struct connection * c = NULL;
 
+void test_ping()
+{
+  uint8_t device_protocol_version;
+  ping( c, &device_protocol_version );
+  assert( device_protocol_version == 1 );
+}
+
 void check_connection_caps()
 {
 #ifdef DEBUG
@@ -110,8 +117,9 @@ void pwm16_full_test()
 int main(void)
 {
   c = connection_open( DEV2DRIV_FILENAME, DRIV2DEV_FILENAME );
+  c->protocol_version = 1;
   if ( c == NULL ) return EXIT_FAILURE;
-  printf( "Connection initialized, sending getCaps :\n" );
+  test_ping();
   get_caps( c );
   // Tests
   check_connection_caps();

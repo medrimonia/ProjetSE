@@ -18,6 +18,7 @@ struct connection * connection_open( const char * in_filename,
                                      const char * out_filename )
 {
   struct connection * c = malloc( sizeof *c );
+  c->protocol_version = 0;
   c->caps.nb_pins = 0;
   c->caps.pins_mask_type = NULL;
   c->state.pins_state    = NULL;

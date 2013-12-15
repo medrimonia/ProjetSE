@@ -67,14 +67,13 @@ void reset( struct connection * connection )
 }
 
 void ping( struct connection * connection,
-           char protocol_version,
            uint8_t * device_protocol_version)
 {
   struct packet p;
   set_packet_header(&p, CMD_PING, 0, 1);
   unsigned char buffer[VERSION_BYTES_NB];
   init_packet(buffer, VERSION_BYTES_NB);
-  write_bit_value(buffer, 0, protocol_version, 8);
+  write_bit_value(buffer, 0, connection->protocol_version, 8);
   p.data = buffer;
   send_packet(connection, &p);
   struct packet reply;

@@ -12,6 +12,7 @@
 #endif
 
 struct connection {
+  uint8_t protocol_version;
   int fd_in;
   int fd_out;
   struct device_caps caps;

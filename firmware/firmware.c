@@ -22,6 +22,7 @@ struct connection * device;
 void init_device_content()
 {
   device = malloc( sizeof(struct connection) );
+  device->protocol_version = 1;
   device->fd_in = -1;
   device->fd_out = -1;
   device->caps.pins_mask_type = NULL;

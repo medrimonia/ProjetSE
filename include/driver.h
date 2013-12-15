@@ -43,8 +43,7 @@ void get_caps( struct connection * c );
 void reset( struct connection * c );
 
 /** Send a ping request to check if the board is alive */
-void ping( struct connection * c, char protocol_version,
-           uint8_t * device_protocol_version );
+void ping( struct connection * c, uint8_t * device_protocol_version );
 
 /** Get the device-stored type of one pin */
 int get_type( struct connection * c, uint8_t pin_id, uint8_t * type );

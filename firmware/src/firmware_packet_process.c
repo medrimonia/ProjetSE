@@ -15,7 +15,7 @@ void reply_get_caps( struct connection * c )
   rep.data = malloc( 1 + 1 + c->caps.nb_pins );
   init_packet( rep.data, c->caps.nb_pins + 2 );
   rep.data[0] = get_reply_id();
-  rep.data[1] += c->caps.nb_pins;
+  rep.data[1] = c->caps.nb_pins;
   memcpy( rep.data + 2, c->caps.pins_mask_type, c->caps.nb_pins );
   send_packet( c, &rep );
   free( rep.data );
@@ -27,6 +27,14 @@ void reply_reset( struct connection * c, const struct packet * p )
 
 void reply_ping( struct connection * c, const struct packet * p )
 {
+  struct packet rep;
+  set_packet_header(&rep, CMD_GET_CAPS, REP_CODE_SUCCESS, c->caps.nb_pins + 2);
+  unsigned char buffer[2];
+  rep.data = buffer;
+  init_packet( rep.data, 2 );
+  rep.data[0] = get_reply_id();
+  rep.data[1] = c->protocol_version;
+  send_packet( c, &rep );
 }
 
 void reply_read( struct connection * c, const struct packet * p )

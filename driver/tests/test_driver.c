@@ -44,7 +44,8 @@ void test_ping( struct connection * c )
   print_title("Ping 3 :");
   set_input( c, "driver/tests/test_ping_reply" );
   uint8_t device_protocol_version;
-  ping(c, 3, &device_protocol_version);
+  c->protocol_version = 3;
+  ping(c, &device_protocol_version);
   printf( "Expected protocol version : 1\n" );
   printf( "Real protocol version     : %d\n", device_protocol_version );
 }
