@@ -1,3 +1,5 @@
+// No Sense to compile this module if mode is not embedded
+#ifdef EMBEDDED
 #include "uart.h"
 #include "io_utils.h"
 
@@ -56,3 +58,4 @@ int main()
 
   return -1;
 }
+#endif

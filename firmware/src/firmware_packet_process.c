@@ -126,7 +126,7 @@ void treat_set_type( struct connection * c, const struct packet * p )
   else {
 #ifndef EMBEDDED
     fprintf( stderr, "Set type for mask unimplemented !\n" );
-#endif EMBEDDED
+#endif
   }
 }
 

@@ -1,3 +1,5 @@
+//It makes no sense to compile this module if it's not in embedded mode
+#ifdef EMBEDDED
 #include "io_utils.h"
 #include "uart.h"
 
@@ -21,3 +23,4 @@ int read( int fd, unsigned char * buffer, unsigned int n )
   // TODO
   return -1;
 }
+#endif

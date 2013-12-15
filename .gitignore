@@ -22,6 +22,6 @@
 test_bit_utils
 test_driver
 test_protocol
-device
+fake_device
 mok_firmware
 test_communication
