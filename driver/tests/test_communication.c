@@ -6,6 +6,7 @@
 #include "bit_utils.h"
 #include "connection.h"
 #include "driver.h"
+#include "test_utils.h"
 
 #define NB_PINS 16
 
@@ -16,6 +17,7 @@ void test_ping()
   uint8_t device_protocol_version;
   ping( c, &device_protocol_version );
   assert( device_protocol_version == 1 );
+  print_ok( "Ping" );
 }
 
 void check_connection_caps()
@@ -31,6 +33,7 @@ void check_connection_caps()
   for ( i = 0; i < NB_PINS; i++ ) {
     assert( c->caps.pins_mask_type[i] == 31 );//TODO hard-coded value
   }
+  print_ok( "Get Caps" );
 }
 
 void digital_full_test()
@@ -51,6 +54,7 @@ void digital_full_test()
   bool verif_val;
   digital_read( c, pin_id, &verif_val );
   assert( verif_val == wished_val );
+  print_ok( "Digital full" );
 }
 
 void analogic_full_test()
@@ -71,6 +75,7 @@ void analogic_full_test()
   uint16_t verif_val;
   analogic_read( c, pin_id, &verif_val );
   assert( verif_val == wished_val );
+  print_ok( "Analogic full" );
 }
 
 void pwm8_full_test()
@@ -91,6 +96,7 @@ void pwm8_full_test()
   uint8_t verif_val;
   pwm8_read( c, pin_id, &verif_val );
   assert( verif_val == wished_val );
+  print_ok( "PWM8 full" );
 }
 
 void pwm16_full_test()
@@ -111,11 +117,13 @@ void pwm16_full_test()
   uint16_t verif_val;
   pwm16_read( c, pin_id, &verif_val );
   assert( verif_val == wished_val );
+  print_ok( "PWM16 full" );
 }
 
 
 int main(void)
 {
+  print_separator();
   c = connection_open( DEV2DRIV_FILENAME, DRIV2DEV_FILENAME );
   c->protocol_version = 1;
   if ( c == NULL ) return EXIT_FAILURE;
@@ -129,6 +137,7 @@ int main(void)
   pwm8_full_test();
   pwm16_full_test();
 
+  print_separator();
   // Ending
   connection_close( c );
   return EXIT_SUCCESS;

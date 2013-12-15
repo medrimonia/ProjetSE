@@ -3,6 +3,8 @@
 
 #include "protocol.h"
 
+void print_ok( const char * message );
+
 void print_separator();
 
 // title must be terminated by a \0
