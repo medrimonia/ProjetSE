@@ -55,7 +55,6 @@ void init_communication()
     unlink( DRIV2DEV_FILENAME );
     exit( EXIT_FAILURE );    
   }
-  printf( "Opening fd :\n" );
   // Opening files
   device->fd_out = open( DEV2DRIV_FILENAME, O_WRONLY );
   if ( device->fd_out < 0 ) {
@@ -89,7 +88,6 @@ void mainloop()
     int16_t cmd = read_cmd( &p.header );
     switch ( cmd ) {
       case CMD_GET_CAPS:
-        printf( "Treating a getcaps cmd\n" );
         reply_get_caps( device );
         break;
       case CMD_RESET:
@@ -105,11 +103,9 @@ void mainloop()
         reply_write( device, &p );
         break;
       case CMD_GET_TYPE:
-        printf( "Treating a get type cmd\n" );
         reply_get_type( device, &p );
         break;
       case CMD_SET_TYPE:
-        printf( "Treating a set type cmd\n" );
         reply_set_type( device, &p );
         break;
       case CMD_GET_FAILSAFE:
@@ -130,7 +126,6 @@ int main(void)
 {
   init_device_content();
   init_communication();
-  printf( "Communication started\n" );
   mainloop();
   end_communication();
   return EXIT_SUCCESS;
