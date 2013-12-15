@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #ifndef EMBEDDED
+#include <errno.h>
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -46,11 +47,11 @@ void init_communication()
   exit( EXIT_FAILURE );
 #else
   // Creating 2 fifos for communication
-  if ( mkfifo( DRIV2DEV_FILENAME, S_IRWXU ) < 0 ){
+  if ( mkfifo( DRIV2DEV_FILENAME, S_IRWXU ) < 0 && errno != EEXIST ){
     perror( "Failed to create the driver to device fifo file" );
     exit( EXIT_FAILURE );
   }
-  if ( mkfifo( DEV2DRIV_FILENAME, S_IRWXU ) < 0 ){
+  if ( mkfifo( DEV2DRIV_FILENAME, S_IRWXU ) < 0 && errno != EEXIST ){
     perror( "Failed to create the device to driver fifo file" );
     unlink( DRIV2DEV_FILENAME );
     exit( EXIT_FAILURE );    
@@ -112,7 +113,7 @@ void mainloop()
         reply_get_failsafe( device, &p );
         break;
       case CMD_SET_FAILSAFE:
-        reply_get_failsafe( device, &p );
+        reply_set_failsafe( device, &p );
         break;
       default:
         break;
