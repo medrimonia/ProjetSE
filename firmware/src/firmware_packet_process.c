@@ -28,7 +28,7 @@ void reply_reset( struct connection * c, const struct packet * p )
 void reply_ping( struct connection * c, const struct packet * p )
 {
   struct packet rep;
-  set_packet_header(&rep, CMD_GET_CAPS, REP_CODE_SUCCESS, c->caps.nb_pins + 2);
+  set_packet_header(&rep, CMD_GET_CAPS, REP_CODE_SUCCESS, 2);
   unsigned char buffer[2];
   rep.data = buffer;
   init_packet( rep.data, 2 );
