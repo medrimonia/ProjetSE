@@ -33,13 +33,26 @@ int mask_nb_pins_used( const mask m , unsigned int mask_length)
   return pins_used;
 }
 
-int write_mask( unsigned char * buffer, const mask m, unsigned int mask_length )
+int write_mask( unsigned char * buffer,
+                const mask m,
+                unsigned int mask_length )
 {
   unsigned int i;
   for (i = 0; i < mask_length; i++) {
     write_bit_value(buffer, i, m[i], 1);
   }
   return i;
+}
+
+int read_mask( const unsigned char * buffer,
+               unsigned int offset,
+               mask m,
+               unsigned int mask_length )
+{
+  unsigned int i;
+  for ( i = 0; i < mask_length; i++ ) {
+    m[i] = read_bit_value( buffer, offset + i, 1 );
+  }
 }
 
 void destroy_mask( mask m )

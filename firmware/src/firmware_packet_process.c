@@ -152,8 +152,17 @@ void reply_get_failsafe( struct connection * c, const struct packet * p )
     write_bit_value( rep.data, offset,  value, val_bits );
   }
   else {
-    fprintf( stderr, "Set type for mask unimplemented !\n" );
-    return;
+    mask m = new_mask( c->caps.nb_pins );
+    read_mask( p->data, m, c->caps.nb_pins );
+    unsigned int nb_pins_used = mask_nb_pins_used( m, c->caps.nb_pins );
+    struct failsafe * masked_failsafe = sub_failsafe( c->failsafe, m );
+    int additional_bits = failsafe_nb_bits( masked_failsafe, nb_pins_used );
+    data_bytes += BITS2BYTES( additional_bits );
+    rep.data = malloc(data_bytes);
+    init_packet( rep.data, data_bytes );
+    write_failsafe( rep.data, offset, masked_failsafe, nb_pins_used );
+    destroy_failsafe( masked_failsafe );
+    destroy_mask( m );
   }
   set_packet_header( &rep, CMD_SET_TYPE, REP_CODE_SUCCESS, data_bytes );
   unsigned char rep_id = get_reply_id();

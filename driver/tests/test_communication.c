@@ -162,10 +162,14 @@ void full_mask_test()
     uint8_t pin_id = pins_used[i];
     assert( c->state.pins_state[pin_id].pins_type == wished_types[i] );
   }
+  uint16_t read_types[MASK_TEST_NB_PINS];
+  get_type_mask( c, m, read_types );
+  for ( i = 0; i < MASK_TEST_NB_PINS; i++ ) {
+    assert( read_types[i] == wished_types[i] );
+  }
   print_ok( "Full mask" );
 }
 
-/* Faut pas mettre l'achat de la rue avant l'émeu
 void test_mask_failsafe()
 {
   uint8_t pin_used [3] = {1, 5, 9};
@@ -174,7 +178,6 @@ void test_mask_failsafe()
                                PIN_TYPE_PWM8};
   uint16_t wished_values[3] = { DIGITAL_ON, 515, 42 };
 }
-*/
 
 int main(void)
 {
@@ -192,8 +195,9 @@ int main(void)
   pwm8_full_test();
   pwm16_full_test();
   test_failsafe();
-  full_mask_test();
-
+  //full_mask_test();
+  //test_mask_failsafe();
+  
   print_separator();
   // Ending
   connection_close( c );

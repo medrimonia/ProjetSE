@@ -37,7 +37,10 @@ int write_mask( unsigned char * buffer, const mask m, unsigned int mask_length )
  * \param m The mask in which data will be placed.
  * \return the numbers of chars read
  */
-int read_mask( const unsigned char * buffer, mask m, int mask_length );
+int read_mask( const unsigned char * buffer,
+               unsigned int offset,
+               mask m,
+               unsigned int mask_length );
 
 void destroy_mask(mask m);
 

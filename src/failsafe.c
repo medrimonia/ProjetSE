@@ -17,6 +17,24 @@ struct failsafe * new_failsafe( unsigned int nb_pins )
   return f;
 }
 
+struct failsafe * sub_failsafe( const struct failsafe * f, mask m,
+                                unsigned int mask_length )
+{
+  struct failsafe * sub = new_failsafe(mask_nb_pins_used( m, mask_length ) );
+  int pin_index = 0;
+  int sub_index = 0;
+  sub->timeout = f->timeout;
+  do {
+    pin_index = mask_next_pin_used( m, pin_index, mask_length );
+    if ( pin_index  == -1 ) break;
+    sub->pins_failsafe[sub_index].pin_state = f->pins_failsafe[pin_index].pin_state;
+    sub->pins_failsafe[sub_index].pin_value = f->pins_failsafe[pin_index].pin_value;
+    sub_index++;
+    pin_index++;
+  } while( true );
+  return sub;
+}
+
 uint16_t failsafe_nb_bits( const struct failsafe * f, unsigned int nb_pins)
 {
   unsigned int sum = 16 + nb_pins;//timeout_size + mask_size

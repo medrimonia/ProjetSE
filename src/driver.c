@@ -214,7 +214,7 @@ int get_type_mask( struct connection * c,
                    uint16_t          * types )
 {
   struct packet p;
-  unsigned int data_bits = c->caps.nb_pins-1;
+  unsigned int data_bits = c->caps.nb_pins-1;//TODO check: why -1?
   unsigned int data_bytes = BITS2BYTES(data_bits);
   set_packet_header(&p, CMD_GET_TYPE, USE_MASK, data_bytes);
   unsigned char * buffer = malloc(data_bytes);
