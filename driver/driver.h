@@ -78,7 +78,10 @@ int set_failsafe( struct connection         * c,
                   const struct pin_failsafe * failsafe_state );
 
 int set_failsafe_mask( struct connection     * c,
-                       const struct failsafe * failsafe_state );
+                       mask                    m,
+                       uint8_t                 type,
+                       uint16_t                timeout,
+                       uint16_t              * values );
 
 /** Read the value of the pin in it's current state, value will be placed in
  * an int in order to be able to stock any type of value. */

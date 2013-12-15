@@ -441,18 +441,42 @@ int set_failsafe( struct connection         * c,
   return 1;
 }
 
-/* Multiple changes, needs to be reworked
-int set_failsafe_mask( struct connection       * c,
-                       const struct failsafe   * failsafe_state)
+int set_failsafe_mask( struct connection     * c,
+                       mask                    m,
+                       uint8_t                 type,
+                       uint16_t                timeout,
+                       uint16_t              * values )
 {
-  unsigned char p[CMD_SIZE];
-  init_packet(p, CMD_SIZE);
-  unsigned int data_bits_nb = failsafe_nb_bits(failsafe_state, c->nb_pins);
-  unsigned int data_bytes_nb = (data_bits_nb - 1) / 8 + 1;
-  write_header(p, CMD_SET_FAILSAFE, 0, USE_MASK, data_bytes_nb);
-  write_failsafe(p + 3, failsafe_state, c->nb_pins);
-  send_packet(c, p, 3 + data_bytes_nb);
-  //TODO
-  return 1;
+  uint8_t nb_pins_used = mask_nb_pins_used( m, c->caps.nb_pins );
+  int val_bits = get_type_bits_nb( type );
+  int data_bits = TIMEOUT_BITS_NB + c->caps.nb_pins + nb_pins_used * val_bits;
+  int data_bytes = BITS2BYTES( data_bits );
+  struct packet p;
+  set_packet_header( &p, CMD_SET_FAILSAFE, (type << 1) + USE_MASK, data_bytes);
+  p.data = malloc( data_bytes );
+  unsigned int offset = 0;
+  write_bit_value( p.data, offset, timeout, TIMEOUT_BITS_NB );
+  offset += TIMEOUT_BITS_NB;
+  write_mask( p.data + 2, m, c->caps.nb_pins );//TODO offset to write mask
+  offset += c->caps.nb_pins;
+  write_value_list( p.data, offset, values, nb_pins_used, val_bits );
+  send_packet( c, &p );
+  free( p.data );
+  // read reply
+  struct packet reply;
+  read_reply( c, &reply );//TODO check return code  
+  packet_free( &reply );
+  // apply changes on the connection properties
+  c->failsafe->timeout = timeout;
+  int pin_index = 0;
+  unsigned int i = 0;
+  do{
+    pin_index = mask_next_pin_used( m, pin_index, c->caps.nb_pins );
+    if (pin_index == -1) break;
+    c->failsafe->pins_failsafe[pin_index].pin_state = type;
+    c->failsafe->pins_failsafe[pin_index].pin_value = values[i];
+    i++;
+    pin_index++;
+  }while(true);
+  return 0;
 }
-*/

@@ -199,13 +199,59 @@ void full_mask_test()
   print_ok( "Full mask" );
 }
 
+#define FS_TEST_NB_PINS 5
 void test_mask_failsafe()
 {
-  uint8_t pin_used [3] = {1, 5, 9};
-  uint16_t wished_types[3] = { PIN_TYPE_DIGITAL,
-                               PIN_TYPE_ANALOG16,
-                               PIN_TYPE_PWM8};
-  uint16_t wished_values[3] = { DIGITAL_ON, 515, 42 };
+  uint8_t pins_used [FS_TEST_NB_PINS] = {1, 3, 5, 9, 12};
+  uint16_t wished_types[FS_TEST_NB_PINS]  = { PIN_TYPE_DIGITAL,
+                                              PIN_TYPE_ANALOG16,
+                                              PIN_TYPE_DIGITAL,
+                                              PIN_TYPE_PWM8,
+                                              PIN_TYPE_PWM8};
+  uint16_t wished_values[FS_TEST_NB_PINS] = { DIGITAL_ON,
+                                              515,
+                                              DIGITAL_OFF,
+                                              42,
+                                              251};
+  uint16_t wished_timeout = 513;
+  // Setting the failsafe mask for each type
+  uint8_t used_types[3] = {PIN_TYPE_DIGITAL,
+                           PIN_TYPE_ANALOG16,
+                           PIN_TYPE_PWM8};
+  int nb_types_used = 3;
+  int type_no;
+  for ( type_no = 0; type_no < nb_types_used; type_no++ ) {
+    uint8_t type = used_types[type_no];
+    // Creating appropriated mask, pin_no list and value list
+    mask m = new_mask( c->caps.nb_pins );
+    uint8_t pins[FS_TEST_NB_PINS];
+    uint16_t pins_values[FS_TEST_NB_PINS];
+    int i;
+    int nb_pins = 0;
+    for ( i = 0; i < FS_TEST_NB_PINS; i++ ) {
+      if ( wished_types[i] == type ){
+        pins[nb_pins]        = pins_used[i];
+        pins_values[nb_pins] = wished_values[i];
+        m[ pins[nb_pins] ]   = true;
+        nb_pins++;
+      }
+    }
+    // Sending Values
+    set_failsafe_mask( c, m, type, wished_timeout, pins_values );
+    // Verifying that failsafe has been applied internally
+    assert( c->failsafe->timeout == wished_timeout );
+    for ( i = 0; i < nb_pins; i++ ) {
+      uint8_t pin_id = pins[i];
+      uint8_t  stored_type  = c->failsafe->pins_failsafe[pin_id].pin_state;
+      uint16_t stored_value = c->failsafe->pins_failsafe[pin_id].pin_value;
+      assert( type  == stored_type );
+      assert( pins_values[i] == stored_value );
+    }
+    // Liberating resources
+    destroy_mask( m ); 
+  }
+  // Reading the whole of it to check that everything has been received well
+  print_ok( "Failsafe mask" );
 }
 
 int main(void)
@@ -225,7 +271,7 @@ int main(void)
   pwm16_full_test();
   test_failsafe();
   full_mask_test();
-  //test_mask_failsafe();
+  test_mask_failsafe();
   
   print_separator();
   // Ending
