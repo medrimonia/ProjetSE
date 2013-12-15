@@ -6,6 +6,7 @@
 
 #include "bit_utils.h"
 
+#ifndef EMBEDDED
 void print_ok( const char * message )
 {
   unsigned int message_max_length = 15;
@@ -35,3 +36,4 @@ void print_title( const char * title )
   }
   printf("\n\n");
 }
+#endif
