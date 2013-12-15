@@ -25,3 +25,4 @@ test_protocol
 fake_device
 mok_firmware
 test_communication
+cross_build
