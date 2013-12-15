@@ -78,6 +78,7 @@ uint8_t get_type_bits_nb( uint8_t pin_type )
   return 0;
 }
 
+#ifndef EMBEDDED
 void packet_print( struct packet * p )
 {
   //TODO avoid malloc for print if we have enough time
@@ -91,3 +92,4 @@ void packet_print( struct packet * p )
 
   free( buffer );
 }
+#endif

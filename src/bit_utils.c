@@ -62,6 +62,8 @@ int16_t read_bit_value( const unsigned char * src, int offset, int val_size )
   return val;
 }
 
+// Display functions not needed for embedded
+#ifndef EMBEDDED
 void display_binary( unsigned char v )
 {
   int i;
@@ -86,6 +88,7 @@ void display_packet_hexa( const unsigned char * p, uint16_t packet_size )
     printf("%02x|", p[i]);
   }
 }
+#endif
 
 void write_cmd( unsigned char * p, uint8_t cmd_no )
 {

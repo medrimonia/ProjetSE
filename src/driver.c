@@ -27,7 +27,9 @@ int read_reply( struct connection * c, struct packet * reply )
   }
   uint8_t reply_code = reply->header % 16;
   if (reply_code != REP_CODE_SUCCESS){
+#ifndef EMBEDDED
     printf("Invalid reply code received : %d\n", reply_code);
+#endif
   }
   uint8_t reply_id = read_bit_value( reply->data, 0, REPLY_ID_BITS_NB );
   /* TODO
@@ -36,9 +38,11 @@ int read_reply( struct connection * c, struct packet * reply )
   }
   */
   if (!packet_valid( reply )){
+#ifndef EMBEDDED
     printf( "Invalid checksum!\n" );
     printf( "\tExpected : %d\n", reply->checksum );
     printf( "\tReceived : %d\n", compute_checksum( reply ) );
+#endif
   }
   return n;
 }

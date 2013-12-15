@@ -20,13 +20,15 @@ void write_bit_value( unsigned char * dst,
 
 int16_t read_bit_value( const unsigned char * src, int offset, int val_size );
 
+#ifndef EMBEDDED
 void display_binary( unsigned char v );
-
 /**
  * param packet_size In bytes
  */
 void display_packet     ( const unsigned char * p, uint16_t packet_size );
 void display_packet_hexa( const unsigned char * p, uint16_t packet_size );
+#endif
+
 
 void write_cmd      ( unsigned char * p, uint8_t  cmd_no     );
 void write_pin_type ( unsigned char * p, uint8_t  pin_type   );

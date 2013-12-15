@@ -42,7 +42,10 @@
 
 #define DIGITAL_ON      true
 #define DIGITAL_OFF     false
+
+#ifndef EMBEDDED
 #define DIGPIN2STR(x) (x == DIGITAL_ON ? "ON" : "OFF")
+#endif
 
 //TODO : to change on arduino
 #define REPLY_SIZE     1000
@@ -91,6 +94,8 @@ void packet_free ( struct packet * p );
 // Return the size of values of the specified type in bits
 uint8_t get_type_bits_nb( uint8_t pin_type );
 
+#ifndef EMBEDDED
 void packet_print( struct packet * p );
+#endif
 
 #endif//PROTOCOL_H
