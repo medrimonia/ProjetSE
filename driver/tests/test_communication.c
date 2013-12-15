@@ -141,6 +141,30 @@ void test_failsafe()
   print_ok( "Failsafe" );
 }
 
+#define MASK_TEST_NB_PINS 3
+void full_mask_test()
+{
+  // Choosen data
+  uint8_t pins_used[MASK_TEST_NB_PINS] = {1, 5, 9};
+  // using uint16_t for compatibility
+  uint16_t wished_types[MASK_TEST_NB_PINS] = {PIN_TYPE_ANALOG16,
+                                              PIN_TYPE_PWM8,
+                                              PIN_TYPE_DIGITAL};
+  uint16_t wished_values[MASK_TEST_NB_PINS] = {515, 42, DIGITAL_ON};
+  // Building needed objects
+  mask m = new_mask( c->caps.nb_pins );
+  unsigned int i;
+  for ( i = 0; i < MASK_TEST_NB_PINS; i++ )
+    m[ pins_used[i] ] = true;
+  // Communication
+  set_type_mask( c, m, wished_types );
+  for ( i = 0; i < MASK_TEST_NB_PINS; i++ ) {
+    uint8_t pin_id = pins_used[i];
+    assert( c->state.pins_state[pin_id].pins_type == wished_types[i] );
+  }
+  print_ok( "Full mask" );
+}
+
 /* Faut pas mettre l'achat de la rue avant l'émeu
 void test_mask_failsafe()
 {
@@ -168,6 +192,7 @@ int main(void)
   pwm8_full_test();
   pwm16_full_test();
   test_failsafe();
+  full_mask_test();
 
   print_separator();
   // Ending

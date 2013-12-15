@@ -279,11 +279,21 @@ int set_type_mask( struct connection * c,
   write_value_list(p.data, c->caps.nb_pins, values, nb_values, PIN_TYPE_BITS_NB);
   send_packet(c, &p);
   free(p.data);
-  //Verifying reply
+  // Verifying reply
   struct packet reply;
   read_reply( c, &reply );//TODO check return code
   packet_free( &reply );
-  return EXIT_FAILURE;
+  // Applying datas
+  int mask_index = 0;
+  int val_index = 0;
+  do{
+    mask_index = mask_next_pin_used( mask, mask_index, c->caps.nb_pins );
+    if ( mask_index == -1 ) break;
+    c->state.pins_state[mask_index].pins_type = values[val_index];
+    val_index++;
+    mask_index++;
+  }while(true);
+  return EXIT_SUCCESS;
 }
 
 int get_failsafe( struct connection   * c,
