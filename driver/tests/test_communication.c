@@ -152,8 +152,8 @@ int main(void)
 {
   print_separator();
   c = connection_open( DEV2DRIV_FILENAME, DRIV2DEV_FILENAME );
-  c->protocol_version = 1;
   if ( c == NULL ) return EXIT_FAILURE;
+  c->protocol_version = 1;
   test_ping();
   get_caps( c );
   // Tests
