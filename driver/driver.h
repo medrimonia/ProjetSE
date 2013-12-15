@@ -67,6 +67,10 @@ int get_failsafe( struct connection   * c,
                   uint8_t               pin_id,
                   struct pin_failsafe * failsafe );
 
+/**
+ * The failsafe status must have at least as much elements than the number
+ * of pins in this mask.
+ */
 int get_failsafe_mask( struct connection * c,
                        const mask          mask,
                        struct failsafe   * failsafe );

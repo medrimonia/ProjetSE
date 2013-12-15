@@ -245,9 +245,18 @@ void reply_set_failsafe( struct connection * c, const struct packet * p )
     c->failsafe->pins_failsafe[pin_id].pin_value = val;
   }
   else {
-#ifndef EMBEDDED
-    fprintf( stderr, "Set failsafe for mask unimplemented !\n" );
-#endif
+    mask m = new_mask( c->caps.nb_pins );
+    read_mask( p->data, 0, m, c->caps.nb_pins );
+    offset += c->caps.nb_pins;
+    int pin_index = 0;
+    do{
+      pin_index = mask_next_pin_used( m, pin_index, c->caps.nb_pins );
+      if ( pin_index == -1 ) break;
+      int16_t val = read_bit_value( p->data, offset, val_bits );
+      c->failsafe->pins_failsafe[pin_index].pin_state = type;
+      c->failsafe->pins_failsafe[pin_index].pin_value = val;
+      pin_index++;
+    }while( true );
   }
   // Reply
   struct packet rep;

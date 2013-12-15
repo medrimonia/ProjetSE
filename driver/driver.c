@@ -394,6 +394,7 @@ int get_failsafe_mask( struct connection       * c,
   struct packet reply;
   read_reply( c, &reply );//TODO treat return code
   unsigned int offset = REPLY_ID_BITS_NB + TIMEOUT_BITS_NB;
+  f->timeout = read_bit_value( reply.data, REPLY_ID_BITS_NB, TIMEOUT_BITS_NB);
   read_failsafe( reply.data, offset, f, nb_pins_used );
   int pin_id = 0;
   int i = 0;
@@ -454,6 +455,7 @@ int set_failsafe_mask( struct connection     * c,
   struct packet p;
   set_packet_header( &p, CMD_SET_FAILSAFE, (type << 1) + USE_MASK, data_bytes);
   p.data = malloc( data_bytes );
+  init_packet( p.data, data_bytes );
   unsigned int offset = 0;
   write_bit_value( p.data, offset, timeout, TIMEOUT_BITS_NB );
   offset += TIMEOUT_BITS_NB;

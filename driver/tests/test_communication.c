@@ -251,6 +251,25 @@ void test_mask_failsafe()
     destroy_mask( m ); 
   }
   // Reading the whole of it to check that everything has been received well
+  // Computing reading_mask
+  mask reading_mask = new_mask( c->caps.nb_pins );
+  int i;
+  for ( i = 0; i < FS_TEST_NB_PINS; i++ ) {
+    reading_mask[ pins_used[i] ] = true;
+  }
+  struct failsafe * read_failsafe = new_failsafe( FS_TEST_NB_PINS );
+  get_failsafe_mask( c, reading_mask, read_failsafe );
+  // Asserting
+  assert( read_failsafe->timeout == wished_timeout );
+  for ( i = 0; i < FS_TEST_NB_PINS; i++ ) {
+    uint8_t pin_no = pins_used[i];
+    uint8_t read_type = read_failsafe->pins_failsafe[pin_no].pin_state;
+    uint16_t read_value = read_failsafe->pins_failsafe[pin_no].pin_value;
+    assert( read_type == wished_types[i] );
+    assert( read_value == wished_values[i] );
+  }
+  destroy_failsafe( read_failsafe );
+  destroy_mask( reading_mask );
   print_ok( "Failsafe mask" );
 }
 
