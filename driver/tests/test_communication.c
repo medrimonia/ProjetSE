@@ -68,7 +68,7 @@ void analogic_full_test()
 
 void pwm8_full_test()
 {
-  uint8_t pin_id = 13;
+  uint8_t pin_id = 0;
   // Writing type
   set_type( c, pin_id, PIN_TYPE_PWM8 );
   assert( c->state.pins_state[pin_id].pins_type == PIN_TYPE_PWM8 );
@@ -77,12 +77,32 @@ void pwm8_full_test()
   get_type( c, pin_id, &verif_type );
   assert( verif_type == PIN_TYPE_PWM8 );
   // Writing value
-  uint16_t wished_val  = 211;
+  uint16_t wished_val  = 42;
   pwm8_write( c, pin_id, wished_val );
   assert( c->state.pins_state[pin_id].pins_val == wished_val );
   // Verifying value
   uint8_t verif_val;
   pwm8_read( c, pin_id, &verif_val );
+  assert( verif_val == wished_val );
+}
+
+void pwm16_full_test()
+{
+  uint8_t pin_id = 13;
+  // Writing type
+  set_type( c, pin_id, PIN_TYPE_PWM16 );
+  assert( c->state.pins_state[pin_id].pins_type == PIN_TYPE_PWM16 );
+  // Verifying type
+  uint8_t verif_type;
+  get_type( c, pin_id, &verif_type );
+  assert( verif_type == PIN_TYPE_PWM16 );
+  // Writing value
+  uint16_t wished_val  = 515;
+  pwm16_write( c, pin_id, wished_val );
+  assert( c->state.pins_state[pin_id].pins_val == wished_val );
+  // Verifying value
+  uint16_t verif_val;
+  pwm16_read( c, pin_id, &verif_val );
   assert( verif_val == wished_val );
 }
 
@@ -99,6 +119,7 @@ int main(void)
   digital_full_test();
   analogic_full_test();
   pwm8_full_test();
+  pwm16_full_test();
 
   // Ending
   connection_close( c );
