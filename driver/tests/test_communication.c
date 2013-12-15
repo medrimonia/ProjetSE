@@ -141,22 +141,23 @@ void test_failsafe()
   print_ok( "Failsafe" );
 }
 
-#define MASK_TEST_NB_PINS 3
+#define MASK_TEST_NB_PINS 4
 void full_mask_test()
 {
   // Choosen data
-  uint8_t pins_used[MASK_TEST_NB_PINS] = {1, 5, 9};
+  uint8_t pins_used[MASK_TEST_NB_PINS] = {1, 5, 9, 11};
   // using uint16_t for compatibility
   uint16_t wished_types[MASK_TEST_NB_PINS] = {PIN_TYPE_ANALOG16,
                                               PIN_TYPE_PWM8,
-                                              PIN_TYPE_DIGITAL};
-  uint16_t wished_values[MASK_TEST_NB_PINS] = {515, 42, DIGITAL_ON};
+                                              PIN_TYPE_DIGITAL,
+                                              PIN_TYPE_PWM8};
+  uint16_t wished_values[MASK_TEST_NB_PINS] = {515, 42, DIGITAL_ON, 65};
   // Building needed objects
   mask m = new_mask( c->caps.nb_pins );
   unsigned int i;
   for ( i = 0; i < MASK_TEST_NB_PINS; i++ )
     m[ pins_used[i] ] = true;
-  // Communication
+  // Types, Set + get
   set_type_mask( c, m, wished_types );
   for ( i = 0; i < MASK_TEST_NB_PINS; i++ ) {
     uint8_t pin_id = pins_used[i];
@@ -167,6 +168,7 @@ void full_mask_test()
   for ( i = 0; i < MASK_TEST_NB_PINS; i++ ) {
     assert( read_types[i] == wished_types[i] );
   }
+  // Values : Set + get
   print_ok( "Full mask" );
 }
 
