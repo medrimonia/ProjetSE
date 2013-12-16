@@ -212,7 +212,7 @@ void reply_get_failsafe( struct connection * c, const struct packet * p )
     mask m = new_mask( c->caps.nb_pins );
     read_mask( p->data, 0, m, c->caps.nb_pins );
     unsigned int nb_pins_used = mask_nb_pins_used( m, c->caps.nb_pins );
-    struct failsafe * masked_failsafe = sub_failsafe( c->failsafe, m, nb_pins_used );
+    struct failsafe * masked_failsafe = sub_failsafe( c->failsafe, m, c->caps.nb_pins );
     int additional_bits = failsafe_nb_bits( masked_failsafe, nb_pins_used );
     data_bytes += BITS2BYTES( additional_bits );
     rep.data = malloc(data_bytes);
@@ -246,13 +246,14 @@ void reply_set_failsafe( struct connection * c, const struct packet * p )
   }
   else {
     mask m = new_mask( c->caps.nb_pins );
-    read_mask( p->data, 0, m, c->caps.nb_pins );
+    read_mask( p->data, offset, m, c->caps.nb_pins );
     offset += c->caps.nb_pins;
     int pin_index = 0;
     do{
       pin_index = mask_next_pin_used( m, pin_index, c->caps.nb_pins );
       if ( pin_index == -1 ) break;
       int16_t val = read_bit_value( p->data, offset, val_bits );
+      offset += val_bits;
       c->failsafe->pins_failsafe[pin_index].pin_state = type;
       c->failsafe->pins_failsafe[pin_index].pin_value = val;
       pin_index++;
