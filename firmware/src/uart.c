@@ -6,19 +6,13 @@
 fifo fifo_receiver;
 fifo fifo_transmitter;
 
-unsigned char test= 'o';
 
 /* Receiver */
 ISR( USART_RXC_vect )
 {
-  test = UDR;
+  if( UCSRA & _RXC) 
+    fifo_receiver.array[fifo_receiver.last_write++] = UDR;
 
-  if( test == 'A')
-    PORTB |= 0xFF;
-  else if ( test== 'E')
-    PORTB &= 0x00;
-
-  UDR = test;
 }
 
 void delay( int32_t wait )

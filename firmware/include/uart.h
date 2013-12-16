@@ -30,9 +30,9 @@
  **/
 
 typedef struct{
-  char array[FIFO_SIZE];
-  int reading_index;
-  int writing_index;
+  unsigned char array[FIFO_SIZE];
+  int last_read;
+  int last_write;
 }fifo;
 
 /**
