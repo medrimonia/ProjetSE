@@ -1,7 +1,19 @@
-\section{Driver}
+Le driver et le firmware sont tous les deux écrits en C. Par conséquent, le
+code qui pouvait être mis en commun l'a été tant que possible. Cela concerne
+notamment la gestion des masks, du failsafe, la fabrication de paquet, ainsi
+que la définition du protocole.
 
-Le driver est écrit en C.
+De plus, afin d'avoir un code du firmware sensiblement identique, que le code
+soit embarqué ou non, une macro de préprocesseur est utilisée. Lorsque
+\emph{EMBEDDED} est définie le code est compilé pour fonctionner sur
+l'arduino. Inversement, sans la définition de cette macro le code peut-être
+utilisé pour effectuer des tests de communication interprocessus afin de
+tester le protocole.
+
+%TODO: détailler ce qui change concrètement entre l'utilisation dans l'arduino
+%ou non
+
+\section{Driver}
 
 \section{Firmware}
 
-Le firmware est écrit en C.
