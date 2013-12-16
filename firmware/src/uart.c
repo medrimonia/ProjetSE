@@ -33,6 +33,7 @@ void uart_init( uint32_t baudrate )
 //  UCSRC |= (1 <<UCSZ0) |(1 << UCSZ1);
 }
 
+/*
 int main()
 {
 
@@ -56,4 +57,5 @@ int main()
 
   return -1;
 }
+*/
 #endif

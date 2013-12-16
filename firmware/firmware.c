@@ -7,6 +7,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#else
+#include "uart.h"
 #endif
 
 #include "bit_utils.h"
@@ -47,7 +49,9 @@ void init_device_content()
 void init_communication()
 {
 #ifdef EMBEDDED
-  exit( EXIT_FAILURE );
+  DDRB = 0x20;
+  uart_init(19200);
+  sei();
 #else
   // Creating 2 fifos for communication
   if ( mkfifo( DRIV2DEV_FILENAME, S_IRWXU ) < 0 && errno != EEXIST ){
@@ -76,8 +80,10 @@ void init_communication()
 void end_communication()
 {
   connection_close(device);
+#ifndef EMBEDDED
   unlink( DRIV2DEV_FILENAME );
   unlink( DEV2DRIV_FILENAME );
+#endif
 }
 
 void mainloop()
@@ -132,5 +138,5 @@ int main(void)
   init_communication();
   mainloop();
   end_communication();
-  return EXIT_SUCCESS;
+  return 0;
 }
