@@ -33,7 +33,11 @@ void init_device_content()
   connection_init_resources( device );
   unsigned int i;
   for ( i = 0; i < NB_PINS; i++ ){
-    device->caps.pins_mask_type[i] = 31;//TODO hardcoding is bad but fast
+    device->caps.pins_mask_type[i] = (1 << PIN_TYPE_DIGITAL)
+                                   + (1 << PIN_TYPE_ANALOG8)
+                                   + (1 << PIN_TYPE_ANALOG16)
+                                   + (1 << PIN_TYPE_PWM8)
+                                   + (1 << PIN_TYPE_PWM16);
     device->state.pins_state[i].pins_type = PIN_TYPE_DIGITAL;
     device->state.pins_state[i].pins_val  = 0;
     //TODO init failsafe
