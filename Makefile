@@ -152,7 +152,7 @@ include .depend
 
 
 clean:
-	@rm -rf local_build
+	@rm -rf local_build cross_build
 
 mrproper: clean
 	@rm -f ${BINS}
