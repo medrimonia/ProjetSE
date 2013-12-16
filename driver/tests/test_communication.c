@@ -196,6 +196,7 @@ void full_mask_test()
   }
   
   destroy_mask( m );
+  destroy_mask( write_mask );
   print_ok( "Full mask" );
 }
 
