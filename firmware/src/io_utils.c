@@ -25,7 +25,7 @@ int read( int fd, unsigned char * buffer, unsigned int n )
 
   while ( i < n )
   {
-    if ( fifo_receiver.last_write != fifo_receiver.last_read)
+    if ( fifo_receiver.last_write != fifo_receiver.last_read )
     {
       buffer[i] = fifo_receiver.array[fifo_receiver.last_read++];
       i++;
