@@ -7,23 +7,21 @@ fifo fifo_receiver;
 fifo fifo_transmitter;
 
 
-/* Receiver */
+/* Receiver
+ * Interupt function about RX vector 
+ * */
 ISR( USART_RXC_vect )
 {
   if( UCSRA & _RXC) 
     fifo_receiver.array[fifo_receiver.last_write++] = UDR;
 
 }
-
-void delay( int32_t wait )
-{
-  while(wait--);
-}
-
 void uart_init( uint32_t baudrate )
 {
+  // calculation for UBBR register
   uint16_t ubbr = (F_CPU/(16 * baudrate) ) -1;
 
+  // Assign the value to the register
   UBRRH = (ubbr >>8);
   UBRRL = ubbr & 0xff;
 
@@ -37,14 +35,20 @@ void uart_init( uint32_t baudrate )
 
 int main()
 {
+
+  // Assign the pin B5 like out pin
   DDRB = 0x20;
+  // Set the baudrate to 19200
   uart_init(19200);
+  // Enable the interruption
   sei();
 
   while(1)
   {
+    // Assign every pin on port B to 1
     PORTB |= 0xFF;
     _delay_ms(400);
+    // Assign every pin on port B to 2 
     PORTB &= 0x00;
     _delay_ms(400);
 

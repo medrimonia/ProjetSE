@@ -59,7 +59,4 @@ void uart_init(uint32_t);
 
 void uart_write(unsigned char c);
 
-
-void delay(int32_t);
-
 #endif
