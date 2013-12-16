@@ -48,7 +48,9 @@
 #endif
 
 //TODO : to change on arduino
+#ifndef EMBEDDED
 #define REPLY_SIZE     1000
+#endif
 
 #define PARAM_BITS_NB      4
 #define DATA_SIZE_BITS_NB 16

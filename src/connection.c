@@ -14,8 +14,13 @@
 
 /** BUFF_SIZE should be high enough to read up to 256 pin status (3 bits)
  * and value (up to 16 bits)
- * Thus it should be greater than 1+2+256*19/8+1 = 612 */
+ * Thus it should be greater than 1+2+256*19/8+1 = 612 
+ * On atm8, only 16 pins are available -> 1 + 2 + 16 * 19 / 8 + 1 = 42*/
+#ifndef EMBEDDED
 #define BUFF_SIZE 612
+#else
+#define BUFF_SIZE 42
+#endif
 
 /** Returns NULL if connection could not be opened */
 #ifndef EMBEDDED
