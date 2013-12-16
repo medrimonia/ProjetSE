@@ -128,6 +128,19 @@ void mainloop()
   }
 }
 
+#ifdef EMBEDDED
+fifo fifo_receiver;
+fifo fifo_transmitter;
+/* Receiver
+ * Interupt function about RX vector 
+ * */
+ISR( USART_RXC_vect )
+{
+  if( UCSRA & _RXC) 
+    fifo_receiver.array[fifo_receiver.last_write++] = UDR;
+}
+#endif
+
 int main(void)
 {
   init_device_content();
