@@ -70,6 +70,7 @@ void reply_read( struct connection * c, const struct packet * p )
       offset += val_bits;
       pin_index++;
     }while( true );
+    destroy_mask( m );
   }
   set_packet_header( &rep, CMD_READ, REP_CODE_SUCCESS, data_bytes );
   rep.data[0] = get_reply_id();
@@ -102,6 +103,7 @@ void treat_write( struct connection * c, const struct packet * p )
       offset += val_bits_nb;
       pin_index++;
     }while( true );
+    destroy_mask( m );
   }
 }
 
@@ -258,6 +260,7 @@ void reply_set_failsafe( struct connection * c, const struct packet * p )
       c->failsafe->pins_failsafe[pin_index].pin_value = val;
       pin_index++;
     }while( true );
+    destroy_mask( m );
   }
   // Reply
   struct packet rep;
