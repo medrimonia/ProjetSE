@@ -1,10 +1,11 @@
 BIN=report.pdf
+DEPS=$(wildcard sections/*.tex)
 
 .PHONY: all clean
 
 all: $(BIN)
 
-%.pdf: %.tex
+%.pdf: %.tex $(DEPS)
 	pdflatex $< && pdflatex $<
 
 clean:
