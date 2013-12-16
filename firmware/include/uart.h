@@ -30,9 +30,9 @@
  **/
 
 typedef struct{
-  char array[FIFO_SIZE];
-  int reading_index;
-  int writing_index;
+  unsigned char array[FIFO_SIZE];
+  int last_read;
+  int last_write;
 }fifo;
 
 /**
@@ -58,8 +58,5 @@ void uart_init(uint32_t);
  * */
 
 void uart_write(unsigned char c);
-
-
-void delay(int32_t);
 
 #endif
