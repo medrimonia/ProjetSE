@@ -128,7 +128,9 @@ cross_build/$(TARGET).hex : cross_build/$(TARGET).elf
 bin: cross_build/$(TARGET).elf
 	avr-objcopy -S -j .text -j .data -O binary $< cross_build/${TARGET}.bin
 
-cross_build/$(TARGET).elf : $(CROSS_COMMON_OBJ) $(CROSS_FIRMWARE_OBJ)
+cross_build/$(TARGET).elf : cross_build/firmware/firmware.o \
+														$(CROSS_COMMON_OBJ)             \
+													  $(CROSS_FIRMWARE_OBJ)
 	$(CROSS_COMPILE) -o $@ $^
 
 cross_build:
