@@ -42,7 +42,7 @@ void reply_read( struct connection * c, const struct packet * p )
   bool use_mask = p->header % 2 == USE_MASK;
   uint8_t pin_type = read_param( &(p->header) ) >> 1;
   uint8_t val_bits = get_type_bits_nb( pin_type );
-  unsigned int offset = REPLY_ID_BITS_NB;
+  uint16_t offset = REPLY_ID_BITS_NB;
   uint16_t data_bytes = 0;
   struct packet rep;
   if (!use_mask) {
@@ -56,12 +56,12 @@ void reply_read( struct connection * c, const struct packet * p )
   else {
     mask m = new_mask( c->caps.nb_pins );
     read_mask( p->data, 0, m, c->caps.nb_pins );
-    int nb_pins_used = mask_nb_pins_used( m, c->caps.nb_pins );
+    uint8_t nb_pins_used = mask_nb_pins_used( m, c->caps.nb_pins );
     uint16_t data_bits = offset + nb_pins_used * val_bits;
     data_bytes = BITS2BYTES( data_bits );
     rep.data = malloc( data_bytes );
     init_packet( rep.data, data_bytes );
-    int pin_index = 0;
+    uint8_t pin_index = 0;
     do{
       pin_index = mask_next_pin_used( m, pin_index, c->caps.nb_pins );
       if ( pin_index == -1 ) break;
