@@ -64,6 +64,42 @@ dans deux dossiers différents.
 
 \subsection{Firmware}
 
+\subsubsection{Gestion des registres}
+
+\paragraph{}
+Pour la réalisation de la communication UART il nous a fallu décider de la façon
+de récuperer les informations de la communication UART. Pour cela nous avons
+décidé d'utiliser les interruptions de la communication UART. Cependant avant de
+lire ou d'écrire sur les lignes de communications, il nous a fallu initialiser
+la communication
+
+\paragraph{}
+Pour effectuer cela, il a été nécessaire de chercher dans la datasheet, les
+différents registres à initialiser. Ces registres sont au nombre de trois:
+\begin{itemize}
+  \item Le registre \verb!UBRR! qui contient la valeur de la vitesse de communication
+    fonction de la fréquence du micro-contrôleur et du baudrate suivant la
+    formule suivante:\begin{equation}
+      UBRR = \frac{f_{OSC}}{16 \cdot Baudrate} -1
+      \label{baudrate}
+    \end{equation}
+  \item Les registres \verb!UCSRA! et \verb!UCSRB! qui sont les registres de contrôle et de
+    statut de la communication.
+  \item Le registre \verb!UCSRC! qui sert à définir le format de la trame
+\end{itemize}
+
+\paragraph{}
+Après cette initialisation il était nécessaire de connaitre la façon de
+récupérer et d'envoyer un message à partir du bus de communication. Pour cela
+nous sommes retournés à la recherche des registres concernés dans la datasheet.
+Après recherche nous sommes arrivé au point que la donnée reçue / envoyée est
+stocké avant traitement dans le registre \verb!UDR!. Ce registre admet deux
+comportements différents en fonction de la façon dont il est utilisé. Dans le
+cas d'une lecture, le registre retournera la valeur sur 8bit du récepteur. Dans
+le cas d'une écriture , la valeur stockée par le registre sera envoyée lorsque
+le \verb!Transmit Shift Register! sera vide.
+
+
 \subsubsection{Taille d'exécutable}
 % Confrontation au problème de la taille
 \paragraph{}
