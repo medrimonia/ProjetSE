@@ -1,5 +1,45 @@
 \section{Arduino}
 
+  % Pour l'arduino , on a le microcontrolleur qui va gérer la communication et les pinouilles de PWM et de gestion des pinouilles analogiques.Du
+  % coup il faut être capable à tout instant de pouvoir recevoir les informations de la carte intelligence (la raspberry) -> d'où les
+  % interruptions. Seul problème du coup , on est pas sur que on va pas surcharger avec la communication le temps de calcul du microP et que du
+  % coup il pourra plus activer la PWM au temps où il faut. Après observation du soft arduino , les interruptions sont interdites par le soft pour
+  % être sur que le microcontrolleur puisse générer, dans les temps , chaque signal. Cela pose donc le problème de création d'un scheduler
+  % permettant la périodisation des taches, cependant on s'est rendu compte après compilation du code que le binaire généré atteint déja les
+  % limites de possibilité de l'atmega. La création d'un scheduler est donc impossible actuellement, il faudrait pour cela réduire le binaire et
+  % ensuite s'assurer que la communication avec la Raspberry Pi ne parasitera pas par son temps d'occupation du micro-contrôleur  la génération de
+  % signaux.
+
+
+  L'arduino est actuellement, une solution rapide et fiable d'utiliser une carte
+électronique pour développer un projet.
+\paragraph{}
+  Dans le cas de ce projet, la carte utilisée est une DAGU Mini Driver Control
+Board, qui embarque un ATmega8. Elle est dotée de deux bus de communications: un
+bus SPI et un bus UART.
+\paragraph{}
+  Ce dernier va être utilisé pour la communication avec une Raspberry Pi. Cette
+communication étant asynchrone full duplex, il va falloir une façon de
+déterminer l'arrivée d'une nouvelle donnée. Pour cela les
+vecteurs d'interruption fournit avec le micro-contrôleur vont être utilisé.
+Cependant en fonctionnant comme cela, le soft s'interdit l'utilisation de l'API
+arduino pour la génération de PWM 8 et 16 bits.
+\paragraph{}
+  L'explication de cette limite s'explique par le fait que l'API Arduino utilise
+une boucle pour appliquer ses différents signaux et ainsi si une interruption
+apparait la valeur de la PWM sera faussée. Ainsi pour être sûr que la PWM
+générée est de la bonne valeur, il faudrait utiliser le système interne du
+micro-contrôlleur qui génère automatiquement les PWM si le timer est
+convenablement initialisé. Cependant pour des problèmes de taille de binaire,
+il est actuellement impossible de rajouter de nouvelles gestions de PIN ou
+encore un scheduler basé sur un timer avec une priorité sur l'interruption.
+\paragraph{}
+  La solution serait de réduire la taille du binaire pour s'assurer de ne pas
+réécrire sur le bootloader et ensuite s'assurer que la communication avec la
+Raspberry Pi ne parasitera pas, par son temps d'occupation du
+micro-contrôleur, la génération de signaux.\\
+
+
 \section{RaspberryPi}
 
 \subsection{Choix de l'OS}
