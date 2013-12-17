@@ -9,7 +9,7 @@ struct failsafe * new_failsafe( unsigned int nb_pins )
   struct failsafe * f = malloc(sizeof(struct failsafe));
   f->timeout       = 0;
   f->pins_failsafe = malloc(nb_pins * sizeof(struct pin_failsafe));
-  unsigned int i;
+  uint8_t i;
   for (i = 0; i < nb_pins; i++){
     f->pins_failsafe[i].pin_state = PIN_TYPE_DISABLED;
     f->pins_failsafe[i].pin_value = 0;
@@ -21,8 +21,8 @@ struct failsafe * sub_failsafe( const struct failsafe * f, mask m,
                                 uint8_t mask_length )
 {
   struct failsafe * sub = new_failsafe(mask_nb_pins_used( m, mask_length ) );
-  int pin_index = 0;
-  int sub_index = 0;
+  uint8_t pin_index = 0;
+  uint8_t sub_index = 0;
   sub->timeout = f->timeout;
   do {
     pin_index = mask_next_pin_used( m, pin_index, mask_length );
@@ -37,8 +37,8 @@ struct failsafe * sub_failsafe( const struct failsafe * f, mask m,
 
 uint16_t failsafe_nb_bits( const struct failsafe * f, unsigned int nb_pins)
 {
-  unsigned int sum = 16 + nb_pins;//timeout_size + mask_size
-  unsigned int i;
+  uint16_t sum = 16 + nb_pins;//timeout_size + mask_size
+  uint8_t i;
   for (i = 0; i < nb_pins; i++) {
     if (f->pins_failsafe[i].pin_state == PIN_TYPE_DISABLED) continue;
     uint8_t val_size = get_type_bits_nb(f->pins_failsafe[i].pin_state);
