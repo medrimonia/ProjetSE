@@ -18,5 +18,22 @@ Au fur et à mesure de l'implémentation, nous avons pu prendre conscience des
 difficultés de débogage d'un protocole qui cherche à travailler au bit près.
 De plus, l'écriture de ce code nous a été pénible de par sa répétitivité. Nous
 avons donc pu conclure que si la nécessité d'optimiser les protocoles déjà
-existant n'est pas établie, il vaut mieut utiliser les solutions existantes
+existant n'est pas établie, il vaut mieux utiliser les solutions existantes
 afin d'éviter trop de complications.
+
+% De l'amélioration de la latence
+\paragraph{}
+Il était prévu de définir une mesure de la latence afin d'effectuer des
+benchmarks et optimiser les performances de la communication. Cependant, du
+fait des problèmes successifs que nous avons eu avec nos cartes et du temps
+passé sur l'écriture de l'API nous n'avons malheureusement pas pu traiter
+cette partie du projet.
+
+% Une API incomplète
+\paragraph{}
+Enfin, l'API - bien que le code soit de taille conséquente - ne traite pas
+l'ensemble des erreurs pouvant survenir dans la communication. Par exemple le
+protocole permet d'avoir un code de retour signalant une erreur dans les
+paquets de réponse ; ce code de retour n'est pas toujours pris en compte par
+notre API. Avec du temps supplémentaire nous aurions pu améliorer la prise en
+charge des erreurs dans la communication.
