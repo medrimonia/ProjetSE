@@ -92,13 +92,21 @@ différents registres à initialiser. Ces registres sont au nombre de trois:
 Après cette initialisation il était nécessaire de connaitre la façon de
 récupérer et d'envoyer un message à partir du bus de communication. Pour cela
 nous sommes retournés à la recherche des registres concernés dans la datasheet.
-Après recherche nous sommes arrivé au point que la donnée reçue / envoyée est
-stocké avant traitement dans le registre \verb!UDR!. Ce registre admet deux
+Après recherche nous sommes arrivé au point que la donnée reçue/envoyée est
+stockée avant traitement dans le registre \verb!UDR!. Ce registre admet deux
 comportements différents en fonction de la façon dont il est utilisé. Dans le
 cas d'une lecture, le registre retournera la valeur sur 8bit du récepteur. Dans
 le cas d'une écriture , la valeur stockée par le registre sera envoyée lorsque
 le \verb!Transmit Shift Register! sera vide.
 
+\paragraph{}
+Cependant , la gestion du registre de lecture ne suffit pas à pouvoir faire
+d'autres tâches en parallèle de la communication. Il faut donc quitter le mode
+de scrutation pour passer dans un mode d'interruption. Nous passerons sur
+l'activation des différents bit dans le registre \verb!UCSRB! pour permettre
+l'utilisation des vecteurs d'interruptions compris dans la table des vecteurs du
+micro-contrôleur. Pour cela il nous faut appeler la fonction ISR prenant en
+argument un vecteur d'interruption. 
 
 \subsubsection{Taille d'exécutable}
 % Confrontation au problème de la taille
