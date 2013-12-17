@@ -44,7 +44,7 @@ void read_device_caps( struct device_caps * dc, struct packet * p )
   }
   dc->pins_mask_type = malloc(dc->nb_pins);
   //TODO hard coded value
-  unsigned int i;
+  uint8_t i;
   for (i = 0; i < dc->nb_pins; i++){
     dc->pins_mask_type[i] = p->data[i + 2];
   }
