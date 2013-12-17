@@ -21,9 +21,9 @@ struct failsafe * sub_failsafe( const struct failsafe * f, mask m,
                                 uint8_t mask_length )
 {
   struct failsafe * sub = new_failsafe(mask_nb_pins_used( m, mask_length ) );
-  uint8_t pin_index = 0;
   uint8_t sub_index = 0;
   sub->timeout = f->timeout;
+  int pin_index = 0;
   do {
     pin_index = mask_next_pin_used( m, pin_index, mask_length );
     if ( pin_index  == -1 ) break;

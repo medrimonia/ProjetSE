@@ -61,7 +61,7 @@ void reply_read( struct connection * c, const struct packet * p )
     data_bytes = BITS2BYTES( data_bits );
     rep.data = malloc( data_bytes );
     init_packet( rep.data, data_bytes );
-    uint8_t pin_index = 0;
+    int pin_index = 0;
     do{
       pin_index = mask_next_pin_used( m, pin_index, c->caps.nb_pins );
       if ( pin_index == -1 ) break;
@@ -93,7 +93,7 @@ void treat_write( struct connection * c, const struct packet * p )
   else {
     mask m = new_mask( c->caps.nb_pins );
     read_mask( p->data, 0, m, c->caps.nb_pins );
-    uint8_t pin_index = 0;
+    int pin_index = 0;
     uint16_t offset = c->caps.nb_pins;
     do{
       pin_index = mask_next_pin_used( m, pin_index, c->caps.nb_pins );
