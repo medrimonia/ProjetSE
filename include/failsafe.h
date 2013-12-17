@@ -29,7 +29,7 @@ uint16_t failsafe_nb_bits( const struct failsafe * f, unsigned int nb_pins );
 void write_failsafe( unsigned char         * p,
                      uint16_t                offset,
                      const struct failsafe * f,
-                     unsigned int            nb_pins);
+                     uint8_t                 nb_pins);
 
 /**
  * Read only the stream corresponding to pins status and values,
@@ -38,7 +38,7 @@ void write_failsafe( unsigned char         * p,
 void read_failsafe(const unsigned char * buffer,
                    uint16_t              offset,
                    struct failsafe     * f,
-                   unsigned int          nb_pins);
+                   uint8_t               nb_pins);
 
 void destroy_failsafe( struct failsafe * f);
 
