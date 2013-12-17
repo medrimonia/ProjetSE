@@ -52,7 +52,7 @@ void write_failsafe( unsigned char         * p,
                      const struct failsafe * f,
                      uint8_t                 nb_pins )
 {
-  unsigned int i;
+  uint8_t i;
   for (i = 0; i < nb_pins; i++) {
     if (f->pins_failsafe[i].pin_state == PIN_TYPE_DISABLED) continue;
     uint16_t pin_val = f->pins_failsafe[i].pin_value;
@@ -70,7 +70,7 @@ void read_failsafe(const unsigned char * buffer,
                    struct failsafe     * f,
                    uint8_t               nb_pins)
 {
-  unsigned int i;
+  uint8_t i;
   for (i = 0; i < nb_pins; i++)
   {
     uint8_t pin_type = read_bit_value( buffer, offset, PIN_TYPE_BITS_NB );
