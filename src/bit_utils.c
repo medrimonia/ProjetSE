@@ -16,9 +16,9 @@ void init_packet( unsigned char * p, uint16_t packet_size )
 //dst bits must be 0 where they will be written
 //TODO improve
 void write_bit_value( unsigned char * dst,
-                      int offset,
+                      uint16_t offset,
                       int16_t val,
-                      int val_size )
+                      uint8_t val_size )
 {
   int bit_no = offset / 8;
   offset = offset % 8;
@@ -39,7 +39,9 @@ void write_bit_value( unsigned char * dst,
   dst[bit_no] |= (unsigned char)to_write;
 }
 
-int16_t read_bit_value( const unsigned char * src, int offset, int val_size )
+int16_t read_bit_value( const unsigned char * src,
+                        int offset,
+                        uint8_t val_size )
 {
   int16_t val = 0;
   int bit_no = offset / 8;

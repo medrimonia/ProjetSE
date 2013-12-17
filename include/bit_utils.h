@@ -14,11 +14,12 @@ void init_packet( unsigned char * p, uint16_t packet_size );
  * param val_size In bits
  */
 void write_bit_value( unsigned char * dst,
-                      int             offset,
+                      uint16_t        offset,
                       int16_t         val,
-                      int             val_size );
+                      uint8_t         val_size );
 
-int16_t read_bit_value( const unsigned char * src, int offset, int val_size );
+int16_t read_bit_value( const unsigned char * src, int offset,
+                        uint8_t val_size );
 
 #ifndef EMBEDDED
 void display_binary( unsigned char v );
