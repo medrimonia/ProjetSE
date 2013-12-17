@@ -123,7 +123,7 @@ asm: $(ASSEMBLE)
 
 cross_build/$(TARGET).hex : cross_build/$(TARGET).elf
 	avr-objcopy -S -j .text -j .data -O ihex $< $@ -g
-	avr-size $@
+	avr-size --mcu=$(DEVICE) -C $@
 
 bin: cross_build/$(TARGET).elf
 	avr-objcopy -S -j .text -j .data -O binary $< cross_build/${TARGET}.bin
@@ -131,7 +131,9 @@ bin: cross_build/$(TARGET).elf
 cross_build/$(TARGET).elf : cross_build/firmware/firmware.o \
 														$(CROSS_COMMON_OBJ)             \
 													  $(CROSS_FIRMWARE_OBJ)
-	$(CROSS_COMPILE) -o $@ $^
+	$(CROSS_COMPILE) -o $@ $^ -gc-sections
+	avr-size --mcu=$(DEVICE) -C $@
+
 
 cross_build:
 	@mkdir -p cross_build
