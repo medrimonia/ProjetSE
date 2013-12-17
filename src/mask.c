@@ -13,7 +13,7 @@ mask new_mask( unsigned int nb_pins )
   return m;
 }
 
-int mask_next_pin_used( const mask m, int start, int mask_length ){
+int mask_next_pin_used( const mask m, uint16_t start, uint8_t mask_length ){
   while ( start < mask_length){
     if (m[start]) return start;
     start++;
@@ -35,7 +35,7 @@ int mask_nb_pins_used( const mask m , uint8_t mask_length)
 
 int write_mask( unsigned char * buffer,
                 const mask m,
-                unsigned int mask_length )
+                uint8_t mask_length )
 {
   unsigned int i;
   for (i = 0; i < mask_length; i++) {
@@ -45,9 +45,9 @@ int write_mask( unsigned char * buffer,
 }
 
 int read_mask( const unsigned char * buffer,
-               unsigned int offset,
+               uint16_t offset,
                mask m,
-               unsigned int mask_length )
+               uint8_t mask_length )
 {
   unsigned int i;
   for ( i = 0; i < mask_length; i++ ) {

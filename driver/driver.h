@@ -17,7 +17,6 @@
 #include "device_state.h"
 #include "failsafe.h"
 #include "protocol.h"
-#include "value_list.h"
 
 struct connection * new_connection();
 

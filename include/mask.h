@@ -21,7 +21,7 @@ int mask_nb_pins_used( const mask m , uint8_t mask_length);
  * Return -1, if no next pin used can be found
  * start research at m[start]
  */
-int mask_next_pin_used( const mask m, int start, int mask_length );
+int mask_next_pin_used( const mask m, uint16_t start, uint8_t mask_length );
 
 /**
  * Write the content of a mask in a buffer
@@ -30,7 +30,7 @@ int mask_next_pin_used( const mask m, int start, int mask_length );
  *               ceil( NB_PINS / 8 ) free chars available
  * \return The number of chars written
  */
-int write_mask( unsigned char * buffer, const mask m, unsigned int mask_length );
+int write_mask( unsigned char * buffer, const mask m, uint8_t mask_length );
 
 /**
  * Read a mask from a buffer, ceil( NB_PINS /8 ) chars will be read.
@@ -39,9 +39,9 @@ int write_mask( unsigned char * buffer, const mask m, unsigned int mask_length )
  * \return the numbers of chars read
  */
 int read_mask( const unsigned char * buffer,
-               unsigned int offset,
+               uint16_t offset,
                mask m,
-               unsigned int mask_length );
+               uint8_t mask_length );
 
 void destroy_mask(mask m);
 
