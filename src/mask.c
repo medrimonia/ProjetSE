@@ -6,7 +6,7 @@
 mask new_mask( unsigned int nb_pins )
 {
   mask m = malloc(nb_pins * sizeof(bool));
-  unsigned int i;
+  uint8_t i;
   for (i = 0; i < nb_pins; i++) {
     m[i] = false;
   }
@@ -23,8 +23,8 @@ int mask_next_pin_used( const mask m, uint16_t start, uint8_t mask_length ){
 
 int mask_nb_pins_used( const mask m , uint8_t mask_length)
 {
-  unsigned int i;
-  unsigned int pins_used = 0;
+  uint8_t i;
+  uint8_t pins_used = 0;
   for (i = 0; i < mask_length; i++){
     if (m[i] == MASK_PIN_ON){
       pins_used ++;
@@ -37,7 +37,7 @@ int write_mask( unsigned char * buffer,
                 const mask m,
                 uint8_t mask_length )
 {
-  unsigned int i;
+  uint8_t i;
   for (i = 0; i < mask_length; i++) {
     write_bit_value(buffer, i, m[i], 1);
   }
@@ -49,7 +49,7 @@ int read_mask( const unsigned char * buffer,
                mask m,
                uint8_t mask_length )
 {
-  unsigned int i;
+  uint8_t i;
   for ( i = 0; i < mask_length; i++ ) {
     m[i] = read_bit_value( buffer, offset + i, 1 );
   }
