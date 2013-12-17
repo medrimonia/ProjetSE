@@ -141,9 +141,9 @@ cross_build:
 
 depend: .depend
 
-.depend: $(SRC)
+.depend: $(COMMON_SRC) $(DRIVER_SRC) $(FIRMWARE_SRC)
 	rm -f ./.depend
-	$(CC) -I${INCDIR} -MM $^ > ./.depend;
+	$(CC) -I$(COMMON_INC_DIR) -I$(FIRMWARE_INC_DIR) -MM $^ > ./.depend;
 
 include .depend
 
@@ -152,4 +152,4 @@ clean:
 	@rm -rf local_build cross_build
 
 mrproper: clean
-	@rm -f ${BINS}
+	@rm -f ${BINS} ./.depend
