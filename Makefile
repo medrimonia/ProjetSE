@@ -18,7 +18,6 @@ DRIVER_SRC   = $(wildcard $(DRIVER_DIR)/*.c)
 BINS=test_bit_utils     \
      test_driver        \
      test_protocol      \
-     mok_firmware       \
      fake_device        \
      test_communication
 
@@ -70,10 +69,6 @@ test_driver: local_build/driver/tests/test_driver.o \
 
 test_protocol: local_build/src/tests/test_protocol.o \
                ${LOC_COMMON_OBJ} ${LOC_DRIVER_OBJ}
-	${LOC_COMPILER} -o $@  $^ ${LDFLAGS}
-
-mok_firmware: local_build/firmware/tests/mok_firmware.o \
-              ${LOC_FIRMWARE_OBJ} ${LOC_COMMON_OBJ}
 	${LOC_COMPILER} -o $@  $^ ${LDFLAGS}
 
 
