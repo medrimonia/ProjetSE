@@ -33,7 +33,7 @@ Nous avons souhaité les produire tous à l'aide d'un unique Makefile, car, tous
 les exécutables partageant du code, cela nous permettait d'assurer facilement
 que nous n'avions pas détruit la compilation des autres binaires en effectuant
 des modifications. Cet aspect était rendu encore plus important par la présence
-des flags de compilation risquant d'engendrer des situations ou une modification
+des flags de compilation risquant d'engendrer des situations où une modification
 apporte des problèmes de compilation dans un autre mode que celui qui est
 étudié.
 
@@ -47,7 +47,7 @@ Afin d'éviter d'utiliser des dépendances sans s'en rendre compte, des règles
 spécifique à chaque catégorie ont été créé, permettant de s'assurer que seuls
 les headers acceptable pour la catégorie étaient utilisés\footnote{La partie
 commune ne devait dépendre ni de celle du driver, ni de celle du firmware. Celle
-du firmware ne devait pas dépendre du driver et inversément}.
+du firmware ne devait pas dépendre du driver et inversement}.
 
 % Distinction de cibles
 \paragraph{}
@@ -60,15 +60,13 @@ des objets compilé avec différentes options, nous avons décidé de placer ceu
 destinés à une utilisation locale et ceux destinés à une utilisation embarquée
 dans deux dossiers différents.
 
-\subsection{Driver}
-
 \subsection{Firmware}
 
 \subsubsection{Gestion des registres}
 
 \paragraph{}
 Pour la réalisation de la communication UART il nous a fallu décider de la façon
-de récuperer les informations de la communication UART. Pour cela nous avons
+de récupérer les informations de la communication UART. Pour cela nous avons
 décidé d'utiliser les interruptions de la communication UART. Cependant avant de
 lire ou d'écrire sur les lignes de communications, il nous a fallu initialiser
 la communication
@@ -89,13 +87,13 @@ différents registres à initialiser. Ces registres sont au nombre de trois:
 \end{itemize}
 
 \paragraph{}
-Après cette initialisation il était nécessaire de connaitre la façon de
+Après cette initialisation il était nécessaire de connaître la façon de
 récupérer et d'envoyer un message à partir du bus de communication. Pour cela
 nous sommes retournés à la recherche des registres concernés dans la datasheet.
 Après recherche nous sommes arrivé au point que la donnée reçue/envoyée est
 stockée avant traitement dans le registre \verb!UDR!. Ce registre admet deux
 comportements différents en fonction de la façon dont il est utilisé. Dans le
-cas d'une lecture, le registre retournera la valeur sur 8bit du récepteur. Dans
+cas d'une lecture, le registre retournera la valeur sur 8 bit du récepteur. Dans
 le cas d'une écriture , la valeur stockée par le registre sera envoyée lorsque
 le \verb!Transmit Shift Register! sera vide.
 
@@ -120,13 +118,13 @@ réduire la taille de celui-ci était une priorité.
 Armé de nos connaissances lacunaires dans ce domaine, nous avons cherché à
 réduire la taille du binaire obtenu. Après avoir essayé de nombreuses
 {\em astuces} de compilation trouvées sur internet, nous n'avons pas réussi à
-avoir le moindre gain. Nous avons trouvé d'autre conseils qui indiquaient qu'il
+avoir le moindre gain. Nous avons trouvé d'autres conseils qui indiquaient qu'il
 valait mieux utiliser autant que possible des entiers de taille définie
 \verb!int8_t! ou \verb!int16_t! plutôt que des entiers simples \verb!int!.
 
 % Gain avec les entiers de taille donnée
 \paragraph{}
-Passer l'entièreté de notre projet au crible de cette règle nous a permis
+Passer l'intégralité de notre projet au crible de cette règle nous a permis
 d'obtenir un léger gain
           \footnote{Nous sommes passé d'environ 7000 bytes à 6850.}.
 Cependant, il nous est vite apparu que ces efforts ne suffiraient pas à obtenir
