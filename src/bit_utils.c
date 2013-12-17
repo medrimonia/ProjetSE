@@ -40,14 +40,14 @@ void write_bit_value( unsigned char * dst,
 }
 
 int16_t read_bit_value( const unsigned char * src,
-                        int offset,
+                        uint16_t offset,
                         uint8_t val_size )
 {
   int16_t val = 0;
-  int bit_no = offset / 8;
+  uint16_t bit_no = offset / 8;
   offset = offset % 8;
-  int bits_remaining = val_size;
-  int available_bits = 8 - offset;
+  uint16_t bits_remaining = val_size;
+  uint8_t available_bits = 8 - offset;
   while (bits_remaining > available_bits) {
     int16_t read_value = (unsigned char)(src[bit_no] << offset) >> offset;
     val += read_value;
@@ -57,7 +57,7 @@ int16_t read_bit_value( const unsigned char * src,
     bit_no++;
     val = val << bits_remaining;
   }
-  int shift = 8 - bits_remaining - offset;
+  uint8_t shift = 8 - bits_remaining - offset;
   unsigned char read_value  = src[bit_no] >> shift;
   // Removing the unwanted left part
   val += (unsigned char)(read_value << (8 - bits_remaining)) >> (8 - bits_remaining);

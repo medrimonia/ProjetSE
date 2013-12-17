@@ -18,7 +18,8 @@ void write_bit_value( unsigned char * dst,
                       int16_t         val,
                       uint8_t         val_size );
 
-int16_t read_bit_value( const unsigned char * src, int offset,
+int16_t read_bit_value( const unsigned char * src,
+                        uint16_t offset,
                         uint8_t val_size );
 
 #ifndef EMBEDDED
