@@ -62,7 +62,7 @@ void connection_init_resources( struct connection * c )
   c->caps.pins_mask_type = malloc(c->caps.nb_pins);
   c->state.pins_state = malloc(c->caps.nb_pins * sizeof(struct pin_state));
   c->failsafe = new_failsafe( c->caps.nb_pins );
-  unsigned int pin_no;
+  uint8_t pin_no;
   for ( pin_no = 0; pin_no < c->caps.nb_pins; pin_no++ ){
     //Unknown state should maybe be initialized
     c->caps.pins_mask_type[pin_no] = 0;// No available states at start
@@ -102,11 +102,11 @@ void connection_close( struct connection * c )
 int connection_write( struct connection   * c,
                       const struct packet * p )
 {
-  int buff_size = p->size + 4;
+  uint16_t buff_size = p->size + 4;
   unsigned char * buffer = malloc( buff_size );
   init_packet( buffer, p->size + 4 );
   packet_write( buffer, p );
-  int nb_bytes = write( c->fd_out, buffer, buff_size );
+  uint16_t nb_bytes = write( c->fd_out, buffer, buff_size );
   if ( nb_bytes == -1 ) {
 #ifndef EMBEDDED
     perror("write");
