@@ -199,6 +199,7 @@ void test_set_type_mask( struct connection * c )
   free(m);
 }
 
+#ifndef DISABLE_FAILSAFE
 void test_get_failsafe( struct connection * c )
 {
   print_title("Get failsafe on pin 7");
@@ -267,6 +268,7 @@ void test_set_failsafe( struct connection * c )
   fs.pin_state = PIN_TYPE_PWM8;
   set_failsafe( c, 3, 515, &fs);
 }
+#endif
 
 /*
 void set_failsafe_test( struct connection * c ) mask version!
@@ -334,6 +336,7 @@ int main( void )
   print_separator();
   test_set_type_mask(c);
   print_separator();
+#ifndef DISABLE_FAILSAFE
   test_get_failsafe(c);//get_failsafe will need to be verified
   print_separator();
   test_get_failsafe_mask(c);//get_failsafe_mask will need to be verified
@@ -341,8 +344,12 @@ int main( void )
   connection_close( c );
   exit(EXIT_FAILURE);
   test_set_failsafe(c);
+#else
+  exit(EXIT_FAILURE);
+#endif
 /* TODO discuss it
   test_set_failsafe_mask(c);
 */
   print_separator();
+  exit(EXIT_FAILURE);
 }

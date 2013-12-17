@@ -75,12 +75,14 @@ int main(int argc, char **argv)
       case CMD_SET_TYPE:
         reply_set_type( c, p );
         break;
+#ifndef DISABLE_FAILSAFE
       case CMD_GET_FAILSAFE:
         reply_get_failsafe( c, p );
         break;
       case CMD_SET_FAILSAFE:
         reply_get_failsafe( c, p );
         break;
+#endif
       default:
         break;
     }

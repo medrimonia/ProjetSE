@@ -4,6 +4,7 @@
 #include "bit_utils.h"
 #include "protocol.h"
 
+#ifndef DISABLE_FAILSAFE
 struct failsafe * new_failsafe( unsigned int nb_pins )
 {
   struct failsafe * f = malloc(sizeof(struct failsafe));
@@ -88,3 +89,4 @@ void destroy_failsafe( struct failsafe * f )
   free(f->pins_failsafe);
   free(f);
 }
+#endif

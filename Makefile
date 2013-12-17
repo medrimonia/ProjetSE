@@ -1,9 +1,9 @@
 ################################################################################
 #                                 COMMON RULES                                 #
-################################################################################
+##############################################################################R##
 COMMON_SRC_DIR=src
 COMMON_INC_DIR=include
-CFLAGS=-Wall -Wextra -I${COMMON_INC_DIR}
+CFLAGS=-Wall -Wextra -I${COMMON_INC_DIR} -DDISABLE_FAILSAFE
 
 FIRMWARE_SRC_DIR=firmware/src
 FIRMWARE_INC_DIR=firmware/include

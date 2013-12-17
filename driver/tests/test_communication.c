@@ -120,6 +120,7 @@ void pwm16_full_test()
   print_ok( "PWM16 full" );
 }
 
+#ifndef DISABLE_FAILSAFE
 void test_failsafe()
 {
   uint8_t pin_id = 5;
@@ -140,6 +141,7 @@ void test_failsafe()
   assert( read_state.pin_value == pin_value );
   print_ok( "Failsafe" );
 }
+#endif
 
 #define MASK_TEST_NB_PINS 4
 void full_mask_test()
@@ -200,6 +202,7 @@ void full_mask_test()
   print_ok( "Full mask" );
 }
 
+#ifndef DISABLE_FAILSAFE
 #define FS_TEST_NB_PINS 5
 void test_mask_failsafe()
 {
@@ -272,6 +275,7 @@ void test_mask_failsafe()
   destroy_mask( reading_mask );
   print_ok( "Failsafe mask" );
 }
+#endif
 
 int main(void)
 {
@@ -288,9 +292,11 @@ int main(void)
   analogic_full_test();
   pwm8_full_test();
   pwm16_full_test();
-  test_failsafe();
   full_mask_test();
+#ifndef DISABLE_FAILSAFE
+  test_failsafe();
   test_mask_failsafe();
+#endif
   
   print_separator();
   // Ending

@@ -191,6 +191,7 @@ void reply_set_type( struct connection * c, const struct packet * p )
   send_packet( c, &rep );
 }
 
+#ifndef DISABLE_FAILSAFE
 void reply_get_failsafe( struct connection * c, const struct packet * p )
 {
   bool use_mask = p->header % 2 == USE_MASK;
@@ -269,4 +270,4 @@ void reply_set_failsafe( struct connection * c, const struct packet * p )
   rep.data = &rep_id;
   send_packet( c, &rep );
 }
-
+#endif

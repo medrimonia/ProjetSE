@@ -5,6 +5,7 @@
 
 #include "mask.h"
 
+#ifndef DISABLE_FAILSAFE
 struct pin_failsafe {
   uint8_t pin_state;
   /** Value is on 16 bits to allow storing diverse types of values. If the
@@ -41,5 +42,6 @@ void read_failsafe(const unsigned char * buffer,
                    uint8_t               nb_pins);
 
 void destroy_failsafe( struct failsafe * f);
+#endif
 
 #endif//FAILSAFE_H

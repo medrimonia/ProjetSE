@@ -118,12 +118,14 @@ void mainloop()
       case CMD_SET_TYPE:
         reply_set_type( device, &p );
         break;
+#ifndef DISABLE_FAILSAFE
       case CMD_GET_FAILSAFE:
         reply_get_failsafe( device, &p );
         break;
       case CMD_SET_FAILSAFE:
         reply_set_failsafe( device, &p );
         break;
+#endif
       default:
         break;
     }

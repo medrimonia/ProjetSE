@@ -352,6 +352,7 @@ int set_type_mask( struct connection * c,
   return 0;
 }
 
+#ifndef DISABLE_FAILSAFE
 int get_failsafe( struct connection   * c,
                   uint8_t               pin_id,
                   struct pin_failsafe * failsafe )
@@ -482,3 +483,4 @@ int set_failsafe_mask( struct connection     * c,
   }while(true);
   return 0;
 }
+#endif
