@@ -65,3 +65,33 @@ dans deux dossiers différents.
 \section{Firmware}
 
 \subsection{Taille d'exécutable}
+% Confrontation au problème de la taille
+\paragraph{}
+Après avoir malencontreusement écrasé notre bootloader alors que nous pensions
+que la taille de notre exécutable était raisonnable, il est devenu flagrant que
+réduire la taille de celui-ci était une priorité.
+
+% Essai avec des connaissances lacunaires
+\paragraph{}
+Armé de nos connaissances lacunaires dans ce domaine, nous avons cherché à
+réduire la taille du binaire obtenu. Après avoir essayé de nombreuses
+{\em astuces} de compilation trouvées sur internet, nous n'avons pas réussi à
+avoir le moindre gain. Nous avons trouvé d'autre conseils qui indiquaient qu'il
+valait mieux utiliser autant que possible des entiers de taille définie
+\verb!int8_t! ou \verb!int16_t! plutôt que des entiers simples \verb!int!.
+
+% Gain avec les entiers de taille donnée
+\paragraph{}
+Passer l'entièreté de notre projet au crible de cette règle nous a permis
+d'obtenir un léger gain
+          \footnote{Nous sommes passé d'environ 7000 bytes à 6850.}.
+Cependant, il nous est vite apparu que ces efforts ne suffiraient pas à obtenir
+de gain significatif.
+
+% Flinguage du failsafe
+\paragraph{}
+Afin d'être sûr de pouvoir tester notre firmware sur la carte dans le temps
+imparti, nous avons donc décidé d'opter pour une solution brutale mais dont
+l'efficacité ne faisait aucun doute. Nous avons ajouté un flag de compilation
+\verb!DISABLE_FAILSAFE! permettant de désactiver tout le code lié à cette
+fonctionnalité.
