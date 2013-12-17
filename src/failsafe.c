@@ -18,7 +18,7 @@ struct failsafe * new_failsafe( unsigned int nb_pins )
 }
 
 struct failsafe * sub_failsafe( const struct failsafe * f, mask m,
-                                unsigned int mask_length )
+                                uint8_t mask_length )
 {
   struct failsafe * sub = new_failsafe(mask_nb_pins_used( m, mask_length ) );
   int pin_index = 0;

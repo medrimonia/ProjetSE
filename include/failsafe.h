@@ -21,7 +21,7 @@ struct failsafe{
 struct failsafe * new_failsafe( unsigned int nb_pins );
 
 struct failsafe * sub_failsafe( const struct failsafe * f, mask m,
-                                unsigned int mask_length );
+                                uint8_t mask_length );
 
 uint16_t failsafe_nb_bits( const struct failsafe * f, unsigned int nb_pins );
 
