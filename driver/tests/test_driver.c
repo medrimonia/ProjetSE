@@ -30,6 +30,7 @@ void test_get_caps( struct connection * c )
   printf( "\nExpected type mask      : |ff|0d|\n");
   // Recovering the number of pins
   c->caps.nb_pins = NB_PINS;
+  connection_init_resources( c );
 }
 
 void test_reset( struct connection * c )
