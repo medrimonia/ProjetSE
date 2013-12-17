@@ -1,17 +1,17 @@
 \subsection{Tests}
-
+\paragraph{}
 Chacune des fonctions du driver, du firmware et communes au driver et au
 firmware ont été testé. Le protocole de communication entre le driver et le
 firmware a également été testé au moyen d'une communication entre processus
 avant de mettre en place le code sur les cartes.
-
+\paragraph{}
 Les programmes de tests se trouvent dans des sous dossiers \emph{tests}.
 Chacun des composants (driver, firmware et commun) a doit à son dossier de
 test. La plupart des tests affichent le résultat effectif comparé au résultat
 attendu, cela permet notamment de voir si un paquet formé est différent de ce
 qu'on aurait du obtenir et de voir sur quelle partie du paquet il y a une
 erreur.
-
+\paragraph{}
 D'autres tests utilisent des assertions afin de vérifier plus rapidement la
 validité des fonctions utilisées. C'est notamment le cas du test de
 communication dans lequel le driver envoie une commande au firmware qui
