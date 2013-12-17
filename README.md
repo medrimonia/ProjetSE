@@ -20,8 +20,8 @@ While the latest one include the use of two processus communicating and using
 assertions, older tests which were used through the developing process were
 simpler and require more attention from the user.
 
-communication_test
-^^^^^^^^^^^^^^^^^^
+###communication_test
+
 The communication test consists of launching a fake firmware which will have
 the same behavior than the true firmware. It will additionnally open two pipes
 in /tmp/ folder. After it, the test_communication binary can be launched in
@@ -36,18 +36,18 @@ Tests is launched with :
 ./test_communication```
 
 
-test_driver
-^^^^^^^^^^^
+###test_driver
+
 This test is using various binary files, each one representing a packet. The
 connection input is changed to test each available command. No assertions are
 used but the expected input is showed and the user can compare.
 
-test_protocol
-^^^^^^^^^^^^^
+###test_protocol
+
 This test compare the expected and calculated checksum, packet conversion and
 packet validation. It has no assertion and need to be checked by an user
 
-test_bit_utils
-^^^^^^^^^^^^^^
+###test_bit_utils
+
 This executable launch tests with no assertion, the user has to look if the
 result is the same as the expected value
