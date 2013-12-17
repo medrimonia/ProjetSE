@@ -1,5 +1,3 @@
-\subsection{Arduino}
-
   % Pour l'arduino , on a le microcontrolleur qui va gérer la communication et les pinouilles de PWM et de gestion des pinouilles analogiques.Du
   % coup il faut être capable à tout instant de pouvoir recevoir les informations de la carte intelligence (la raspberry) -> d'où les
   % interruptions. Seul problème du coup , on est pas sur que on va pas surcharger avec la communication le temps de calcul du microP et que du
@@ -14,7 +12,7 @@
   L'arduino est actuellement, une solution rapide et fiable d'utiliser une carte
 électronique pour développer un projet.
 \paragraph{}
-  Dans le cas de ce projet, la carte utilisée est une DAGU Mini Driver Control
+  Dans le cadre de ce projet, la carte utilisée est une DAGU Mini Driver Control
 Board, qui embarque un ATmega8. Elle est dotée de deux bus de communications: un
 bus SPI et un bus UART.
 \paragraph{}
@@ -38,6 +36,3 @@ encore un scheduler basé sur un timer avec une priorité sur l'interruption.
 réécrire sur le bootloader et ensuite s'assurer que la communication avec la
 Raspberry Pi ne parasitera pas, par son temps d'occupation du
 micro-contrôleur, la génération de signaux.\\
-
-
-\subsection{RaspberryPi}
