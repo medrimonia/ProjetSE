@@ -33,7 +33,7 @@ void init_device_content()
   device->failsafe = NULL;
   device->caps.nb_pins = NB_PINS;
   connection_init_resources( device );
-  unsigned int i;
+  uint8_t i;
   for ( i = 0; i < NB_PINS; i++ ){
     device->caps.pins_mask_type[i] = (1 << PIN_TYPE_DIGITAL)
                                    + (1 << PIN_TYPE_ANALOG8)
