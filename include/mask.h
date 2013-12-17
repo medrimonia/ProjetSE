@@ -2,6 +2,7 @@
 #define MASK_H
 
 #include <stdbool.h>
+#include <stdint.h>
 
 #define MASK_PIN_ON  true
 #define MASK_PIN_OFF false
@@ -14,7 +15,7 @@ mask new_mask( unsigned int nb_pins );
  * Return the number of pins used in a mask
  * \param m The mask to analyze
  */
-int mask_nb_pins_used( const mask m , unsigned int mask_length);
+int mask_nb_pins_used( const mask m , uint8_t mask_length);
 
 /**
  * Return -1, if no next pin used can be found

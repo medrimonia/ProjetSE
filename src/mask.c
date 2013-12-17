@@ -21,7 +21,7 @@ int mask_next_pin_used( const mask m, int start, int mask_length ){
   return -1;
 }
 
-int mask_nb_pins_used( const mask m , unsigned int mask_length)
+int mask_nb_pins_used( const mask m , uint8_t mask_length)
 {
   unsigned int i;
   unsigned int pins_used = 0;
