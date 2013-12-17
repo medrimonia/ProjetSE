@@ -1,8 +1,10 @@
+\paragraph{}
 Le driver et le firmware sont tous les deux écrits en C. Par conséquent, le
 code qui pouvait être mis en commun l'a été tant que possible. Cela concerne
 notamment la gestion des masks, du failsafe, la fabrication de paquet, ainsi
 que la définition du protocole.
 
+\paragraph{}
 De plus, afin d'avoir un code du firmware sensiblement identique, que le code
 soit embarqué ou non, une macro de préprocesseur est utilisée. Lorsque
 \emph{EMBEDDED} est définie le code est compilé pour fonctionner sur
@@ -13,7 +15,53 @@ tester le protocole.
 %TODO: détailler ce qui change concrètement entre l'utilisation dans l'arduino
 %ou non
 
+\section{Makefile}
+% Cibles du Makefile
+\paragraph{}
+Les différents binaires que nous cherchions à produire étaient les suivants~:
+\begin{itemize}
+\item Firmware
+\item Fake-firmware
+      \footnote{Une version du firmware à employer en local sur un ordinateur
+                pour permettre de valider la communication}
+\item Différents binaires de tests
+\end{itemize}
+
+% Multi-cible : un Makefile
+\paragraph{}
+Nous avons souhaité les produire tous à l'aide d'un unique Makefile, car, tous
+les exécutables partageant du code, cela nous permettait d'assurer facilement
+que nous n'avions pas détruit la compilation des autres binaires en effectuant
+des modifications. Cet aspect était rendu encore plus important par la présence
+des flags de compilation risquant d'engendrer des situations ou une modification
+apporte des problèmes de compilation dans un autre mode que celui qui est
+étudié.
+
+% Distinction de sources
+\paragraph{}
+Bien qu'une grande partie du code soit commune, il existe toute de même des
+différences. Celles-ci se sont traduites sous la forme de trois catégories
+séparées~:
+le code commun, le code spécifique au driver et le code spécifique au firmware.
+Afin d'éviter d'utiliser des dépendances sans s'en rendre compte, des règles
+spécifique à chaque catégorie ont été créé, permettant de s'assurer que seuls
+les headers acceptable pour la catégorie étaient utilisés\footnote{La partie
+commune ne devait dépendre ni de celle du driver, ni de celle du firmware. Celle
+du firmware ne devait pas dépendre du driver et inversément}.
+
+% Distinction de cibles
+\paragraph{}
+Outre la différence provenant de l'architecture logicielle, il existe aussi une
+différence de cible. Effectivement, le {\em fake-firmware} et le {\em firmware}
+correspondent aux mêmes objets, mais compilés de manière différente. Par
+conséquent, il nous aurait semblé étrange d'utiliser plusieurs Makefile pour
+effectuer la même tâche. Afin de résoudre le problèmes de la nécessité d'avoir
+des objets compilé avec différentes options, nous avons décidé de placer ceux
+destinés à une utilisation locale et ceux destinés à une utilisation embarquée
+dans deux dossiers différents.
+
 \section{Driver}
 
 \section{Firmware}
 
+\subsection{Taille d'exécutable}
